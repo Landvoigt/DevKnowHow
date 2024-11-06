@@ -22,30 +22,28 @@
             </div>
             <div class="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
                 <div class="flex flex-shrink-0 items-center">
-                    <span (click)="changePage('dashboard')"
+                    <span (click)="changePage('bash')"
                         class="logo-text text-2xl text-textColorPrimary cursor-pointer">Knowledge Base</span>
                 </div>
                 <div class="hidden md:ml-6 md:block">
                     <div class="flex space-x-4">
-                        <a (click)="changePage('dashboard')"
+                        <a (click)="changePage('bash')"
                             class="rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-navColorHover hover:text-white cursor-pointer"
-                            [ngClass]="{'bg-navColorHover' : activePage('dashboard'), 'text-white' : activePage('dashboard')}">Dashboard</a>
-                        <a (click)="changePage('films')"
+                            [ngClass]="{'bg-navColorHover' : activePage('bash'), 'text-white' : activePage('bash')}">Bash</a>
+                        <a (click)="changePage('cmd')"
                             class="rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-navColorHover hover:text-white cursor-pointer"
-                            [ngClass]="{'bg-navColorHover' : activePage('films'), 'text-white' : activePage('films')}">Films</a>
-                        <!-- <a (click)="changePage('series')"
+                            [ngClass]="{'bg-navColorHover' : activePage('cmd'), 'text-white' : activePage('cmd')}">Cmd</a>
+                        <a (click)="changePage('git')"
                             class="rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-navColorHover hover:text-white cursor-pointer"
-                            [ngClass]="{'bg-navColorHover' : activePage('series'), 'text-white' : activePage('series')}">Series</a> -->
-                        <a (click)="changePage('playlist')"
+                            [ngClass]="{'bg-navColorHover' : activePage('git'), 'text-white' : activePage('git')}">Git</a>
+                        <a (click)="changePage('sql')"
                             class="rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-navColorHover hover:text-white cursor-pointer"
-                            [ngClass]="{'bg-navColorHover' : activePage('playlist'), 'text-white' : activePage('playlist')}">My
-                            List</a>
+                            [ngClass]="{'bg-navColorHover' : activePage('sql'), 'text-white' : activePage('sql')}">SQL</a>
                     </div>
                 </div>
             </div>
             <div class="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
-                <span class="hidden sm:flex text-md text-textColorPrimary">
-                    Irgendwas</span>
+                <span class="hidden sm:flex text-md text-textColorPrimary"></span>
                 <!-- Profile dropdown -->
                 <div class="relative ml-3">
                     <div>
@@ -75,19 +73,18 @@
     <!-- Mobile menu -->
     <div *ngIf="mobileMenuOpen" @slideUpDownSlow class="md:hidden" id="mobile-menu">
         <div class="space-y-1 px-2 pb-3 pt-2">
-            <a (click)="changePage('dashboard')"
+            <a (click)="changePage('bash')"
                 class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-navColorHover hover:text-white cursor-pointer"
-                [ngClass]="{'bg-navColorHover' : activePage('dashboard'), 'text-white' : activePage('dashboard')}">Dashboard</a>
-            <a (click)="changePage('films')"
+                [ngClass]="{'bg-navColorHover' : activePage('bash'), 'text-white' : activePage('bash')}">Bash</a>
+            <a (click)="changePage('cmd')"
                 class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-navColorHover hover:text-white cursor-pointer"
-                [ngClass]="{'bg-navColorHover' : activePage('films'), 'text-white' : activePage('films')}">Films</a>
-            <!-- <a (click)="changePage('series')"
+                [ngClass]="{'bg-navColorHover' : activePage('cmd'), 'text-white' : activePage('cmd')}">Cmd</a>
+            <a (click)="changePage('git')"
                 class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-navColorHover hover:text-white cursor-pointer"
-                [ngClass]="{'bg-navColorHover' : activePage('series'), 'text-white' : activePage('series')}">Series</a> -->
-            <a (click)="changePage('playlist')"
+                [ngClass]="{'bg-navColorHover' : activePage('git'), 'text-white' : activePage('git')}">Git</a>
+            <a (click)="changePage('sql')"
                 class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-navColorHover hover:text-white cursor-pointer"
-                [ngClass]="{'bg-navColorHover' : activePage('playlist'), 'text-white' : activePage('playlist')}">My
-                List</a>
+                [ngClass]="{'bg-navColorHover' : activePage('sql'), 'text-white' : activePage('sql')}">SQL</a>
         </div>
     </div>
 </nav>

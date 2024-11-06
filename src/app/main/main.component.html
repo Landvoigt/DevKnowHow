@@ -1,26 +1,45 @@
 <div @fadeInSuperSlow class="mainpage-wrapper relative flex flex-col min-h-screen">
-    <!-- <div id="mainpageOverlay" class="mainpage-overlay absolute cursor-pointer"></div> -->
+  <!-- <div id="mainpageOverlay" class="mainpage-overlay absolute cursor-pointer"></div> -->
 
-    <!-- Navbar -->
-    <navbar [currentPage]="currentPage" (pageChanged)="onPageChanged($event)" [closeMenu]="closeMenu"></navbar>
+  <!-- Navbar -->
+  <navbar [currentPage]="currentPage" (pageChanged)="onPageChanged($event)" [closeMenu]="closeMenu"></navbar>
 
-    <!-- <div (click)="closeUserMenu()" class="flex-1 flex flex-col bg-gradient-to-r from-default-from to-default-to pb-10"> -->
+  <div (click)="closeUserMenu()" class="flex-1 flex flex-col bg-gradient-to-r from-default-from to-default-to pb-10">
 
-    <!-- <ng-container *ngIf="activePage('dashboard')">
-      <app-dashboard></app-dashboard>
+    <ng-container *ngIf="activePage('bash')">
+      <app-bash></app-bash>
     </ng-container>
 
-    <ng-container *ngIf="activePage('films')">
-      <app-films></app-films>
+    <ng-container *ngIf="activePage('cmd')">
+      <app-cmd></app-cmd>
     </ng-container>
 
-    <ng-container *ngIf="activePage('playlist')">
-      <app-playlist></app-playlist>
+    <ng-container *ngIf="activePage('git')">
+      <app-git></app-git>
     </ng-container>
-  </div> -->
 
-    <!-- Footer -->
-    <footer class="mt-auto"></footer>
+    <ng-container *ngIf="activePage('sql')">
+      <app-sql></app-sql>
+    </ng-container>
+
+    <ng-container *ngIf="activePage('docker')">
+      <app-docker></app-docker>
+    </ng-container>
+
+    <ng-container *ngIf="activePage('ng_setup')">
+      <app-ng-setup></app-ng-setup>
+    </ng-container>
+
+    <ng-container *ngIf="activePage('ng_defaults')">
+      <app-ng-defaults></app-ng-defaults>
+    </ng-container>
+
+    <ng-container *ngIf="activePage('other')">
+      <app-other></app-other>
+    </ng-container>
+  </div>
+
+  <footer class="mt-auto"></footer>
 </div>
 
 <!-- Loading Screen -->

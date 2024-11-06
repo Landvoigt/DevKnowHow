@@ -13,8 +13,9 @@ import { fadeIn, slideUpDownSlow } from '../utils/animations';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   @Input() closeMenu: boolean = false;
-  @Input() currentPage: 'dashboard' | 'films' | 'series' | 'playlist' = 'dashboard';
-  @Output() pageChanged: EventEmitter<'dashboard' | 'films' | 'series' | 'playlist'> = new EventEmitter<'dashboard' | 'films' | 'series' | 'playlist'>();
+  @Input() currentPage: 'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other' = 'bash';
+  @Output() pageChanged: EventEmitter<'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other'>
+    = new EventEmitter<'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other'>();
 
   userMenuOpen: boolean = false;
   mobileMenuOpen: boolean = false;
@@ -49,7 +50,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.mobileMenuOpen = false;
   }
 
-  changePage(page: 'dashboard' | 'films' | 'series' | 'playlist') {
+  changePage(page: 'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other') {
     this.closeUserMenu();
     this.closeMobileMenu();
     this.navService.main();
@@ -58,7 +59,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     localStorage.setItem('currentPage', page);
   }
 
-  activePage(page: 'dashboard' | 'films' | 'series' | 'playlist') {
+  activePage(page: 'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other') {
     return this.currentPage === page;
   }
 
