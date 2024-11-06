@@ -1,0 +1,27 @@
+<div @fadeInSuperSlow class="mainpage-wrapper relative flex flex-col min-h-screen">
+    <!-- <div id="mainpageOverlay" class="mainpage-overlay absolute cursor-pointer"></div> -->
+
+    <!-- Navbar -->
+    <navbar [currentPage]="currentPage" (pageChanged)="onPageChanged($event)" [closeMenu]="closeMenu"></navbar>
+
+    <!-- <div (click)="closeUserMenu()" class="flex-1 flex flex-col bg-gradient-to-r from-default-from to-default-to pb-10"> -->
+
+    <!-- <ng-container *ngIf="activePage('dashboard')">
+      <app-dashboard></app-dashboard>
+    </ng-container>
+
+    <ng-container *ngIf="activePage('films')">
+      <app-films></app-films>
+    </ng-container>
+
+    <ng-container *ngIf="activePage('playlist')">
+      <app-playlist></app-playlist>
+    </ng-container>
+  </div> -->
+
+    <!-- Footer -->
+    <footer class="mt-auto"></footer>
+</div>
+
+<!-- Loading Screen -->
+<!-- <app-loading-screen [class.active]="(videoService.appLoading$ | async) === true"></app-loading-screen> -->
