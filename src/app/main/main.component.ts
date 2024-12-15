@@ -2,45 +2,38 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
-import { BashComponent } from './sites/bash/bash.component';
-import { CmdComponent } from './sites/cmd/cmd.component';
-import { DockerComponent } from './sites/docker/docker.component';
-import { GitComponent } from './sites/git/git.component';
-import { NgDefaultsComponent } from './sites/ng-defaults/ng-defaults.component';
-import { NgSetupComponent } from './sites/ng-setup/ng-setup.component';
-import { SqlComponent } from './sites/sql/sql.component';
-import { OtherComponent } from './sites/other/other.component';
+import { fadeInSuperSlow } from '@utils/animations';
+import { RestService } from '@services/rest.service';
+import { ErrorService } from '@services/error.service';
+import { RouterOutlet } from '@angular/router';
+import { Category } from '@interfaces/category.interface';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FooterComponent, BashComponent, CmdComponent, DockerComponent, GitComponent, NgDefaultsComponent, NgSetupComponent, SqlComponent, OtherComponent],
+  imports: [RouterOutlet, CommonModule, NavbarComponent, FooterComponent],
   templateUrl: './main.component.html',
-  styleUrl: './main.component.scss'
+  styleUrl: './main.component.scss',
+  animations: [fadeInSuperSlow]
 })
 export class MainComponent {
-  currentPage: 'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other'  = 'bash';
+  categories: Category[] = [];
   closeMenu: boolean = false;
 
-  constructor() { }
+  constructor(private rest: RestService, private error: ErrorService) { }
 
-  ngOnInit() {
-    this.loadCurrentPage();
+  ngOnInit(): void {
+    this.loadCategories();
   }
 
-  loadCurrentPage() {
-    const storedPage = localStorage.getItem('currentPage') as 'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other';
-    if (storedPage) {
-      this.currentPage = storedPage;
-    }
-  }
-
-  onPageChanged(page: 'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other') {
-    this.currentPage = page;
-  }
-
-  activePage(page: 'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other') {
-    return this.currentPage === page;
+  loadCategories() {
+    this.rest.getCategories().subscribe({
+      next: (cats: Category[]) => {
+        this.categories = cats || [];
+      },
+      error: (error) => this.error.handleHttpError(error, {}),
+      complete: () => { }
+    });
   }
 
   closeUserMenu() {

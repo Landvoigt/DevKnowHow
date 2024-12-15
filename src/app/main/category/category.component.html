@@ -1,0 +1,25 @@
+<div class="flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-textColorSecondary">
+    <ng-container *ngFor="let item of data || []; let i = index">
+        <div class="w-100 flex items-center pl-14 pr-14 pt-0.5 pb-0.5 gap-14"
+            [ngClass]="{'bg-tableBgSecondary' : i % 2 !== 0}">
+            <!-- <button class="bubbly-button" (click)="animateButton($event)">Click me!</button> -->
+            <div class="w-5/12 flex justify-start items-center gap-5">
+                <div (click)="commandService.copy(item, i)"
+                    class="flex justify-center items-center cursor-pointer rounded-full bg-hover mr-4 fast-transition"
+                    [ngClass]="{'clicked': commandService.activeItems[i]}">
+                    <div
+                        class="h-2.5 w-2.5 rounded-full bg-borderCopyIcon flex justify-center items-center fast-transition">
+                        <div class="h-1.5 w-1.5 rounded-full bg-bgCopyIcon fast-transition"></div>
+                    </div>
+                </div>
+                <span [innerHTML]="item.command | variable"></span>
+            </div>
+            <!-- <div class="w-4/12 flex justify-start items-center">
+                <span [innerHTML]="item.example | variable"></span>
+            </div> -->
+            <div class="w-7/12 flex justify-start items-center">
+                <span [innerHTML]="'(' + (item.description | variable) + ')'"></span>
+            </div>
+        </div>
+    </ng-container>
+</div>

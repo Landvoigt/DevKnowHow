@@ -42,3 +42,4 @@ testem.log
 Thumbs.db
 
 /src/environment
+/src/app/models/command.model.ts

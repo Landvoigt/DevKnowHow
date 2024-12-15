@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { NavigationService } from '../services/navigation.service';
-import { fadeIn, slideUpDownSlow } from '../utils/animations';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Category } from '@interfaces/category.interface';
+import { NavigationService } from '@services/navigation.service';
+import { fadeIn, slideUpDownSlow } from '@utils/animations';
 
 @Component({
   selector: 'navbar',
@@ -12,18 +14,15 @@ import { fadeIn, slideUpDownSlow } from '../utils/animations';
   animations: [fadeIn, slideUpDownSlow]
 })
 export class NavbarComponent implements OnInit, OnDestroy {
+  @Input() categories: Category[] = [];
   @Input() closeMenu: boolean = false;
-  @Input() currentPage: 'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other' = 'bash';
-  @Output() pageChanged: EventEmitter<'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other'>
-    = new EventEmitter<'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other'>();
-
+  
   userMenuOpen: boolean = false;
   mobileMenuOpen: boolean = false;
 
-  constructor(public navService: NavigationService) { }
+  constructor(public navService: NavigationService, private router: Router) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   ngOnChanges() {
     if (this.closeMenu) {
@@ -50,24 +49,23 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.mobileMenuOpen = false;
   }
 
-  changePage(page: 'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other') {
+  changePage(cat: Category) {
     this.closeUserMenu();
     this.closeMobileMenu();
-    this.navService.main();
-    this.currentPage = page;
-    this.pageChanged.emit(page);
-    localStorage.setItem('currentPage', page);
+    this.router.navigate([`category/${cat.id}/`])
+    // this.navService.main();
+    // this.currentPage = page;
+    // this.pageChanged.emit(page);
+    // localStorage.setItem('currentPage', page);
   }
 
-  activePage(page: 'bash' | 'cmd' | 'git' | 'sql' | 'docker' | 'ng_setup' | 'ng_defaults' | 'other') {
-    return this.currentPage === page;
-  }
+  // activePage(cat: Category) {
+  //   return this.currentPage === cat.id;
+  // }
 
   goToProfiles() {
-    this.navService.profiles();
+    // this.navService.profiles();
   }
 
-
-  ngOnDestroy(): void {
-  }
+  ngOnDestroy(): void { }
 }

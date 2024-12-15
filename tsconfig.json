@@ -25,13 +25,13 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@auth/*": ["src/app/services/*"],
+      "@assets/*": ["src/assets/*"],
+      "@auth/*": ["src/app/auth/*"],
       "@services/*": ["src/app/services/*"],
       "@interfaces/*": ["src/app/interfaces/*"],
       "@models/*": ["src/app/models/*"],
+      "@pipes/*": ["src/app/pipes/*"],
       "@utils/*": ["src/app/utils/*"],
-      "@video/*": ["src/app/video/*"],
-      "@assets/*": ["src/assets/*"],
     }
   },
   "angularCompilerOptions": {

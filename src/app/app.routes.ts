@@ -1,12 +1,16 @@
 import { Routes } from '@angular/router';
-import { MainComponent } from './main/main.component';
 import { ImprintComponent } from './imprint/imprint.component';
 import { PolicyComponent } from './policy/policy.component';
+import { CreateComponent } from './main/create/create.component';
+import { CategoryComponent } from './main/category/category.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/main', pathMatch: 'full' },
 
-    { path: 'main', component: MainComponent },
+    { path: 'category/:id', component: CategoryComponent },
+
+    { path: 'create', component: CreateComponent },
+    { path: 'create/admin', component: CreateComponent },
 
     { path: 'imprint', component: ImprintComponent },
     { path: 'policy', component: PolicyComponent },
