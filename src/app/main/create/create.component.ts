@@ -7,6 +7,9 @@ import { RestService } from '@services/rest.service';
 import { createForm, CreateFormModel } from '@interfaces/create.interface';
 import { fadeIn } from '@utils/animations';
 import { CommandRequest } from '@models/requests.model';
+import { data, Item } from '@models/command.model';
+import { concatMap, from } from 'rxjs';
+import { DIRECT_ACTIVATION_PASSWORD } from 'src/config/config';
 
 @Component({
   selector: 'app-create',
@@ -24,6 +27,8 @@ export class CreateComponent implements OnInit {
   newCatSelected: boolean = false;
 
   adminMode: boolean = false;
+
+  data: any = data;
 
   constructor(
     private restService: RestService,
@@ -87,7 +92,7 @@ export class CreateComponent implements OnInit {
         bodyValue.category = this.newType.value;
       }
 
-      const commandPayload: CommandRequest = this.adminMode ? this.getAdminRequest(bodyValue, name, email, message) : this.getRequest(bodyValue, name, email, message);
+      const commandPayload: CommandRequest = this.adminMode ? this.getAdminRequest(bodyValue) : this.getRequest(bodyValue, name, email, message);
 
       this.loading = true;
       this.restService.createCommand(commandPayload).subscribe({
@@ -104,6 +109,36 @@ export class CreateComponent implements OnInit {
     }
   }
 
+  onBatchSubmit() {
+    if (!this.data || this.data.length === 0) {
+      this.alertService.showAlert('No items to submit.', 'warning');
+      return;
+    }
+
+    this.loading = true;
+
+    from(this.data)
+      .pipe(
+        concatMap((item: any) => {
+          item.param = DIRECT_ACTIVATION_PASSWORD;
+          const adminRequest: CommandRequest = this.getAdminRequest(item);
+          return this.restService.createCommand(adminRequest);
+        })
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('Item submitted successfully', response);
+        },
+        error: (err) => {
+          this.errorService.handleContactError(err);
+        },
+        complete: () => {
+          this.alertService.showAlert('All items were submitted successfully!', 'success');
+          this.loading = false;
+        },
+      });
+  }
+
   getRequest(bodyValue: any, name: string | null | undefined, email: string | null | undefined, message: string | null | undefined) {
     return {
       command: bodyValue.command,
@@ -118,7 +153,7 @@ export class CreateComponent implements OnInit {
     };
   }
 
-  getAdminRequest(bodyValue: any, name: string | null | undefined, email: string | null | undefined, message: string | null | undefined) {
+  getAdminRequest(bodyValue: any) {
     return {
       command: bodyValue.command,
       category: bodyValue.category,
@@ -127,8 +162,8 @@ export class CreateComponent implements OnInit {
       example: bodyValue.example || '',
       param: bodyValue.param || '',
       creator_name: "ADMIN",
-      creator_email: "",
-      creator_message: "",
+      creator_email: "timvoigt1996@gmail.com",
+      creator_message: "admin",
     };
   }
 }
