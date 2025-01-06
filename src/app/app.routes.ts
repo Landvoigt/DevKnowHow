@@ -5,7 +5,7 @@ import { CreateComponent } from './main/create/create.component';
 import { CategoryComponent } from './main/category/category.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: '/main', pathMatch: 'full' },
+    { path: '', redirectTo: '/category/7', pathMatch: 'full' },
 
     { path: 'category/:id', component: CategoryComponent },
 

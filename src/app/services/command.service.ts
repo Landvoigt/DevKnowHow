@@ -18,7 +18,7 @@ export class CommandService {
 
       setTimeout(() => {
         this.activeItems[index] = false;
-      }, 1000);
+      }, 775);
     }).catch(err => { throw err });
   }
 

@@ -46,14 +46,4 @@ export class CategoryComponent implements OnInit {
       });
     }
   }
-
-  animateButton(event: Event): void {
-    const target = event.target as HTMLElement;
-    target.classList.remove('animate');
-    target.classList.add('animate');
-
-    setTimeout(() => {
-      target.classList.remove('animate');
-    }, 700);
-  }
 }

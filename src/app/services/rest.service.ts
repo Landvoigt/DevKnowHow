@@ -10,7 +10,7 @@ import { CommandRequest } from '@models/requests.model';
 })
 export class RestService {
   apiBaseUrl: string = 'http://127.0.0.1:8000/';
-  // apiBaseUrl: string = 'https://videoflix.back-serv-api.com/api/';
+  // apiBaseUrl: string = 'http://212.227.161.51:8000/';
 
   constructor(private http: HttpClient) { }
 

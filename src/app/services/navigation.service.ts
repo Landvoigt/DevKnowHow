@@ -38,6 +38,10 @@ export class NavigationService {
     this.router.navigate(['/create']);
   }
 
+  home() {
+    this.router.navigate(['/category/7']);
+  }
+
   category(catId: number) {
     this.router.navigate(['/category/' + catId]);
   }
