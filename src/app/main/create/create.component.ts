@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormGroup } from '@angular/forms';
 import { AlertService } from '@services/alert.service';
 import { ErrorService } from '@services/error.service';
@@ -7,7 +7,6 @@ import { RestService } from '@services/rest.service';
 import { createForm, CreateFormModel } from '@interfaces/create.interface';
 import { fadeIn } from '@utils/animations';
 import { CommandRequest } from '@models/requests.model';
-import { data } from '@models/command.model';
 import { Category } from '@interfaces/category.interface';
 
 @Component({
@@ -19,6 +18,9 @@ import { Category } from '@interfaces/category.interface';
   animations: [fadeIn]
 })
 export class CreateComponent implements OnInit {
+  @ViewChild('commandInput', { static: true }) commandInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('descriptionInput', { static: true }) descriptionInput!: ElementRef<HTMLTextAreaElement>;
+
   public createForm: FormGroup<CreateFormModel> = createForm();
 
   categories: Category[] = [];
@@ -27,7 +29,8 @@ export class CreateComponent implements OnInit {
   closeMenu: boolean = false;
   newCatSelected: boolean = false;
 
-  data: any = data;
+  commandTyped: boolean = false;
+  descriptionTyped: boolean = false;
 
   constructor(
     private restService: RestService,
@@ -135,5 +138,27 @@ export class CreateComponent implements OnInit {
       creator_email: email || undefined,
       creator_message: message || '',
     };
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+
+    if (!this.commandInput.nativeElement.contains(target) && this.commandTyped) {
+      this.commandTyped = false;
+    }
+    if (!this.descriptionInput.nativeElement.contains(target) && this.descriptionTyped) {
+      this.descriptionTyped = false;
+    }
+  }
+
+  checkInput(nativeElement: HTMLInputElement | HTMLTextAreaElement) {
+    const value = nativeElement.value;
+
+    if (nativeElement === this.commandInput.nativeElement) {
+      this.commandTyped = value.length > 2;
+    } else if (nativeElement === this.descriptionInput.nativeElement) {
+      this.descriptionTyped = value.length > 2;
+    }
   }
 }

@@ -42,7 +42,7 @@
                 <div class="relative ml-3">
                     <div>
                         <button (click)="navService.create()" type="submit"
-                            class="submit-btn flex w-full justify-center rounded-lg bg-accentColor px-4 py-2 text-lg font-semibold 
+                            class="add-btn flex w-full justify-center rounded-lg bg-accentColor px-4 py-2 text-lg font-semibold 
                                 leading-6 text-white shadow-lg hover:bg-accentColorHover focus:outline-none focus-visible:ring-2 
                                 focus-visible:ring-offset-2 focus-visible:ring-accentColor disabled:opacity-60 disabled:hover:bg-accentColor">
                             <span>Add New</span>
@@ -69,9 +69,10 @@
     <div *ngIf="mobileMenuOpen" @slideUpDownSlow class="md:hidden" id="mobile-menu">
         <div class="space-y-1 px-2 pb-3 pt-2">
             <ng-container *ngFor="let cat of categories || []">
-                <a (click)="navService.category(cat.id)"
+                <a (click)="navService.category(cat.id); closeMobileMenu()"
                     class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-navColorHover hover:text-white cursor-pointer"
-                    [ngClass]="{'bg-navColorHover' : navService.activePage === cat.id, 'text-white' : navService.activePage === cat.id}">Bash</a>
+                    [ngClass]="{'bg-navColorHover' : navService.activePage === cat.id, 'text-white' : navService.activePage === cat.id}">
+                    {{ cat.title }}</a>
             </ng-container>
         </div>
     </div>
