@@ -1,22 +1,23 @@
 <div class="flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-textColorSecondary">
     <ng-container *ngFor="let item of data || []; let i = index">
-        <div class="w-100 flex items-center pl-14 pr-14 pt-0.5 pb-0.5 gap-14"
+        <div (click)="toggleHiddenText(i)" class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
             [ngClass]="{'bg-tableBgSecondary' : i % 2 !== 0}">
-            <div class="w-5/12 flex justify-start items-center gap-5">
-                <div (click)="commandService.copy(item, i)"
-                    class="h-6 w-6 flex justify-center items-center cursor-pointer rounded-full mr-2 fast-transition">
-                    <div [ngClass]="{'clicked': commandService.activeItems[i]}"
-                        class="flex justify-center items-center padding-extra rounded-full border-2 border-borderCopyIcon bg-bgCopyIcon 
-                            hover:bg-white fast-transition">
+            <div class="w-5/12 min-max-w-5-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
+                <div (click)="commandService.copy(item, i); $event.stopPropagation()"
+                    class="h-6 flex justify-start items-center lg:mr-6 md:mr-6 sm:mr-6 mr-3 cursor-pointer rounded-full fast-transition">
+                    <div [ngClass]="{'clicked': commandService.activeItems[i]}" class="flex justify-center items-center padding-extra 
+                            rounded-full border-2 border-borderCopyIcon bg-bgCopyIcon hover:bg-white fast-transition">
                     </div>
                 </div>
-                <span [innerHTML]="item.command | variable"></span>
+                <span [innerHTML]="item.command | variable" class="w-full max-w-full leading-6"
+                    [ngClass]="{'truncate': hidden[i] !== true}"></span>
             </div>
             <!-- <div class="w-4/12 flex justify-start items-center">
                 <span [innerHTML]="item.example | variable"></span>
             </div> -->
-            <div class="w-7/12 flex justify-start items-center">
-                <span [innerHTML]="'(' + (item.description | variable) + ')'"></span>
+            <div class="w-7/12 min-max-w-7-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
+                <span [innerHTML]="'(' + (item.description | variable) + ')'" class="w-full max-w-full leading-6"
+                    [ngClass]="{'truncate': hidden[i] !== true}"></span>
             </div>
         </div>
     </ng-container>

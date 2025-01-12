@@ -6,8 +6,8 @@ export interface CreateFormModel {
     email: FormControl<string | null>;
     body: FormGroup<{
         category: FormControl<string | null>;
-        subType: FormControl<string | null>;
-        newType: FormControl<string | null>;
+        subCategory: FormControl<string | null>;
+        newCategory: FormControl<string | null>;
         command: FormControl<string | null>;
         description: FormControl<string | null>;
         example: FormControl<string | null>;
@@ -22,8 +22,8 @@ export function createForm(): FormGroup<CreateFormModel> {
         email: new FormControl<string | null>(null, [Validators.required, Validators.pattern(EmailRegex),]),
         body: new FormGroup({
             category: new FormControl<string | null>(null, Validators.required),
-            subType: new FormControl<string | null>(null),
-            newType: new FormControl<string | null>(null),
+            subCategory: new FormControl<string | null>(null),
+            newCategory: new FormControl<string | null>(null),
             command: new FormControl<string | null>(null, Validators.required),
             description: new FormControl<string | null>(null, Validators.required),
             example: new FormControl<string | null>(null),

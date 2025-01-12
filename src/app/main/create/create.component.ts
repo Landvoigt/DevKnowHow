@@ -7,9 +7,8 @@ import { RestService } from '@services/rest.service';
 import { createForm, CreateFormModel } from '@interfaces/create.interface';
 import { fadeIn } from '@utils/animations';
 import { CommandRequest } from '@models/requests.model';
-import { data, Item } from '@models/command.model';
-import { concatMap, from } from 'rxjs';
-import { DIRECT_ACTIVATION_PASSWORD } from 'src/config/config';
+import { data } from '@models/command.model';
+import { Category } from '@interfaces/category.interface';
 
 @Component({
   selector: 'app-create',
@@ -22,18 +21,18 @@ import { DIRECT_ACTIVATION_PASSWORD } from 'src/config/config';
 export class CreateComponent implements OnInit {
   public createForm: FormGroup<CreateFormModel> = createForm();
 
+  categories: Category[] = [];
+
   loading: boolean = false;
   closeMenu: boolean = false;
   newCatSelected: boolean = false;
-
-  adminMode: boolean = false;
 
   data: any = data;
 
   constructor(
     private restService: RestService,
     private errorService: ErrorService,
-    private alertService: AlertService) { }
+    private alertService: AlertService, private rest: RestService, private error: ErrorService) { }
 
   get name() {
     return this.createForm.get('name');
@@ -51,8 +50,8 @@ export class CreateComponent implements OnInit {
     return this.body.get('category');
   }
 
-  get newType() {
-    return this.body.get('newType');
+  get newCategory() {
+    return this.body.get('newCategory');
   }
 
   get command() {
@@ -68,6 +67,21 @@ export class CreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadCategories();
+    this.setupCategoryListener();
+  }
+
+  loadCategories() {
+    this.rest.getCategories().subscribe({
+      next: (cats: Category[]) => {
+        this.categories = cats || [];
+      },
+      error: (error) => this.error.handleHttpError(error, {}),
+      complete: () => { }
+    });
+  }
+
+  setupCategoryListener() {
     this.category?.valueChanges.subscribe(() => {
       this.checkNewCategorySelection();
     });
@@ -88,11 +102,11 @@ export class CreateComponent implements OnInit {
       const { name, email, message } = this.createForm.value;
       const bodyValue = this.body.value;
 
-      if (this.category && this.newType?.value != null) {
-        bodyValue.category = this.newType.value;
+      if (this.category && this.newCategory?.value != null) {
+        bodyValue.category = this.newCategory.value;
       }
 
-      const commandPayload: CommandRequest = this.adminMode ? this.getAdminRequest(bodyValue) : this.getRequest(bodyValue, name, email, message);
+      const commandPayload: CommandRequest = this.getRequest(bodyValue, name, email, message);
 
       this.loading = true;
       this.restService.createCommand(commandPayload).subscribe({
@@ -109,61 +123,17 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  onBatchSubmit() {
-    if (!this.data || this.data.length === 0) {
-      this.alertService.showAlert('No items to submit.', 'warning');
-      return;
-    }
-
-    this.loading = true;
-
-    from(this.data)
-      .pipe(
-        concatMap((item: any) => {
-          item.param = DIRECT_ACTIVATION_PASSWORD;
-          const adminRequest: CommandRequest = this.getAdminRequest(item);
-          return this.restService.createCommand(adminRequest);
-        })
-      )
-      .subscribe({
-        next: (response) => {
-          console.log('Item submitted successfully', response);
-        },
-        error: (err) => {
-          this.errorService.handleContactError(err);
-        },
-        complete: () => {
-          this.alertService.showAlert('All items were submitted successfully!', 'success');
-          this.loading = false;
-        },
-      });
-  }
-
   getRequest(bodyValue: any, name: string | null | undefined, email: string | null | undefined, message: string | null | undefined) {
     return {
       command: bodyValue.command,
       category: bodyValue.category,
-      sub_category: bodyValue.subType || '',
+      sub_category: bodyValue.subCategory || '',
       description: bodyValue.description,
       example: bodyValue.example || '',
       param: bodyValue.param || '',
       creator_name: name || undefined,
       creator_email: email || undefined,
       creator_message: message || '',
-    };
-  }
-
-  getAdminRequest(bodyValue: any) {
-    return {
-      command: bodyValue.command,
-      category: bodyValue.category,
-      sub_category: bodyValue.subType || '',
-      description: bodyValue.description,
-      example: bodyValue.example || '',
-      param: bodyValue.param || '',
-      creator_name: "ADMIN",
-      creator_email: "timvoigt1996@gmail.com",
-      creator_message: "admin",
     };
   }
 }

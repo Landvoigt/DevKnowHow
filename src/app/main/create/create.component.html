@@ -8,12 +8,12 @@
     </div>
     <form [formGroup]="createForm" (ngSubmit)="onSubmit()" class="space-y-6 mx-auto max-w-6xl">
         <div class="mx-auto max-w-2xl text-center">
-            <h2 class="text-3xl font-bold tracking-tight text-textColorPrimary sm:text-4xl">Create a new item</h2>
+            <h2 class="text-3xl font-bold tracking-tight text-textColorPrimary sm:text-4xl">Suggest a new item</h2>
         </div>
         <!-- <button (click)="$event.preventDefault(); onBatchSubmit()" style="background-color: aliceblue;">Submit all data
             !!!</button> -->
         <div class="grid grid-cols-3 gap-x-8 gap-y-6 sm:grid-cols-2 mt-10">
-            <div *ngIf="!adminMode">
+            <div>
                 <label for="name"
                     class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Name
                     *</label>
@@ -27,7 +27,7 @@
                     </span>
                 </div>
             </div>
-            <div *ngIf="!adminMode" class="sm:col-span-2">
+            <div class="sm:col-span-2">
                 <label for="email"
                     class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Email
                     *</label>
@@ -90,38 +90,33 @@
                         class="block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 
                             placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover lg:text-lg lg:leading-6 bg-aliceblue">
                         <option value="" disabled>Select a category</option>
-                        <option value="bash">Bash</option>
-                        <option value="cmd">CMD</option>
-                        <option value="git">Git</option>
-                        <option value="sql">SQL</option>
-                        <option value="docker">Docker</option>
-                        <option value="ng_setup">NG Setup</option>
-                        <option value="ng_defaults">NG Defaults</option>
-                        <option value="general">General</option>
+                        <ng-container *ngFor="let c of categories">
+                            <option [value]="c.title">{{ c.title }}</option>
+                        </ng-container>
                         <option value="new">New Category</option>
                     </select>
                     <span *ngIf="category?.dirty || category?.touched"
                         class="input-error absolute form-control-sm text-danger">
-                        <span *ngIf="category?.hasError('required')">* category is required</span>
+                        <span *ngIf="category?.hasError('required')">* Category is required</span>
                     </span>
                 </div>
             </div>
-            <!-- <div *ngIf="!newType" formGroupName="body" class="sm:col-span-1">
-                <label for="subType"
+            <!-- <div *ngIf="!newCategory" formGroupName="body" class="sm:col-span-1">
+                <label for="subCategory"
                     class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Sub
                     Type</label>
                 <div class="mt-2 relative">
-                    <input id="subType" formControlName="subType" type="text"
+                    <input id="subCategory" formControlName="subCategory" type="text"
                         class="block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover lg:text-lg lg:leading-6 bg-aliceblue">
                 </div>
             </div> -->
             <div *ngIf="newCatSelected" formGroupName="body" class="sm:col-span-1">
-                <label for="newType"
+                <label for="newCategory"
                     class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">New
-                    Type</label>
+                    Category</label>
                 <div class="mt-2 relative">
-                    <input id="newType" formControlName="newType" type="text" required
+                    <input id="newCategory" formControlName="newCategory" type="text" required
                         class="block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover lg:text-lg lg:leading-6 bg-aliceblue">
                 </div>
@@ -144,7 +139,7 @@
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover lg:text-lg lg:leading-6 bg-aliceblue">
                 </div>
             </div>
-            <div *ngIf="!adminMode" class="sm:col-span-3">
+            <div class="sm:col-span-3">
                 <label for="message"
                     class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Additional
                     Message</label>

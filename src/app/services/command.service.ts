@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Item } from '@models/command.model';
+import { Command } from '@models/command.model';
 import { AlertService } from './alert.service';
 
 @Injectable({
@@ -10,7 +10,7 @@ export class CommandService {
 
   constructor(private alertService: AlertService) { }
 
-  copy(item: Item, index: number) {
+  copy(item: Command, index: number) {
     navigator.clipboard.writeText(item.command).then(() => {
 
       this.activeItems[index] = true;

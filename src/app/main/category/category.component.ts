@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Item } from '@models/command.model';
+import { Command } from '@models/command.model';
 import { CommandService } from '@services/command.service';
 import { VariablePipe } from '@pipes/variable.pipe';
 import { RestService } from '@services/rest.service';
@@ -16,7 +16,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CategoryComponent implements OnInit {
   categoryId: number | null = null;
-  data: Item[] = [];
+  data: Command[] = [];
+  hidden: { [key: number]: boolean } = {};
 
   constructor(private route: ActivatedRoute, public commandService: CommandService, private rest: RestService, private error: ErrorService) { }
 
@@ -25,7 +26,7 @@ export class CategoryComponent implements OnInit {
     this.loadData();
   }
 
-  getCategoryId() {
+  getCategoryId(): void {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -35,10 +36,10 @@ export class CategoryComponent implements OnInit {
     });
   }
 
-  loadData() {
+  loadData(): void {
     if (this.categoryId) {
       this.rest.getCommandsByCategory(this.categoryId).subscribe({
-        next: (commands: Item[]) => {
+        next: (commands: Command[]) => {
           this.data = commands;
         },
         error: (error) => this.error.handleHttpError(error, {}),
@@ -46,4 +47,9 @@ export class CategoryComponent implements OnInit {
       });
     }
   }
+
+  toggleHiddenText(index: number): void {
+    this.hidden[index] = !this.hidden[index];
+  }
+  
 }
