@@ -24,7 +24,7 @@ module.exports = {
         accentColorHover: 'rgb(71 174 225)',
 
         textColorPrimary: 'rgb(240, 248, 255)',
-        textColorSecondary: 'rgb(240, 248, 255)',
+        textColorSecondary: 'rgba(240, 248, 255, 0.75)',
         textColorHover: 'rgb(207 135 255)',
         textColorVariable: '#32ff7c',
 
@@ -33,7 +33,7 @@ module.exports = {
         borderColorVideoBox: 'rgba(241, 248, 253, 0.2)',
 
         bgCopyIcon: '#01071d',
-        borderCopyIcon: '#edededd6',
+        borderCopyIcon: 'rgba(237, 237, 237, 0.9)',
 
         tableBgSecondary: 'rgba(240, 248, 255, 0.05)',
 

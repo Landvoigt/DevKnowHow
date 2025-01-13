@@ -48,7 +48,7 @@ export class CategoryComponent implements OnInit {
     }
   }
 
-  toggleHiddenText(index: number): void {
+  toggleExtendedInfo(index: number): void {
     this.hidden[index] = !this.hidden[index];
   }
   

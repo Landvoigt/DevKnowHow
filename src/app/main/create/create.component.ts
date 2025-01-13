@@ -8,6 +8,8 @@ import { createForm, CreateFormModel } from '@interfaces/create.interface';
 import { fadeIn } from '@utils/animations';
 import { CommandRequest } from '@models/requests.model';
 import { Category } from '@interfaces/category.interface';
+// import { data } from '@models/command.model';
+// import { concatMap, from } from 'rxjs';
 
 @Component({
   selector: 'app-create',
@@ -139,11 +141,11 @@ export class CreateComponent implements OnInit {
       creator_message: message || '',
     };
   }
-
+  
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
-
+    
     if (!this.commandInput.nativeElement.contains(target) && this.commandTyped) {
       this.commandTyped = false;
     }
@@ -151,14 +153,59 @@ export class CreateComponent implements OnInit {
       this.descriptionTyped = false;
     }
   }
-
+  
   checkInput(nativeElement: HTMLInputElement | HTMLTextAreaElement) {
     const value = nativeElement.value;
-
+    
     if (nativeElement === this.commandInput.nativeElement) {
       this.commandTyped = value.length > 2;
     } else if (nativeElement === this.descriptionInput.nativeElement) {
       this.descriptionTyped = value.length > 2;
     }
   }
+ 
+  // data: any = data;
+  // onBatchSubmit() {
+  //   if (!this.data || this.data.length === 0) {
+  //     this.alertService.showAlert('No items to submit.', 'warning');
+  //     return;
+  //   }
+
+  //   this.loading = true;
+
+  //   from(this.data)
+  //     .pipe(
+  //       concatMap((item: any) => {
+  //         // item.param = DIRECT_ACTIVATION_PASSWORD;
+  //         const adminRequest: CommandRequest = this.getAdminRequest(item);
+  //         return this.restService.createCommand(adminRequest);
+  //       })
+  //     )
+  //     .subscribe({
+  //       next: (response) => {
+  //         console.log('Item submitted successfully', response);
+  //       },
+  //       error: (err) => {
+  //         this.errorService.handleContactError(err);
+  //       },
+  //       complete: () => {
+  //         this.alertService.showAlert('All items were submitted successfully!', 'success');
+  //         this.loading = false;
+  //       },
+  //     });
+  // }
+
+  // getAdminRequest(bodyValue: any) {
+  //   return {
+  //     command: bodyValue.command,
+  //     category: bodyValue.category,
+  //     sub_category: bodyValue.subType || '',
+  //     description: bodyValue.description,
+  //     example: bodyValue.example || '',
+  //     param: bodyValue.param || '',
+  //     creator_name: "ADMIN",
+  //     creator_email: "timvoigt1996@gmail.com",
+  //     creator_message: "",
+  //   };
+  // }
 }

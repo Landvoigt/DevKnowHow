@@ -7,7 +7,6 @@ import { RestService } from '@services/rest.service';
 import { ErrorService } from '@services/error.service';
 import { RouterOutlet } from '@angular/router';
 import { Category } from '@interfaces/category.interface';
-import { data } from '@models/command.model';
 
 @Component({
   selector: 'app-main',
