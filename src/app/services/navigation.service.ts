@@ -34,56 +34,20 @@ export class NavigationService {
     this.location.back();
   }
 
-  create() {
-    this.router.navigate(['/create']);
-  }
-
-  home() {
-    this.router.navigate(['/category/7']);
+  main() {
+    this.router.navigate(['main']);
   }
 
   category(catId: number) {
     this.router.navigate(['/category/' + catId]);
   }
 
-  welcome() {
-    this.router.navigate(['/welcome']);
-  }
-
-  login() {
-    this.router.navigate(['/login']);
-  }
-
-  register() {
-    this.router.navigate(['/register']);
-  }
-
-  registerSuccess() {
-    this.router.navigate(['/register_success']);
-  }
-
-  sendMail() {
-    this.router.navigate(['/send_mail']);
-  }
-
-  updateUsername() {
-    this.router.navigate(['/update_username']);
-  }
-
-  profiles() {
-    this.router.navigate(['/selection']);
-  }
-
-  main() {
-    this.router.navigate(['/mainpage']);
+  create() {
+    this.router.navigate(['/create']);
   }
 
   imprint() {
     this.router.navigate(['/imprint']);
-  }
-
-  contact() {
-    this.router.navigate(['/contact']);
   }
 
   policy() {

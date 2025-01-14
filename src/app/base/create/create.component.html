@@ -21,8 +21,7 @@
                     <input id="name" formControlName="name" type="text" spellcheck="false" required
                         class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
-                    <span *ngIf="(name?.dirty || name?.touched) && !name?.pristine"
-                        class="input-error absolute form-control-sm text-danger font-medium">
+                    <span *ngIf="hasInput(name)" class="input-error absolute form-control-sm text-danger font-medium">
                         <span *ngIf="name?.hasError('required')">* Name is required</span>
                         <span *ngIf="name?.hasError('pattern')">* Only letters allowed</span>
                     </span>
@@ -36,8 +35,7 @@
                     <input id="email" formControlName="email" type="email" spellcheck="false" required
                         class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
-                    <span *ngIf="(email?.dirty || email?.touched) && !email?.pristine"
-                        class="input-error absolute form-control-sm text-danger font-medium">
+                    <span *ngIf="hasInput(email)" class="input-error absolute form-control-sm text-danger font-medium">
                         <span *ngIf="email?.hasError('required')">* Email is required</span>
                         <span *ngIf="email?.hasError('pattern')">* Enter valid email (e.g.
                             example&#64;domain.com)</span>
@@ -53,7 +51,7 @@
                         (keydown)="checkInput(commandInput)"
                         class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
-                    <span *ngIf="(command?.dirty || command?.touched) && !command?.pristine"
+                    <span *ngIf="hasInput(command)"
                         class="input-error absolute form-control-sm text-danger font-medium">
                         <span *ngIf="command?.hasError('required')">* Command is required</span>
                     </span>
@@ -72,7 +70,7 @@
                         spellcheck="false" required (keydown)="checkInput(descriptionInput)"
                         class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue"></textarea>
-                    <span *ngIf="(description?.dirty || description?.touched) && !description?.pristine"
+                    <span *ngIf="hasInput(description)"
                         class="input-error absolute form-control-sm text-danger font-medium">
                         <span *ngIf="description?.hasError('required')">* Description is
                             required</span>
@@ -83,7 +81,7 @@
                     </span>
                 </div>
             </div>
-            <div formGroupName="body" [ngClass]="{'sm:col-span-1' : newCatSelected, 'sm:col-span-2' : !newCatSelected}">
+            <div formGroupName="body" [ngClass]="{'sm:col-span-1' : newCatSelected, 'sm:col-span-3' : !newCatSelected}">
                 <label for="category"
                     class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">
                     Category *
@@ -92,29 +90,18 @@
                     <select id="category" formControlName="category" required
                         class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 
                             placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
-                        <option value="" disabled>Select a category</option>
                         <ng-container *ngFor="let c of categories">
                             <option [value]="c.title">{{ c.title }}</option>
                         </ng-container>
-                        <option value="new">New Category</option>
+                        <option value="new">New category +</option>
                     </select>
-                    <span *ngIf="(category?.dirty || category?.touched) && !category?.pristine"
+                    <span *ngIf="hasInput(category)"
                         class="input-error absolute form-control-sm text-danger font-medium">
                         <span *ngIf="category?.hasError('required')">* Category is required</span>
                     </span>
                 </div>
             </div>
-            <!-- <div *ngIf="!newCategory" formGroupName="body" class="sm:col-span-1">
-                <label for="subCategory"
-                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Sub
-                    Type</label>
-                <div class="mt-2 relative">
-                    <input id="subCategory" formControlName="subCategory" type="text"
-                        class="block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
-                </div>
-            </div> -->
-            <div *ngIf="newCatSelected" formGroupName="body" class="sm:col-span-1">
+            <div *ngIf="newCatSelected" formGroupName="body" class="sm:col-span-2">
                 <label for="newCategory"
                     class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">New
                     Category</label>
@@ -124,11 +111,32 @@
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
                 </div>
             </div>
-            <div formGroupName="body" class="sm:col-span-1">
-                <label for="param"
-                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Parameter</label>
+            <div *ngIf="hasInput(category)" formGroupName="body"
+                [ngClass]="{'sm:col-span-1' : newSubCatSelected, 'sm:col-span-3' : !newSubCatSelected}">
+                <label for="subCategory"
+                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Sub
+                    Category</label>
                 <div class="mt-2 relative">
-                    <input id="param" formControlName="param" type="text" spellcheck="false"
+                    <select id="subCategory" formControlName="subCategory" required
+                        class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 
+                            placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                        <ng-container *ngFor="let sc of getSubCategories()">
+                            <option [value]="sc.title">{{ sc.title }}</option>
+                        </ng-container>
+                        <option value="new">New sub category +</option>
+                    </select>
+                    <span *ngIf="hasInput(category)"
+                        class="input-error absolute form-control-sm text-danger font-medium">
+                        <span *ngIf="category?.hasError('required')">* Category is required</span>
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="newSubCatSelected" formGroupName="body" class="sm:col-span-2">
+                <label for="newSubCategory"
+                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">
+                    New Sub Category</label>
+                <div class="mt-2 relative">
+                    <input id="newSubCategory" formControlName="newSubCategory" type="text" spellcheck="false" required
                         class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
                 </div>
@@ -138,6 +146,15 @@
                     class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Example</label>
                 <div class="mt-2 relative">
                     <input id="example" formControlName="example" type="text" spellcheck="false"
+                        class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                </div>
+            </div>
+            <div formGroupName="body" class="sm:col-span-3">
+                <label for="tooltip"
+                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Tooltip</label>
+                <div class="mt-2 relative">
+                    <input id="tooltip" formControlName="tooltip" type="text" spellcheck="false"
                         class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
                 </div>

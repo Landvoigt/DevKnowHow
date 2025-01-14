@@ -53,7 +53,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.closeUserMenu();
     this.closeMobileMenu();
     this.router.navigate([`category/${cat.id}/`])
-    // this.navService.main();
+    // this.navService.base();
     // this.currentPage = page;
     // this.pageChanged.emit(page);
     // localStorage.setItem('currentPage', page);
