@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Category } from '@interfaces/category.interface';
+import { DataService } from '@services/data.service';
 import { NavigationService } from '@services/navigation.service';
 import { fadeIn, slideUpDownSlow } from '@utils/animations';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'navbar',
@@ -14,15 +16,18 @@ import { fadeIn, slideUpDownSlow } from '@utils/animations';
   animations: [fadeIn, slideUpDownSlow]
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  @Input() categories: Category[] = [];
   @Input() closeMenu: boolean = false;
-  
+
+  categories$: Observable<Category[]> = this.dataService.categories$;
+
   userMenuOpen: boolean = false;
   mobileMenuOpen: boolean = false;
 
-  constructor(public navService: NavigationService, private router: Router) { }
+  constructor(public navService: NavigationService, private router: Router, private dataService: DataService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.dataService.loadCategories();
+  }
 
   ngOnChanges() {
     if (this.closeMenu) {

@@ -32,6 +32,10 @@ export class RestService {
     return this.http.post<any>(`${this.apiBaseUrl}command/`, request);
   }
 
+  incrementCopyCount(commandId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiBaseUrl}command/${commandId}/increment_copy/`, {});
+  }
+
   getHeaders(): HttpHeaders {
     // const authToken = this.authService.getAuthenticationToken();
     let headers: { [key: string]: string } = {

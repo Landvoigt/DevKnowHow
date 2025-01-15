@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AlertService } from './alert.service';
+import { RestService } from './rest.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,13 +8,14 @@ import { AlertService } from './alert.service';
 export class CommandService {
   activeItems: { [key: number]: boolean } = {};
 
-  constructor(private alertService: AlertService) { }
+  constructor(private restService: RestService, private alertService: AlertService) { }
 
-  copy(text: string, index: number) {
+  copy(text: string, commandId: number, index: number) {
     navigator.clipboard.writeText(text).then(() => {
-
       this.activeItems[index] = true;
       this.showCopiedBanner();
+
+      this.incrementCopyCount(commandId);
 
       setTimeout(() => {
         this.activeItems[index] = false;
@@ -23,6 +25,10 @@ export class CommandService {
 
   showCopiedBanner() {
     this.alertService.showAlert('Copied!', 'info');
+  }
+
+  incrementCopyCount(commandId: number) {
+    this.restService.incrementCopyCount(commandId).subscribe();
   }
 
 }

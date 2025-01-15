@@ -6,6 +6,9 @@ import { VariablePipe } from '@pipes/variable.pipe';
 import { RestService } from '@services/rest.service';
 import { ErrorService } from '@services/error.service';
 import { ActivatedRoute } from '@angular/router';
+import { DataService } from '@services/data.service';
+import { Category } from '@interfaces/category.interface';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-category',
@@ -15,11 +18,20 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './category.component.scss'
 })
 export class CategoryComponent implements OnInit {
+  categories$: Observable<Category[]> = this.dataService.categories$;
   categoryId: number | null = null;
+  category: Category | undefined;
+  activeSubCat: Category | null = null;
+
   data: Command[] = [];
   hidden: { [key: number]: boolean } = {};
 
-  constructor(private route: ActivatedRoute, public commandService: CommandService, private rest: RestService, private error: ErrorService) { }
+  constructor(
+    private route: ActivatedRoute,
+    public commandService: CommandService,
+    private rest: RestService,
+    private error: ErrorService,
+    private dataService: DataService) { }
 
   ngOnInit(): void {
     this.getCategoryId();
@@ -31,9 +43,20 @@ export class CategoryComponent implements OnInit {
       const id = params.get('id');
       if (id) {
         this.categoryId = +id;
+        this.loadCategory();
         this.loadData();
       }
     });
+  }
+
+  loadCategory(): void {
+    if (this.categoryId) {
+      this.categories$.pipe(
+        map(categories => categories.find(cat => cat.id === this.categoryId))
+      ).subscribe(category => {
+        this.category = category;
+      });
+    }
   }
 
   loadData(): void {
@@ -48,8 +71,16 @@ export class CategoryComponent implements OnInit {
     }
   }
 
+  setActiveSubCategory(subCategory: Category): void {
+    if (this.activeSubCat === subCategory) {
+      this.activeSubCat = null;
+    } else {
+      this.activeSubCat = subCategory;
+    }
+  }
+
   toggleExtendedInfo(index: number): void {
     this.hidden[index] = !this.hidden[index];
   }
-  
+
 }

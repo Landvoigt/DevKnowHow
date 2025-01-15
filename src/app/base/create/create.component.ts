@@ -8,6 +8,8 @@ import { createForm, CreateFormModel } from '@interfaces/create.interface';
 import { fadeIn } from '@utils/animations';
 import { CommandRequest } from '@models/requests.model';
 import { Category } from '@interfaces/category.interface';
+import { DataService } from '@services/data.service';
+import { map, Observable } from 'rxjs';
 // import { data } from '@models/command.model';
 // import { concatMap, from } from 'rxjs';
 
@@ -25,7 +27,7 @@ export class CreateComponent implements OnInit {
 
   public createForm: FormGroup<CreateFormModel> = createForm();
 
-  categories: Category[] = [];
+  categories$: Observable<Category[]> = this.dataService.categories$;
 
   loading: boolean = false;
   closeMenu: boolean = false;
@@ -40,23 +42,12 @@ export class CreateComponent implements OnInit {
     private restService: RestService,
     private errorService: ErrorService,
     private alertService: AlertService,
-    private rest: RestService,
-    private error: ErrorService) { }
+    private dataService: DataService) { }
 
   ngOnInit(): void {
-    this.loadCategories();
+    this.dataService.loadCategories();
     this.setupCategoryListener();
     this.setupSubCategoryListener();
-  }
-
-  loadCategories() {
-    this.rest.getCategories().subscribe({
-      next: (cats: Category[]) => {
-        this.categories = cats || [];
-      },
-      error: (error) => this.error.handleHttpError(error, {}),
-      complete: () => { }
-    });
   }
 
   setupCategoryListener() {
@@ -88,28 +79,54 @@ export class CreateComponent implements OnInit {
 
   onSubmit() {
     if (this.createForm.valid) {
+      this.loading = true;
+
       const { name, email, message } = this.createForm.value;
       const bodyValue = this.body.value;
 
-      if (this.category && this.newCategory?.value != null) {
-        bodyValue.category = this.newCategory.value;
-      }
+      this.setCategory(bodyValue);
+      this.setSubCategory(bodyValue);
 
       const commandPayload: CommandRequest = this.getRequest(bodyValue, name, email, message);
 
-      this.loading = true;
       this.restService.createCommand(commandPayload).subscribe({
-        next: (response) => {
-          this.alertService.showAlert('Thank you for your submission!', 'success');
-          this.createForm.reset();
-          this.loading = false;
-        },
-        error: (err) => {
-          this.errorService.handleContactError(err);
-          this.loading = false;
-        },
+        next: (response) => this.onCreationSubmitted(response),
+        error: (err) => this.onCreationError(err),
       });
     }
+  }
+
+  getBodyValues() {
+    const { name, email, message } = this.createForm.value;
+    const bodyValue = this.body.value;
+
+    this.setCategory(bodyValue);
+    this.setSubCategory(bodyValue);
+
+    return bodyValue;
+  }
+
+  setCategory(bodyValue: any) {
+    if (this.category && this.newCategory?.value != null) {
+      bodyValue.category = this.newCategory.value;
+    }
+  }
+
+  setSubCategory(bodyValue: any) {
+    if (this.subCategory && this.newSubCategory?.value != null) {
+      bodyValue.subCategory = this.newSubCategory.value;
+    }
+  }
+
+  onCreationSubmitted(response: any) {
+    this.alertService.showAlert('Thank you for your submission!', 'success');
+    this.createForm.reset();
+    this.loading = false;
+  }
+
+  onCreationError(err: any) {
+    this.errorService.handleContactError(err);
+    this.loading = false;
   }
 
   @HostListener('document:click', ['$event'])
@@ -149,8 +166,13 @@ export class CreateComponent implements OnInit {
     };
   }
 
-  getSubCategories() {
-    return this.categories.find((cat: Category) => cat.title === this.category?.value)?.sub_categories || [];
+  getSubCategories(): Observable<Category[]> {
+    return this.categories$.pipe(
+      map(categories => {
+        const category = categories.find(cat => cat.title === this.category?.value);
+        return category ? category.sub_categories : [];
+      })
+    );
   }
 
   // Form Getter
