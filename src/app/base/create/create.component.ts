@@ -10,6 +10,7 @@ import { CommandRequest } from '@models/requests.model';
 import { Category } from '@interfaces/category.interface';
 import { DataService } from '@services/data.service';
 import { map, Observable } from 'rxjs';
+import { NavigationService } from '@services/navigation.service';
 // import { data } from '@models/command.model';
 // import { concatMap, from } from 'rxjs';
 
@@ -42,7 +43,8 @@ export class CreateComponent implements OnInit {
     private restService: RestService,
     private errorService: ErrorService,
     private alertService: AlertService,
-    private dataService: DataService) { }
+    private dataService: DataService,
+    public navService: NavigationService) { }
 
   ngOnInit(): void {
     this.dataService.loadCategories();

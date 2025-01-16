@@ -1,20 +1,20 @@
 <ng-container *ngIf="category">
     <div class="flex justify-start gap-6 ml-8 mb-4 pl-0.5" style="margin-top: -0.75rem;">
-        <ng-container *ngFor="let subCat of category?.sub_categories">
+        <div *ngFor="let subCat of category?.sub_categories" @subCategoryAnimation>
             <button (click)="setActiveSubCategory(subCat)" type="submit"
                 class="add-btn min-w-24 flex justify-center rounded-lg bg-accentColor border-2 border-accentColor px-4 py-1 text-md font-semibold 
                     leading-5 text-white shadow-lg hover:bg-accentColorHover hover:border-accentColorHover focus:outline-none focus-visible:ring-2 
                     focus-visible:ring-offset-2 focus-visible:ring-accentColor disabled:opacity-60 disabled:hover:bg-accentColor"
-                    [ngClass]="{'bg-accentColorHover border-textColorPrimary hover:border-textColorPrimary': activeSubCat?.id === subCat.id}">
+                [ngClass]="{'bg-accentColorHover border-textColorPrimary hover:border-textColorPrimary': activeSubCat?.id === subCat.id}">
                 <span>{{ subCat.title }}</span>
             </button>
-        </ng-container>
+        </div>
     </div>
 </ng-container>
-<div class="flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-textColorSecondary">
+<div @fadeIn class="flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-textColorSecondary">
     <ng-container *ngFor="let item of data || []; let i = index">
         <ng-container *ngIf="!activeSubCat || activeSubCat?.title === item.subCategory">
-            <div (click)="toggleExtendedInfo(i)" class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
+            <div @fadeIn (click)="toggleExtendedInfo(i)" class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
                 [ngClass]="{'bg-tableBgSecondary' : i % 2 !== 0}">
                 <div class="w-5/12 min-max-w-5-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
                     <div (click)="commandService.copy(item.command, item.id, i); $event.stopPropagation()"

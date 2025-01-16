@@ -3,7 +3,7 @@ import { trigger, state, style, transition, animate, query, stagger } from '@ang
 export const fadeIn = trigger('fadeIn', [
     state('void', style({ opacity: 0 })),
     transition(':enter', [
-        animate('125ms ease-in-out', style({ opacity: 1 }))
+        animate('355ms ease-in-out', style({ opacity: 1 }))
     ]),
 ]);
 
@@ -85,3 +85,13 @@ export const slideUpDownSlow = trigger('slideUpDownSlow', [
         animate('225ms ease-in-out', style({ height: '0px', opacity: 0, transform: 'translateY(-100%)' }))
     ])
 ]);
+
+export const subCategoryAnimation = trigger('subCategoryAnimation', [
+    transition(':enter', [
+      style({ opacity: 0, transform: 'translateY(-30px)' }),
+      animate('175ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+    ]),
+    transition(':leave', [
+      animate('175ms ease-in', style({ opacity: 0, transform: 'translateY(-30px)' }))
+    ])
+  ]);

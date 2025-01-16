@@ -13,6 +13,11 @@ module.exports = {
 
         'nav-to': '#08490d',
         'nav-from': '#077c91',
+
+        'command-layout-to': '#09330c',
+
+        'routine-layout-to': '#120021',
+        'routine-layout-from': '#89240d',
       },
       colors: {
         aliceblue: '#f0f8ff',
@@ -45,6 +50,8 @@ module.exports = {
         greyTransparentHover: '#dbdbdbe0',
 
         videoflixRed: '#d90505',
+
+        gradientHover: 'rgba(243, 150, 129, 0.2)',
       },
     },
   },

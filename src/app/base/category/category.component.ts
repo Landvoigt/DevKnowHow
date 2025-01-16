@@ -9,13 +9,15 @@ import { ActivatedRoute } from '@angular/router';
 import { DataService } from '@services/data.service';
 import { Category } from '@interfaces/category.interface';
 import { map, Observable } from 'rxjs';
+import { fadeIn, staggeredFadeIn, subCategoryAnimation } from '@utils/animations';
 
 @Component({
   selector: 'app-category',
   standalone: true,
   imports: [CommonModule, VariablePipe],
   templateUrl: './category.component.html',
-  styleUrl: './category.component.scss'
+  styleUrl: './category.component.scss',
+  animations: [fadeIn, staggeredFadeIn, subCategoryAnimation]
 })
 export class CategoryComponent implements OnInit {
   categories$: Observable<Category[]> = this.dataService.categories$;
@@ -64,6 +66,7 @@ export class CategoryComponent implements OnInit {
       this.rest.getCommandsByCategory(this.categoryId).subscribe({
         next: (commands: Command[]) => {
           this.data = commands;
+          console.log(commands)
         },
         error: (error) => this.error.handleHttpError(error, {}),
         complete: () => { }

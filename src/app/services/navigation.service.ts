@@ -8,6 +8,7 @@ import { filter } from 'rxjs';
 })
 export class NavigationService {
   activePage: number | null = null;
+  activeLayout: 'command' | 'routine' | 'smt' = 'command';
 
   constructor(private router: Router, private location: Location) {
     this.router.events.pipe(
