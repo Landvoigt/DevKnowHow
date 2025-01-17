@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { fadeInSuperSlow } from '@utils/animations';
+import { NavigationService } from '@services/navigation.service';
 
 @Component({
   selector: 'app-base',
@@ -15,6 +16,8 @@ import { fadeInSuperSlow } from '@utils/animations';
 })
 export class BaseComponent {
   closeMenu: boolean = false;
+
+  constructor(public navService: NavigationService) { }
 
   closeUserMenu() {
     this.closeMenu = true;

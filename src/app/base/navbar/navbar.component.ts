@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Category } from '@interfaces/category.interface';
+import { FilterPipe } from '@pipes/filter.pipe';
 import { DataService } from '@services/data.service';
 import { NavigationService } from '@services/navigation.service';
 import { fadeIn, slideUpDownSlow } from '@utils/animations';
@@ -10,7 +11,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FilterPipe],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
   animations: [fadeIn, slideUpDownSlow]

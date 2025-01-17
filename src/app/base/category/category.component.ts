@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Command } from '@models/command.model';
+import { Command } from '@interfaces/command.interface';
 import { CommandService } from '@services/command.service';
 import { VariablePipe } from '@pipes/variable.pipe';
 import { RestService } from '@services/rest.service';
@@ -25,7 +25,7 @@ export class CategoryComponent implements OnInit {
   category: Category | undefined;
   activeSubCat: Category | null = null;
 
-  data: Command[] = [];
+  commands: Command[] = [];
   hidden: { [key: number]: boolean } = {};
 
   constructor(
@@ -65,7 +65,7 @@ export class CategoryComponent implements OnInit {
     if (this.categoryId) {
       this.rest.getCommandsByCategory(this.categoryId).subscribe({
         next: (commands: Command[]) => {
-          this.data = commands;
+          this.commands = commands;
           console.log(commands)
         },
         error: (error) => this.error.handleHttpError(error, {}),

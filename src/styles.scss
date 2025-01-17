@@ -12,9 +12,14 @@ body {
 }
 
 .default-transition {
-    transition: all 205ms ease-in-out;
+    transition: all 1205ms ease-in-out;
 }
 
 .fast-transition {
     transition: all 145ms ease-in-out;
+}
+
+.slow-transition {
+    transition: --tw-gradient-from 0.5s ease-in-out,
+        --tw-gradient-to 0.5s ease-in-out;
 }

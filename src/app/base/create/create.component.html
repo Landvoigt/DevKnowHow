@@ -1,4 +1,4 @@
-<div @fadeIn (click)="closeUserMenu()" class="bg-gradient-to-r from-default-from to-default-to px-6 pb-4 lg:px-8"
+<div @fadeIn (click)="closeUserMenu()" class="z-20 relative bg-gradient-to-r from-default-from to-default-to px-6 pb-4 lg:px-8"
     style="height: calc(100% - 66px);">
     <form *ngIf="navService.activeLayout === 'command'" [formGroup]="createForm" (ngSubmit)="onSubmit()"
         class="space-y-6 mx-auto max-w-6xl">

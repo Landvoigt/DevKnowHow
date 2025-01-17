@@ -2,16 +2,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category } from '@interfaces/category.interface';
-import { Command } from '@models/command.model';
+import { Command } from '@interfaces/command.interface';
 import { CommandRequest } from '@models/requests.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RestService {
-  apiBaseUrl: string = 'http://127.0.0.1:8000/';
-  // apiBaseUrl: string = 'https://server-timvoigt.ch/';
-  // apiBaseUrl: string = 'https://knowledgebase.server-timvoigt.ch/';
+  // apiBaseUrl: string = 'http://127.0.0.1:8000/';
+  apiBaseUrl: string = 'https://server-timvoigt.ch/';
 
   constructor(private http: HttpClient) { }
 
@@ -28,7 +27,6 @@ export class RestService {
   }
 
   createCommand(request: CommandRequest): Observable<any> {
-    // const payload = { name, email, body, message };
     return this.http.post<any>(`${this.apiBaseUrl}command/`, request);
   }
 

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { NavigationService } from '@services/navigation.service';
 import { fadeIn } from '@utils/animations';
 
 @Component({
@@ -11,5 +12,7 @@ import { fadeIn } from '@utils/animations';
   animations: [fadeIn]
 })
 export class ImprintComponent {
+
+  constructor(public navService: NavigationService) { }
 
 }

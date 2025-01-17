@@ -1,5 +1,5 @@
 <ng-container *ngIf="category">
-    <div class="flex justify-start gap-6 ml-8 mb-4 pl-0.5" style="margin-top: -0.75rem;">
+    <div class="z-20 relative flex justify-start gap-6 ml-8 mb-4 pl-0.5" style="margin-top: -0.75rem;">
         <div *ngFor="let subCat of category?.sub_categories" @subCategoryAnimation>
             <button (click)="setActiveSubCategory(subCat)" type="submit"
                 class="add-btn min-w-24 flex justify-center rounded-lg bg-accentColor border-2 border-accentColor px-4 py-1 text-md font-semibold 
@@ -11,16 +11,16 @@
         </div>
     </div>
 </ng-container>
-<div @fadeIn class="flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-textColorSecondary">
-    <ng-container *ngFor="let item of data || []; let i = index">
-        <ng-container *ngIf="!activeSubCat || activeSubCat?.title === item.subCategory">
+<div @fadeIn class="z-20 relative flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-textColorSecondary">
+    <ng-container *ngFor="let item of commands || []; let i = index">
+        <ng-container *ngIf="!activeSubCat || activeSubCat?.title === item.sub_category">
             <div @fadeIn (click)="toggleExtendedInfo(i)" class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
                 [ngClass]="{'bg-tableBgSecondary' : i % 2 !== 0}">
                 <div class="w-5/12 min-max-w-5-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
                     <div (click)="commandService.copy(item.command, item.id, i); $event.stopPropagation()"
                         class="h-6 flex justify-start items-center lg:mr-6 md:mr-6 sm:mr-6 mr-3 cursor-pointer rounded-full fast-transition">
                         <div [ngClass]="{'clicked': commandService.activeItems[i]}" class="flex justify-center items-center padding-extra 
-                rounded-full border-2 border-borderCopyIcon bg-bgCopyIcon hover:bg-white fast-transition">
+                            rounded-full border-2 border-borderCopyIcon bg-bgCopyIcon hover:bg-white fast-transition">
                         </div>
                     </div>
                     <span [innerHTML]="item.command | variable"
