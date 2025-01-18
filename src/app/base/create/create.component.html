@@ -1,6 +1,7 @@
-<div @fadeIn (click)="closeUserMenu()" class="z-20 relative bg-gradient-to-r from-default-from to-default-to px-6 pb-4 lg:px-8"
+<div @fadeIn (click)="closeUserMenu()" class="z-20 relative bg-gradient-to-r px-6 pb-4 lg:px-8" [ngClass]="{'from-default-from to-default-to' : navService.activeLayout === 'command', 
+    'from-routine-layout-from to-routine-layout-to' : navService.activeLayout === 'routine'}"
     style="height: calc(100% - 66px);">
-    <form *ngIf="navService.activeLayout === 'command'" [formGroup]="createForm" (ngSubmit)="onSubmit()"
+    <form *ngIf="navService.activeLayout === 'command'" [formGroup]="createForm" (ngSubmit)="onSubmitCommand()"
         class="space-y-6 mx-auto max-w-6xl">
         <div class="mx-auto max-w-2xl text-center">
             <h2 class="text-3xl font-bold tracking-tight text-textColorPrimary sm:text-4xl">Suggest a new item</h2>
@@ -178,55 +179,26 @@
             </button>
         </div>
     </form>
-    <form *ngIf="navService.activeLayout === 'routine'" [formGroup]="createForm" (ngSubmit)="onSubmit()"
+    <form *ngIf="navService.activeLayout === 'routine'" [formGroup]="createForm" (ngSubmit)="onSubmitRoutine()"
         class="space-y-6 mx-auto max-w-6xl">
         <div class="mx-auto max-w-2xl text-center">
             <h2 class="text-3xl font-bold tracking-tight text-textColorPrimary sm:text-4xl">Suggest a new item</h2>
         </div>
         <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 mt-10">
-            <div>
-                <label for="name"
-                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Name
-                    *</label>
-                <div class="mt-2 relative">
-                    <input id="name" formControlName="name" type="text" spellcheck="false" required
-                        class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
-                    <span *ngIf="hasInput(name)" class="input-error absolute form-control-sm text-danger font-medium">
-                        <span *ngIf="name?.hasError('required')">* Name is required</span>
-                        <span *ngIf="name?.hasError('pattern')">* Only letters allowed</span>
-                    </span>
-                </div>
-            </div>
-            <div class="sm:col-span-2">
-                <label for="email"
-                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Email
-                    *</label>
-                <div class="mt-2 relative">
-                    <input id="email" formControlName="email" type="email" spellcheck="false" required
-                        class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
-                    <span *ngIf="hasInput(email)" class="input-error absolute form-control-sm text-danger font-medium">
-                        <span *ngIf="email?.hasError('required')">* Email is required</span>
-                        <span *ngIf="email?.hasError('pattern')">* Enter valid email (e.g.
-                            example&#64;domain.com)</span>
-                    </span>
-                </div>
-            </div>
             <div formGroupName="body" class="sm:col-span-3">
-                <label for="command"
+                <label for="routine"
                     class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Routine
                     *</label>
                 <div class="mt-2 relative">
-                    <textarea #descriptionInput id="description" formControlName="description" rows="20"
-                        spellcheck="false" required (keydown)="checkInput(descriptionInput)"
+                    <textarea #routineInput id="routine" formControlName="routine" rows="20" spellcheck="false" required
+                        (keydown)="checkInput(routineInput)"
                         class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue"></textarea>
-                    <span *ngIf="hasInput(command)"
+                    <span *ngIf="hasInput(routine)"
                         class="input-error absolute form-control-sm text-danger font-medium">
-                        <span *ngIf="command?.hasError('required')">* Command is required</span>
+                        <span *ngIf="routine?.hasError('required')">* Routine is required</span>
                     </span>
-                    <span *ngIf="commandTyped"
+                    <span *ngIf="routineTyped"
                         class="input-error absolute form-control-sm text-success text-textColorVariable font-normal">
                         <span>* Use *VARIABLE* to mark a variable</span>
                     </span>
@@ -242,7 +214,7 @@
                         class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 
                             placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
                         <ng-container *ngIf="categories$ | async as categories">
-                            <ng-container *ngFor="let cat of categories">
+                            <ng-container *ngFor="let cat of categories | filter: navService.activeLayout">
                                 <option [value]="cat.title">{{ cat.title }}</option>
                             </ng-container>
                         </ng-container>
@@ -313,17 +285,47 @@
                         class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
                 </div>
+            </div> -->
+            <div class="w-full sm:col-span-3 border-b-2 border-borderColorLight"></div>
+            <div>
+                <label for="name"
+                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Name
+                    *</label>
+                <div class="mt-2 relative">
+                    <input id="name" formControlName="name" type="text" spellcheck="false" required
+                        class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                    <span *ngIf="hasInput(name)" class="input-error absolute form-control-sm text-danger font-medium">
+                        <span *ngIf="name?.hasError('required')">* Name is required</span>
+                        <span *ngIf="name?.hasError('pattern')">* Only letters allowed</span>
+                    </span>
+                </div>
+            </div>
+            <div class="sm:col-span-2">
+                <label for="email"
+                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Email
+                    *</label>
+                <div class="mt-2 relative">
+                    <input id="email" formControlName="email" type="email" spellcheck="false" required
+                        class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                    <span *ngIf="hasInput(email)" class="input-error absolute form-control-sm text-danger font-medium">
+                        <span *ngIf="email?.hasError('required')">* Email is required</span>
+                        <span *ngIf="email?.hasError('pattern')">* Enter valid email (e.g.
+                            example&#64;domain.com)</span>
+                    </span>
+                </div>
             </div>
             <div class="sm:col-span-3">
                 <label for="message"
                     class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Additional
                     Message</label>
                 <div class="mt-2 relative">
-                    <textarea formControlName="message" id="message" rows="4" spellcheck="false"
+                    <textarea formControlName="message" id="message" rows="3" spellcheck="false"
                         class="block w-full rounded-lg py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 
                             focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue"></textarea>
                 </div>
-            </div> -->
+            </div>
         </div>
         <div class="mt-20">
             <button *ngIf="createForm" type="submit" [disabled]="createForm.invalid || loading"

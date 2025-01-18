@@ -1,8 +1,7 @@
-export interface Command {
+export interface Routine {
     id: number;
     active: boolean;
-    command: string;
-    description: string;
+    routine: string;
     category: string;
     sub_category: string;
     example: string;

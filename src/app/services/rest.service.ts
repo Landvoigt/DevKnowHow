@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category } from '@interfaces/category.interface';
 import { Command } from '@interfaces/command.interface';
-import { CommandRequest } from '@models/requests.model';
+import { CommandRequest, RoutineRequest } from '@models/requests.model';
+import { NavigationService } from './navigation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class RestService {
   // apiBaseUrl: string = 'http://127.0.0.1:8000/';
   apiBaseUrl: string = 'https://server-timvoigt.ch/';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private navService: NavigationService) { }
 
   getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(`${this.apiBaseUrl}category/`);
@@ -30,8 +31,16 @@ export class RestService {
     return this.http.post<any>(`${this.apiBaseUrl}command/`, request);
   }
 
-  incrementCopyCount(commandId: number): Observable<any> {
-    return this.http.post<any>(`${this.apiBaseUrl}command/${commandId}/increment_copy/`, {});
+  createRoutine(request: RoutineRequest): Observable<any> {
+    return this.http.post<any>(`${this.apiBaseUrl}routine/`, request);
+  }
+
+  incrementCopyCount(id: number): Observable<any> {
+    if (this.navService.activeLayout === 'command') {
+      return this.http.post<any>(`${this.apiBaseUrl}command/${id}/increment_copy/`, {});
+    } else {
+      return this.http.post<any>(`${this.apiBaseUrl}routine/${id}/increment_copy/`, {});
+    }
   }
 
   getHeaders(): HttpHeaders {

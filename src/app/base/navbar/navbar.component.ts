@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Category } from '@interfaces/category.interface';
 import { FilterPipe } from '@pipes/filter.pipe';
@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
   styleUrl: './navbar.component.scss',
   animations: [fadeIn, slideUpDownSlow]
 })
-export class NavbarComponent implements OnInit, OnDestroy {
+export class NavbarComponent implements OnInit {
   @Input() closeMenu: boolean = false;
 
   categories$: Observable<Category[]> = this.dataService.categories$;
@@ -32,19 +32,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnChanges() {
     if (this.closeMenu) {
-      this.closeUserMenu();
       this.closeMobileMenu();
     }
   }
 
-  toggleUserMenu() {
-    this.userMenuOpen = !this.userMenuOpen;
-  }
-
-  closeUserMenu() {
-    if (this.userMenuOpen) {
-      this.userMenuOpen = false;
-    }
+  changePage(cat: Category) {
+    this.closeMobileMenu();
+    this.router.navigate([`category/${cat.id}/`]);
   }
 
   toggleMobileMenu() {
@@ -54,24 +48,4 @@ export class NavbarComponent implements OnInit, OnDestroy {
   closeMobileMenu() {
     this.mobileMenuOpen = false;
   }
-
-  changePage(cat: Category) {
-    this.closeUserMenu();
-    this.closeMobileMenu();
-    this.router.navigate([`category/${cat.id}/`])
-    // this.navService.base();
-    // this.currentPage = page;
-    // this.pageChanged.emit(page);
-    // localStorage.setItem('currentPage', page);
-  }
-
-  // activePage(cat: Category) {
-  //   return this.currentPage === cat.id;
-  // }
-
-  goToProfiles() {
-    // this.navService.profiles();
-  }
-
-  ngOnDestroy(): void { }
 }

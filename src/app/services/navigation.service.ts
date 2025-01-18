@@ -11,15 +11,32 @@ export class NavigationService {
   activeLayout: 'command' | 'routine' | 'smt' = 'command';
 
   constructor(private router: Router, private location: Location) {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationStart || event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      if (event instanceof NavigationStart) {
-        this.setActivePageFromUrl(event.url);
-      } else if (event instanceof NavigationEnd) {
-        this.setActivePageFromUrl(event.url);
-      }
-    });
+    this.loadLayout();
+    this.setupActivePageListener();
+  }
+
+  loadLayout() {
+    this.activeLayout = this.safeGetLocalStorage('DevKnowHow_activeLayout');
+  }
+
+  setLayout(layout: 'command' | 'routine' | 'smt') {
+    this.activeLayout = layout;
+    this.safeSetLocalStorage('DevKnowHow_activeLayout', layout);
+  }
+
+  private safeGetLocalStorage(key: string): any {
+    try {
+      const value = localStorage.getItem(key);
+      return value !== null ? JSON.parse(value) : 'command';
+    } catch {
+      return 'command';
+    }
+  }
+
+  private safeSetLocalStorage(key: string, value: any): void {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch { }
   }
 
   private setActivePageFromUrl(url: string): void {
@@ -29,6 +46,18 @@ export class NavigationService {
     } else {
       this.activePage = null;
     }
+  }
+
+  setupActivePageListener() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationStart || event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      if (event instanceof NavigationStart) {
+        this.setActivePageFromUrl(event.url);
+      } else if (event instanceof NavigationEnd) {
+        this.setActivePageFromUrl(event.url);
+      }
+    });
   }
 
   back() {

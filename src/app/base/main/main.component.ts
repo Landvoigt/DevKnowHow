@@ -15,8 +15,4 @@ export class MainComponent {
 
   constructor(public navService: NavigationService) { }
 
-  selectLayout(layout: 'command' | 'routine' | 'smt') {
-    this.navService.activeLayout = layout;
-  }
-
 }
