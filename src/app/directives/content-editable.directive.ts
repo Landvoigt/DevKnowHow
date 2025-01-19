@@ -21,17 +21,17 @@ export class ContentEditableDirective implements ControlValueAccessor {
   writeValue(value: any): void {
     this.el.nativeElement.innerHTML = value ? DOMPurify.sanitize(value) : '';
   }
-
+  
   // The method that registers the onChange callback to update the value in the form control 
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
-
+  
   // The method that registers the onTouched callback 
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-
+  
   // Triggered when the content of the element changes
   @HostListener('input', ['$event'])
   onInput(event: Event): void {
@@ -41,7 +41,9 @@ export class ContentEditableDirective implements ControlValueAccessor {
 
   // Called when the element is blurred (loses focus) 
   @HostListener('blur', ['$event'])
-  onBlur(event: Event): void { this.onTouched(); }
+  onBlur(event: Event): void {
+    this.onTouched();
+  }
 
   // The onChange function that will be called when the value changes 
   private onChange = (value: any) => { };

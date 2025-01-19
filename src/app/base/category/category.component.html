@@ -11,10 +11,12 @@
         </div>
     </div>
 </ng-container>
-<div @fadeIn class="z-20 relative flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-textColorSecondary">
+<div @fadeIn
+    class="z-20 relative flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-textColorSecondary">
     <ng-container *ngFor="let item of commands || []; let i = index">
         <ng-container *ngIf="!activeSubCat || activeSubCat?.title === item.sub_category">
-            <div @fadeIn (click)="toggleExtendedInfo(i)" class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
+            <div @fadeIn (click)="toggleExtendedInfo(i)"
+                class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
                 [ngClass]="{'bg-tableBgSecondary' : i % 2 !== 0}">
                 <div class="w-5/12 min-max-w-5-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
                     <div (click)="commandService.copy(item.command, item.id, i); $event.stopPropagation()"
@@ -52,5 +54,23 @@
                 </div>
             </div>
         </ng-container>
+    </ng-container>
+
+    <ng-container *ngFor="let item of routines || []; let i = index">
+        <div @fadeIn class="flex flex-col items-start lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
+            [ngClass]="{'bg-tableBgSecondary' : i % 2 !== 0}">
+            <span class="mb-2 text-xl text-textColorPrimary">{{ item.title }}</span>
+            <div class="w-full flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
+                <div (click)="commandService.copy(item.routine, item.id, i); $event.stopPropagation()"
+                    class="h-6 flex justify-start items-center lg:mr-6 md:mr-6 sm:mr-6 mr-3 cursor-pointer rounded-full fast-transition">
+                    <div [ngClass]="{'clicked': commandService.activeItems[i]}" class="flex justify-center items-center padding-extra 
+                        rounded-full border-2 border-borderCopyIcon bg-bgCopyIcon hover:bg-white fast-transition">
+                    </div>
+                </div>
+                <span [innerHTML]="item.routine | variable"
+                    class="w-full max-w-full leading-6 text-textColorPrimary"
+                    [ngClass]="{'truncate': hidden[i] !== true}"></span>
+            </div>
+        </div>
     </ng-container>
 </div>

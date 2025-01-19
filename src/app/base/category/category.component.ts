@@ -10,6 +10,8 @@ import { DataService } from '@services/data.service';
 import { Category } from '@interfaces/category.interface';
 import { map, Observable } from 'rxjs';
 import { fadeIn, staggeredFadeIn, subCategoryAnimation } from '@utils/animations';
+import { Routine } from '@interfaces/routine.interface';
+import { NavigationService } from '@services/navigation.service';
 
 @Component({
   selector: 'app-category',
@@ -26,14 +28,17 @@ export class CategoryComponent implements OnInit {
   activeSubCat: Category | null = null;
 
   commands: Command[] = [];
+  routines: Routine[] = [];
+
   hidden: { [key: number]: boolean } = {};
 
   constructor(
     private route: ActivatedRoute,
-    public commandService: CommandService,
     private rest: RestService,
     private error: ErrorService,
-    private dataService: DataService) { }
+    private dataService: DataService,
+    public commandService: CommandService,
+    public navService: NavigationService) { }
 
   ngOnInit(): void {
     this.getCategoryId();
@@ -63,14 +68,23 @@ export class CategoryComponent implements OnInit {
 
   loadData(): void {
     if (this.categoryId) {
-      this.rest.getCommandsByCategory(this.categoryId).subscribe({
-        next: (commands: Command[]) => {
-          this.commands = commands;
-          console.log(commands)
-        },
-        error: (error) => this.error.handleHttpError(error, {}),
-        complete: () => { }
-      });
+      if (this.navService.activeLayout === 'command') {
+        this.rest.getCommandsByCategory(this.categoryId).subscribe({
+          next: (commands: Command[]) => {
+            this.commands = commands.sort((a, b) => b.copy_count - a.copy_count);
+          },
+          error: (error) => this.error.handleHttpError(error, {}),
+          complete: () => { }
+        });
+      } else {
+        this.rest.getRoutinesByCategory(this.categoryId).subscribe({
+          next: (routines: Routine[]) => {
+            this.routines = routines.sort((a, b) => b.copy_count - a.copy_count);
+          },
+          error: (error) => this.error.handleHttpError(error, {}),
+          complete: () => { }
+        });
+      }
     }
   }
 

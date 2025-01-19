@@ -5,6 +5,7 @@ import { Category } from '@interfaces/category.interface';
 import { Command } from '@interfaces/command.interface';
 import { CommandRequest, RoutineRequest } from '@models/requests.model';
 import { NavigationService } from './navigation.service';
+import { Routine } from '@interfaces/routine.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,16 @@ export class RestService {
     return this.http.get<Command[]>(`${this.apiBaseUrl}command/`);
   }
 
+  getRoutines(): Observable<Routine[]> {
+    return this.http.get<Routine[]>(`${this.apiBaseUrl}routine/`);
+  }
+
   getCommandsByCategory(catId: number): Observable<Command[]> {
     return this.http.get<Command[]>(`${this.apiBaseUrl}command/category/${catId}/`);
+  }
+
+  getRoutinesByCategory(catId: number): Observable<Routine[]> {
+    return this.http.get<Routine[]>(`${this.apiBaseUrl}routine/category/${catId}/`);
   }
 
   createCommand(request: CommandRequest): Observable<any> {
