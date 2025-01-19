@@ -5,19 +5,17 @@ module.exports = {
   theme: {
     extend: {
       gradientColorStops: {
-        'default-to': '#172c06',
-        'default-from': '#01071d',
+        'command-prim-to': '#172c06',
+        'command-prim-from': '#01071d',
+        'command-sec-to': '#08490d',
+        'command-sec-from': '#077c91',
+        
+        'routine-sec-to': '#120021',
+        'routine-sec-from': '#89240d',
+        'routine-prim-to': '#44080e',
+        'routine-prim-from': '#1e131c',
 
-        'welcome-to': '#3a0b4f',
-        'welcome-from': '#000510',
-
-        'nav-to': '#08490d',
-        'nav-from': '#077c91',
-
-        'command-layout-to': '#09330c',
-
-        'routine-layout-to': '#120021',
-        'routine-layout-from': '#89240d',
+        'command-btn-to': '#09330c',
       },
       colors: {
         aliceblue: '#f0f8ff',

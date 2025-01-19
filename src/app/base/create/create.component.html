@@ -1,5 +1,5 @@
-<div @fadeIn (click)="closeUserMenu()" class="z-20 relative bg-gradient-to-r px-6 pb-4 lg:px-8" [ngClass]="{'from-default-from to-default-to' : navService.activeLayout === 'command', 
-    'from-routine-layout-from to-routine-layout-to' : navService.activeLayout === 'routine'}"
+<div @fadeIn (click)="closeUserMenu()" class="z-20 relative bg-gradient-to-r px-6 pb-4 lg:px-8" [ngClass]="{'from-command-prim-from to-command-prim-to' : navService.activeLayout === 'command', 
+    'from-routine-prim-from to-routine-prim-to' : navService.activeLayout === 'routine'}"
     style="height: calc(100% - 66px);">
     <form *ngIf="navService.activeLayout === 'command'" [formGroup]="createForm" (ngSubmit)="onSubmitCommand()"
         class="space-y-6 mx-auto max-w-6xl">
@@ -186,14 +186,27 @@
         </div>
         <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 mt-10">
             <div formGroupName="body" class="sm:col-span-3">
+                <label for="title"
+                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Title
+                    *</label>
+                <div class="mt-2 relative">
+                    <input id="title" formControlName="title" type="text" spellcheck="false" required
+                        class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                    <span *ngIf="hasInput(title)" class="input-error absolute form-control-sm text-danger font-medium">
+                        <span *ngIf="title?.hasError('required')">* Title is required</span>
+                    </span>
+                </div>
+            </div>
+            <div formGroupName="body" class="sm:col-span-3">
                 <label for="routine"
                     class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Routine
                     *</label>
                 <div class="mt-2 relative">
-                    <textarea #routineInput id="routine" formControlName="routine" rows="20" spellcheck="false" required
-                        (keydown)="checkInput(routineInput)"
-                        class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue"></textarea>
+                    <div #routineInput id="routine" formControlName="routine" spellcheck="false" (input)="checkInput(routineInput)"
+                        contentEditable required class="block w-full min-h-48 rounded-lg border-0 py-2 sm:py-2.5 px-3 text-gray-900 shadow-lg ring-1 ring-inset 
+                            ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg 
+                            leading-5 sm:leading-6 bg-aliceblue outline-none"></div>
                     <span *ngIf="hasInput(routine)"
                         class="input-error absolute form-control-sm text-danger font-medium">
                         <span *ngIf="routine?.hasError('required')">* Routine is required</span>
@@ -201,6 +214,7 @@
                     <span *ngIf="routineTyped"
                         class="input-error absolute form-control-sm text-success text-textColorVariable font-normal">
                         <span>* Use *VARIABLE* to mark a variable</span>
+                        <span>* Use *C*COMMAND*C* to mark a command</span>
                     </span>
                 </div>
             </div>
@@ -268,24 +282,6 @@
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
                 </div>
             </div>
-            <!-- <div formGroupName="body" class="sm:col-span-3">
-                <label for="example"
-                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Example</label>
-                <div class="mt-2 relative">
-                    <input id="example" formControlName="example" type="text" spellcheck="false"
-                        class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
-                </div>
-            </div>
-            <div formGroupName="body" class="sm:col-span-3">
-                <label for="tooltip"
-                    class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Tooltip</label>
-                <div class="mt-2 relative">
-                    <input id="tooltip" formControlName="tooltip" type="text" spellcheck="false"
-                        class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
-                </div>
-            </div> -->
             <div class="w-full sm:col-span-3 border-b-2 border-borderColorLight"></div>
             <div>
                 <label for="name"
