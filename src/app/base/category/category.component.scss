@@ -1,4 +1,4 @@
-.padding-extra {
+.p-3px {
     padding: 3px;
 }
 
@@ -7,6 +7,11 @@
     background-color: #32ff7c !important;
     border-color: #fff !important;
     animation: pulse 775ms ease-out forwards;
+}
+
+.size-1125rem {
+    width: 1.125rem;
+    height: 1.125rem;
 }
 
 .min-max-w-5-12 {

@@ -40,6 +40,7 @@ module.exports = {
 
         tableBgSecondary: 'rgba(240, 248, 255, 0.05)',
 
+        inputBg: 'rgb(210 234 255)',
         inputColorFocus: '#2528eb',
 
         navColorHover: 'rgb(186 213 255 / 44%)',
