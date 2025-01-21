@@ -33,3 +33,7 @@ body {
     animation: spin 1s linear infinite;
     margin-top: -2px;
 }
+
+select::selection {
+    background-color: black !important;
+}

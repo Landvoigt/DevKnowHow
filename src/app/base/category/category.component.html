@@ -1,6 +1,6 @@
 <ng-container *ngIf="category">
     <div class="z-20 relative flex justify-start gap-6 ml-8 mb-4 pl-0.5" style="margin-top: -0.75rem;">
-        <div class="relative flex items-center h-9 w-56 bg-inputBg rounded-lg">
+        <div class="relative flex items-center h-9 w-56 !bg-inputBg rounded-lg">
             <div class="absolute left-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-1125rem">
@@ -8,17 +8,17 @@
                         d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                 </svg>
             </div>
-            <input #searchInput id="search" (keydown)="search(search)" type="text" spellcheck="false"
-                placeholder="Search..." class="pl-8 pr-8 pb-2.5 w-full h-full rounded-lg bg-inputBg text-gray-900 placeholder:text-gray-600 text-md leading-4 
+            <input #searchInput id="search" (input)="onSearch(searchInput.value)" type="text" spellcheck="false"
+                placeholder="Search..." class="pl-8 pr-8 pb-2.5 w-full h-full rounded-lg !bg-inputBg text-gray-900 placeholder:text-gray-600 text-md leading-4 
                     focus-visible:ring-transparent border-none" />
-            <div class="absolute right-2 cursor-pointer" (click)="searchInput.value = ''">
+            <div class="absolute right-2 cursor-pointer" (click)="cancelSearch(searchInput)">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-1125rem">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
             </div>
         </div>
-        <select [(ngModel)]="activeSubCat" (change)="cacheFilters()"
+        <select *ngIf="category?.sub_categories?.length" [(ngModel)]="activeSubCat" (change)="cacheFilters()"
             class="h-9 w-40 rounded-lg bg-inputBg px-4 py-1.5 text-md leading-5 shadow-lg cursor-pointer focus-visible:ring-transparent border-none"
             [ngClass]="{'text-gray-600': !activeSubCat, 'text-gray-900 font-semibold' : activeSubCat}">
             <option [ngValue]="null" disabled [hidden]="true">Sub Category</option>
@@ -27,7 +27,7 @@
                 {{ subCat.title }}
             </option>
         </select>
-        <select [(ngModel)]="activeOrder" (change)="cacheFilters()"
+        <select [(ngModel)]="activeOrder" (change)="applyOrder()"
             class="h-9 w-40 rounded-lg bg-inputBg px-4 py-1.5 text-md leading-5 shadow-lg cursor-pointer focus-visible:ring-transparent border-none"
             [ngClass]="{'text-gray-600': !activeOrder, 'text-gray-900 font-semibold' : activeOrder}">
             <option [ngValue]="null" disabled [hidden]="true">Order</option>
@@ -40,7 +40,7 @@
 </ng-container>
 <div @fadeIn
     class="z-20 relative flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-textColorSecondary">
-    <ng-container *ngFor="let item of commands || []; let i = index">
+    <ng-container *ngFor="let item of filteredCommands || []; let i = index">
         <ng-container *ngIf="!activeSubCat || activeSubCat?.title === item.sub_category">
             <div @fadeIn (click)="toggleExtendedInfo(i)"
                 class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
@@ -83,7 +83,7 @@
         </ng-container>
     </ng-container>
 
-    <ng-container *ngFor="let item of routines || []; let i = index">
+    <ng-container *ngFor="let item of filteredRoutines || []; let i = index">
         <div @fadeIn class="flex flex-col items-start lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
             [ngClass]="{'bg-tableBgSecondary' : i % 2 !== 0}">
             <span class="mb-2 text-xl text-textColorPrimary">{{ item.title }}</span>

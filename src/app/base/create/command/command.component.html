@@ -1,17 +1,17 @@
 <form [formGroup]="form" (ngSubmit)="onSubmitCommand()" class="space-y-6 mx-auto max-w-6xl">
     <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-3xl font-bold tracking-tight text-textColorPrimary sm:text-4xl">Suggest a new item</h2>
+        <h2 class="text-3xl font-bold tracking-tight text-aliceblue sm:text-4xl">Suggest a new item</h2>
     </div>
     <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 mt-10">
         <div formGroupName="body" class="sm:col-span-3">
             <label for="command"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Command
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Command
                 *</label>
             <div class="mt-2 relative">
                 <input #commandInput id="command" formControlName="command" type="text" spellcheck="false" required
                     (keydown)="checkInput(commandInput)"
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
                 <span *ngIf="hasInput(command)" class="input-error absolute form-control-sm text-danger font-medium">
                     <span *ngIf="command?.hasError('required')">* Command is required</span>
                 </span>
@@ -23,13 +23,13 @@
         </div>
         <div formGroupName="body" class="sm:col-span-3">
             <label for="description"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Description
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Description
                 *</label>
             <div class="mt-2 relative">
                 <textarea #descriptionInput id="description" formControlName="description" rows="3" spellcheck="false"
                     required (keydown)="checkInput(descriptionInput)"
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue"></textarea>
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg"></textarea>
                 <span *ngIf="hasInput(description)"
                     class="input-error absolute form-control-sm text-danger font-medium">
                     <span *ngIf="description?.hasError('required')">* Description is
@@ -43,13 +43,13 @@
         </div>
         <div formGroupName="body" [ngClass]="{'sm:col-span-1' : newCatSelected, 'sm:col-span-3' : !newCatSelected}">
             <label for="category"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
                 Category *
             </label>
             <div class="mt-2 relative">
                 <select id="category" formControlName="category" required
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 
-                            placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                            placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
                     <ng-container *ngIf="categories$ | async as categories">
                         <ng-container *ngFor="let cat of categories | filter: navService.activeLayout">
                             <option [value]="cat.title">{{ cat.title }}</option>
@@ -64,23 +64,23 @@
         </div>
         <div *ngIf="newCatSelected" formGroupName="body" class="sm:col-span-2">
             <label for="newCategory"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">New
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">New
                 Category</label>
             <div class="mt-2 relative">
                 <input id="newCategory" formControlName="newCategory" type="text" spellcheck="false"
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
             </div>
         </div>
         <div *ngIf="hasInput(category) && selectedCatHasSubCategories()" formGroupName="body"
             [ngClass]="{'sm:col-span-1' : newSubCatSelected, 'sm:col-span-3' : !newSubCatSelected}">
             <label for="subCategory"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Sub
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Sub
                 Category</label>
             <div class="mt-2 relative">
                 <select id="subCategory" formControlName="subCategory"
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 
-                            placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                            placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
                     <ng-container *ngIf="getSubCategories() | async as subCategories">
                         <ng-container *ngFor="let subCat of subCategories">
                             <option [value]="subCat.title">{{ subCat.title }}</option>
@@ -92,41 +92,41 @@
         </div>
         <div *ngIf="newSubCatSelected" formGroupName="body" class="sm:col-span-2">
             <label for="newSubCategory"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
                 New Sub Category</label>
             <div class="mt-2 relative">
                 <input id="newSubCategory" formControlName="newSubCategory" type="text" spellcheck="false"
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
             </div>
         </div>
         <div formGroupName="body" class="sm:col-span-3">
             <label for="example"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Example</label>
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Example</label>
             <div class="mt-2 relative">
                 <input id="example" formControlName="example" type="text" spellcheck="false"
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
             </div>
         </div>
         <div formGroupName="body" class="sm:col-span-3">
             <label for="tooltip"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Tooltip</label>
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Tooltip</label>
             <div class="mt-2 relative">
                 <input id="tooltip" formControlName="tooltip" type="text" spellcheck="false"
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
             </div>
         </div>
         <div class="w-full sm:col-span-3 border-b-2 border-borderColorLight"></div>
         <div>
             <label for="name"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Name
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Name
                 *</label>
             <div class="mt-2 relative">
                 <input id="name" formControlName="name" type="text" spellcheck="false" autocomplete="name" required
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
                 <span *ngIf="hasInput(name)" class="input-error absolute form-control-sm text-danger font-medium">
                     <span *ngIf="name?.hasError('required')">* Name is required</span>
                     <span *ngIf="name?.hasError('pattern')">* Only letters allowed</span>
@@ -135,12 +135,12 @@
         </div>
         <div class="sm:col-span-2">
             <label for="email"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Email
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Email
                 *</label>
             <div class="mt-2 relative">
                 <input id="email" formControlName="email" type="email" spellcheck="false" autocomplete="email" required
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue">
+                            focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
                 <span *ngIf="hasInput(email)" class="input-error absolute form-control-sm text-danger font-medium">
                     <span *ngIf="email?.hasError('required')">* Email is required</span>
                     <span *ngIf="email?.hasError('pattern')">* Enter valid email (e.g.
@@ -150,12 +150,12 @@
         </div>
         <div class="sm:col-span-3">
             <label for="message"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-textColorPrimary">Additional
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Additional
                 Message</label>
             <div class="mt-2 relative">
                 <textarea formControlName="message" id="message" rows="3" spellcheck="false"
                     class="block w-full rounded-lg py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 
-                            focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 bg-aliceblue"></textarea>
+                            focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg"></textarea>
             </div>
         </div>
     </div>

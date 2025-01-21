@@ -20,12 +20,20 @@ export class RestService {
     return this.http.get<Category[]>(`${this.apiBaseUrl}category/`);
   }
 
-  getCommands(): Observable<Command[]> {
-    return this.http.get<Command[]>(`${this.apiBaseUrl}command/`);
+  getCommands(searchValue: string): Observable<Command[]> {
+    if (searchValue) {
+      return this.http.get<Command[]>(`${this.apiBaseUrl}command/?search=${searchValue}`);
+    } else {
+      return this.http.get<Command[]>(`${this.apiBaseUrl}command/`);
+    }
   }
 
-  getRoutines(): Observable<Routine[]> {
-    return this.http.get<Routine[]>(`${this.apiBaseUrl}routine/`);
+  getRoutines(searchValue: string): Observable<Routine[]> {
+    if (searchValue) {
+      return this.http.get<Routine[]>(`${this.apiBaseUrl}routine/?search=${searchValue}`);
+    } else {
+      return this.http.get<Routine[]>(`${this.apiBaseUrl}routine/`);
+    }
   }
 
   getCommandsByCategory(catId: number): Observable<Command[]> {

@@ -33,6 +33,8 @@ export class CategoryComponent implements OnInit {
 
   commands: Command[] = [];
   routines: Routine[] = [];
+  filteredCommands: Command[] = [];
+  filteredRoutines: Routine[] = [];
 
   hidden: { [key: number]: boolean } = {};
 
@@ -80,7 +82,9 @@ export class CategoryComponent implements OnInit {
       if (this.navService.activeLayout === 'command') {
         this.rest.getCommandsByCategory(this.categoryId).subscribe({
           next: (commands: Command[]) => {
-            this.commands = commands.sort((a, b) => b.copy_count - a.copy_count);
+            this.commands = commands;
+            this.filteredCommands = [...commands];
+            this.orderCommands();
           },
           error: (error) => this.error.handleHttpError(error, {}),
           complete: () => { }
@@ -88,7 +92,9 @@ export class CategoryComponent implements OnInit {
       } else {
         this.rest.getRoutinesByCategory(this.categoryId).subscribe({
           next: (routines: Routine[]) => {
-            this.routines = routines.sort((a, b) => b.copy_count - a.copy_count);
+            this.routines = routines;
+            this.filteredRoutines = [...routines];
+            this.orderRoutines();
           },
           error: (error) => this.error.handleHttpError(error, {}),
           complete: () => { }
@@ -97,11 +103,28 @@ export class CategoryComponent implements OnInit {
     }
   }
 
+  onSearch(searchTerm: string): void {
+    if (this.navService.activeLayout === 'command') {
+      this.filteredCommands = this.commands.filter((command) =>
+        command.command.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    } else {
+      this.filteredRoutines = this.routines.filter((routine) =>
+        routine.routine.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+  }
+
+  cancelSearch(search: HTMLInputElement) {
+    search.value = '';
+    this.onSearch('');
+  }
+
   toggleExtendedInfo(index: number): void {
     this.hidden[index] = !this.hidden[index];
   }
 
-  loadCachedFilters() {
+  loadCachedFilters(): void {
     const savedData = sessionStorage.getItem(this.getCurrentStorageName());
     if (savedData) {
       const parsedData = JSON.parse(savedData);
@@ -110,7 +133,7 @@ export class CategoryComponent implements OnInit {
     }
   }
 
-  cacheFilters() {
+  cacheFilters(): void {
     const data = {
       activeSubCat: this.activeSubCat ? this.activeSubCat.id : null,
       activeOrder: this.activeOrder
@@ -118,10 +141,45 @@ export class CategoryComponent implements OnInit {
     sessionStorage.setItem(this.getCurrentStorageName(), JSON.stringify(data));
   }
 
+  applyOrder(): void {
+    this.cacheFilters();
+    if (this.navService.activeLayout === 'command') {
+      this.orderCommands();
+    }
+    if (this.navService.activeLayout === 'routine') {
+      this.orderRoutines();
+    }
+  }
+
+  orderCommands(): void {
+    if (this.activeOrder === 'asc') {
+      this.filteredCommands.sort((a, b) => this.compareStrings(a.command, b.command));
+    } else if (this.activeOrder === 'dec') {
+      this.filteredCommands.sort((a, b) => this.compareStrings(b.command, a.command));
+    } else if (this.activeOrder === 'copy') {
+      this.filteredCommands.sort((a, b) => b.copy_count - a.copy_count);
+    }
+  }
+
+  orderRoutines(): void {
+    if (this.activeOrder === 'asc') {
+      this.filteredRoutines.sort((a, b) => this.compareStrings(a.routine, b.routine));
+    } else if (this.activeOrder === 'dec') {
+      this.filteredRoutines.sort((a, b) => this.compareStrings(b.routine, a.routine));
+    } else if (this.activeOrder === 'copy') {
+      this.filteredRoutines.sort((a, b) => b.copy_count - a.copy_count);
+    }
+  }
+
+  compareStrings(str1: string, str2: string): number {
+    const s1 = str1.toLowerCase();
+    const s2 = str2.toLowerCase();
+    if (s1 < s2) return -1;
+    if (s1 > s2) return 1;
+    return 0;
+  }
+
   getCurrentStorageName(): string {
     return this.navService.activeLayout === 'command' ? 'DevKnowHow_activeCommandFilters' : 'DevKnowHow_activeRoutineFilters';
   }
-
-  search(value: any) { }
-
 }
