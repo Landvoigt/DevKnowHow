@@ -9,19 +9,24 @@ import { filter } from 'rxjs';
 export class NavigationService {
   activePage: number | null = null;
   activeLayout: 'command' | 'routine' | 'smt' = 'command';
+  activeLanguage: 'eng' | 'de' = 'eng';
 
   constructor(private router: Router, private location: Location) {
     this.loadLayout();
     this.setupActivePageListener();
   }
 
-  loadLayout() {
+  loadLayout(): void {
     this.activeLayout = this.safeGetLocalStorage('DevKnowHow_activeLayout');
   }
 
-  setLayout(layout: 'command' | 'routine' | 'smt') {
+  setLayout(layout: 'command' | 'routine' | 'smt'): void {
     this.activeLayout = layout;
     this.safeSetLocalStorage('DevKnowHow_activeLayout', layout);
+  }
+
+  setLanguage(lang: 'eng' | 'de'): void {
+    this.activeLanguage = lang;
   }
 
   private safeGetLocalStorage(key: string): any {

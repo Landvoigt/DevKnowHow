@@ -1,4 +1,5 @@
-<div class="relative z-0 flex flex-col justify-between h-58 sm:h-44 w-full gap-2 sm:gap-8 pt-5 pb-5 pl-8 pr-8 
+<div
+    class="relative z-0 flex flex-col justify-between h-58 sm:h-44 w-full gap-2 sm:gap-8 pt-5 pb-5 pl-8 pr-8 
         bg-gradient-to-r from-command-sec-from to-command-sec-to border-t-2 border-borderColorPopup text-textColorPrimary">
     <div class="z-10 absolute top-0 left-0 h-full w-full bg-gradient-to-r from-routine-sec-from to-routine-sec-to 
         transition-all duration-700 ease-in-out" [ngClass]="{'opacity-0' : navService.activeLayout === 'command'}">
@@ -28,7 +29,13 @@
             <a (click)="navService.policy()" class="cursor-pointer hover:text-textColorHover">Privacy Policy</a>
         </div>
     </div>
-    <div class="z-20 flex border-t border-borderColorLight pt-1">
+    <div class="z-20 flex justify-between border-t border-borderColorLight pt-1">
         <div class="text-xs">© 2025 DevKnowHow</div>
+        <div class="flex gap-2">
+            <a (click)="navService.setLanguage('eng')" class="text-xs cursor-pointer"
+                [ngClass]="{'text-textColorTertiary hover:text-textColorHover': navService.activeLanguage !== 'eng'}">english</a>
+            <a (click)="navService.setLanguage('de')" class="text-xs cursor-pointer"
+                [ngClass]="{'text-textColorTertiary hover:text-textColorHover': navService.activeLanguage !== 'de'}">deutsch</a>
+        </div>
     </div>
 </div>

@@ -28,6 +28,7 @@ module.exports = {
 
         textColorPrimary: 'rgb(240, 248, 255)',
         textColorSecondary: 'rgba(240, 248, 255, 0.75)',
+        textColorTertiary: 'rgba(240, 248, 255, 0.5)',
         textColorHover: 'rgb(207 135 255)',
         textColorVariable: '#32ff7c',
 
