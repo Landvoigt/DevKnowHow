@@ -1,0 +1,53 @@
+{
+    "NAVBAR": {
+        "BTN_NEW": "Neu"
+    },
+    "MAIN": {
+        "COMMANDS": "Befehle",
+        "ROUTINES": "Routinen",
+        "FUNCTIONS": "Funktionen"
+    },
+    "CATEGORY": {
+        "SEARCH": "Suchen",
+        "ORDER": "Sortierung",
+        "COPY_COUNT": "Kopieranzahl",
+        "ASCENDING": "Aufsteigend (A-Z)",
+        "DESCENDING": "Absteigend (Z-A)",
+        "CANCEL": "Auswahl aufheben"
+    },
+    "FORM": {
+        "NEW_ITEM": "Schlag einen neuen Eintrag vor",
+        "TITLE": "Titel",
+        "COMMAND": "Befehl",
+        "ROUTINE": "Routine",
+        "DESCRIPTION": "Beschreibung",
+        "CATEGORY": "Kategorie",
+        "NEW_CATEGORY": "Neue Kategorie",
+        "SUBCATEGORY": "Unterkategorie",
+        "NEW_SUBCATEGORY": "Neue Unterkategorie",
+        "EXAMPLE": "Beispiel",
+        "TOOLTIP": "Tipp",
+        "NAME": "Name",
+        "EMAIL": "E-Mail",
+        "ADDITIONAL_MESSAGE": "Zusätzliche Nachricht",
+        "USE_VARIABLE": "Benutze *VARIABLE* um eine Variable zu markieren",
+        "IS_REQUIRED": "ist erforderlich",
+        "ONLY_LETTERS": "Nur Buchstaben erlaubt",
+        "VALID_EMAIL": "Gültige E-Mail eingeben (z.B. beispiel&#64;domain.com)",
+        "BTN_SUBMIT": "Absenden"
+    },
+    "IMPRINT": {
+        "IMPRINT": "Impressum",
+        "INSTANCE": "Verantwortliche Instanz",
+        "SWITZERLAND": "Schweiz"
+    },
+    "FOOTER": {
+        "IMPRINT": "Impressum",
+        "PRIVACY_POLICY": "Datenschutz"
+    },
+    "ERROR": {
+        "UNAUTHORIZED": "Sie sind nicht autorisiert!",
+        "UNEXPECTED": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal.",
+        "NO_RESPONSE": "Der Server hat nicht geantwortet. Bitte überprüfen Sie Ihre Verbindung."
+    }
+}

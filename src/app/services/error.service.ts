@@ -2,20 +2,37 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AlertService } from './alert.service';
 import { Observable, throwError } from 'rxjs';
+import { TranslationService } from './translation.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ErrorService {
 
-  constructor(private alertService: AlertService) { }
+  constructor(private alertService: AlertService, private translationService: TranslationService) { }
 
+  /**
+   * A helper function that translates and shows an alert for error messages.
+   * @param key The translation key for the error message.
+   */
+  private showError(key: string): void {
+    this.translationService.translateMessage(key).subscribe((translatedMessage: string) => {
+      this.alertService.showAlert(translatedMessage, 'error');
+    });
+  }
+
+
+  /**
+   * Handles API errors by status code and displays appropriate error messages.
+   * @param error The HttpErrorResponse object containing error details.
+   */
   handleApiError(error: HttpErrorResponse): Observable<never> {
     if (error.status === 401) {
-      this.alertService.showAlert('You are not authorized!', 'error');
+      this.showError('SERVICES.ERROR.UNAUTHORIZED');
     }
     return throwError(() => { });
   }
+
 
   /**
    * Handles HTTP errors based on status code and calls appropriate error handlers.
@@ -24,13 +41,13 @@ export class ErrorService {
    */
   handleHttpError(error: HttpErrorResponse, errorHandlers: { [key: number]: (error: HttpErrorResponse) => void }): void {
     if (error.status === 0) {
-      this.showAlert('The server did not respond. Please check your connection.');
+      this.showError('SERVICES.ERROR.NO_RESPONSE');
     } else {
       const errorHandler = errorHandlers[error.status];
       if (errorHandler) {
         errorHandler(error);
       } else {
-        this.showAlert('An unexpected error occurred. Please try again later.');
+        this.showError('SERVICES.ERROR.UNEXPECTED');
       }
     }
   }

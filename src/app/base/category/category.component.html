@@ -9,8 +9,8 @@
                 </svg>
             </div>
             <input #searchInput id="search" (input)="onSearch(searchInput.value)" type="text" spellcheck="false"
-                placeholder="Search..." class="pl-8 pr-8 pb-2.5 w-full h-full rounded-lg !bg-inputBg text-gray-900 placeholder:text-gray-600 text-md leading-4 
-                    focus-visible:ring-transparent border-none" />
+                placeholder="{{ 'CATEGORY.SEARCH' | translate }}..." class="pl-8 pr-8 pb-2.5 w-full h-full rounded-lg !bg-inputBg text-gray-900 placeholder:text-gray-600 
+                    text-md leading-4 focus-visible:ring-transparent border-none" />
             <div class="absolute right-2 cursor-pointer" (click)="cancelSearch(searchInput)">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-1125rem">
@@ -21,8 +21,8 @@
         <select *ngIf="category?.sub_categories?.length" [(ngModel)]="activeSubCat" (change)="cacheFilters()"
             class="h-9 w-40 rounded-lg bg-inputBg px-4 py-1.5 text-md leading-5 shadow-lg cursor-pointer focus-visible:ring-transparent border-none"
             [ngClass]="{'text-gray-600': !activeSubCat, 'text-gray-900 font-semibold' : activeSubCat}">
-            <option [ngValue]="null" disabled [hidden]="true">Sub Category</option>
-            <option [ngValue]="null" *ngIf="activeSubCat !== null">Cancel</option>
+            <option [ngValue]="null" disabled [hidden]="true">{{ 'FORM.SUBCATEGORY' | translate }}</option>
+            <option [ngValue]="null" *ngIf="activeSubCat !== null">{{ 'CATEGORY.CANCEL' | translate }}</option>
             <option *ngFor="let subCat of category?.sub_categories" [ngValue]="subCat">
                 {{ subCat.title }}
             </option>
@@ -30,11 +30,11 @@
         <select [(ngModel)]="activeOrder" (change)="applyOrder()"
             class="h-9 w-40 rounded-lg bg-inputBg px-4 py-1.5 text-md leading-5 shadow-lg cursor-pointer focus-visible:ring-transparent border-none"
             [ngClass]="{'text-gray-600': !activeOrder, 'text-gray-900 font-semibold' : activeOrder}">
-            <option [ngValue]="null" disabled [hidden]="true">Order</option>
-            <option [ngValue]="null" *ngIf="activeOrder !== null">Cancel</option>
-            <option [ngValue]="'copy'">Copy Count</option>
-            <option [ngValue]="'asc'">Ascending</option>
-            <option [ngValue]="'dec'">Descending</option>
+            <option [ngValue]="null" disabled [hidden]="true">{{ 'CATEGORY.ORDER' | translate }}</option>
+            <option [ngValue]="null" *ngIf="activeOrder !== null">{{ 'CATEGORY.CANCEL' | translate }}</option>
+            <option [ngValue]="'copy'">{{ 'CATEGORY.COPY_COUNT' | translate }}</option>
+            <option [ngValue]="'asc'">{{ 'CATEGORY.ASCENDING' | translate }}</option>
+            <option [ngValue]="'dec'">{{ 'CATEGORY.DESCENDING' | translate }}</option>
         </select>
     </div>
 </ng-container>

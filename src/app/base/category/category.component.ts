@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { Command } from '@interfaces/command.interface';
 import { CommandService } from '@services/command.service';
 import { VariablePipe } from '@pipes/variable.pipe';
@@ -17,7 +18,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [CommonModule, FormsModule, VariablePipe],
+  imports: [CommonModule, FormsModule, VariablePipe, TranslateModule],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss',
   animations: [fadeIn, staggeredFadeIn, subCategoryAnimation]

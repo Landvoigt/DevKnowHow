@@ -25,17 +25,19 @@
             </a>
         </div>
         <div class="flex sm:flex-col justify-start items-end gap-2 h-12 sm:h-full w-3/12 sm:pt-4">
-            <a (click)="navService.imprint()" class="cursor-pointer hover:text-textColorHover">Imprint</a>
-            <a (click)="navService.policy()" class="cursor-pointer hover:text-textColorHover">Privacy Policy</a>
+            <a (click)="navService.imprint()" class="cursor-pointer hover:text-accentColorHover">
+                {{ 'FOOTER.IMPRINT' | translate }}</a>
+            <a (click)="navService.policy()" class="cursor-pointer hover:text-accentColorHover">
+                {{ 'FOOTER.PRIVACY_POLICY' | translate }}</a>
         </div>
     </div>
     <div class="z-20 flex justify-between border-t border-borderColorLight pt-1">
         <div class="text-xs">© 2025 DevKnowHow</div>
         <div class="flex gap-2">
-            <a (click)="navService.setLanguage('eng')" class="text-xs cursor-pointer"
-                [ngClass]="{'text-textColorTertiary hover:text-textColorHover': navService.activeLanguage !== 'eng'}">english</a>
-            <a (click)="navService.setLanguage('de')" class="text-xs cursor-pointer"
-                [ngClass]="{'text-textColorTertiary hover:text-textColorHover': navService.activeLanguage !== 'de'}">deutsch</a>
+            <a (click)="translation.setLanguage('en')" class="text-xs cursor-pointer"
+                [ngClass]="{'text-textColorTertiary hover:text-accentColorHover': translation.currentLanguage !== 'en'}">english</a>
+            <a (click)="translation.setLanguage('de')" class="text-xs cursor-pointer"
+                [ngClass]="{'text-textColorTertiary hover:text-accentColorHover': translation.currentLanguage !== 'de'}">deutsch</a>
         </div>
     </div>
 </div>

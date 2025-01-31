@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormGroup, AbstractControl } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@interfaces/category.interface';
 import { createFormRoutine, CreateFormRoutineModel } from '@interfaces/create.interface';
 import { RoutineRequest } from '@models/requests.model';
@@ -16,7 +17,7 @@ import { ContentEditableDirective } from 'src/app/directives/content-editable.di
 @Component({
   selector: 'app-routine',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, FilterPipe, ContentEditableDirective],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule, FilterPipe, ContentEditableDirective],
   templateUrl: './routine.component.html',
   styleUrl: './routine.component.scss'
 })

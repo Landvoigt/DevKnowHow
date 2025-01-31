@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormGroup, AbstractControl } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@interfaces/category.interface';
 import { createFormCommand, CreateFormCommandModel } from '@interfaces/create.interface';
 import { CommandRequest } from '@models/requests.model';
@@ -16,7 +17,7 @@ import { debounceTime } from 'rxjs/operators';
 @Component({
   selector: 'app-command',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, FilterPipe],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule, FilterPipe],
   templateUrl: './command.component.html',
   styleUrl: './command.component.scss'
 })

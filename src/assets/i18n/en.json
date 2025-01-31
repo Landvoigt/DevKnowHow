@@ -1,0 +1,53 @@
+{
+    "NAVBAR": {
+        "BTN_NEW": "Add New"
+    },
+    "MAIN": {
+        "COMMANDS": "Commands",
+        "ROUTINES": "Routines",
+        "FUNCTIONS": "Functions"
+    },
+    "CATEGORY": {
+        "SEARCH": "Search",
+        "ORDER": "Order",
+        "COPY_COUNT": "Copy Count",
+        "ASCENDING": "Ascending",
+        "DESCENDING": "Descending",
+        "CANCEL": "Cancel"
+    },
+    "FORM": {
+        "NEW_ITEM": "Suggest a new item",
+        "TITLE": "Title",
+        "COMMAND": "Command",
+        "ROUTINE": "Routine",
+        "DESCRIPTION": "Description",
+        "CATEGORY": "Category",
+        "NEW_CATEGORY": "New Category",
+        "SUBCATEGORY": "Sub Category",
+        "NEW_SUBCATEGORY": "New Sub Category",
+        "EXAMPLE": "Example",
+        "TOOLTIP": "Tooltip",
+        "NAME": "Name",
+        "EMAIL": "Email",
+        "ADDITIONAL_MESSAGE": "Additional Message",
+        "USE_VARIABLE": "Use *VARIABLE* to mark a variable",
+        "IS_REQUIRED": "is required",
+        "ONLY_LETTERS": "Only letters allowed",
+        "VALID_EMAIL": "Enter valid email (e.g. example&#64;domain.com)",
+        "BTN_SUBMIT": "Submit"
+    },
+    "IMPRINT": {
+        "IMPRINT": "Imprint",
+        "INSTANCE": "Responsible Instance",
+        "SWITZERLAND": "Switzerland"
+    },
+    "FOOTER": {
+        "IMPRINT": "Imprint",
+        "PRIVACY_POLICY": "Privacy Policy"
+    },
+    "ERROR": {
+        "UNAUTHORIZED": "You are not authorized!",
+        "UNEXPECTED": "An unexpected error occurred. Please try again later.",
+        "NO_RESPONSE": "The server did not respond. Please check your connection."
+    }
+}

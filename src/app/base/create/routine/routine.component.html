@@ -1,33 +1,33 @@
 <form [formGroup]="form" (ngSubmit)="onSubmitRoutine()" class="space-y-6 mx-auto max-w-6xl">
     <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-3xl font-bold tracking-tight text-inputBg sm:text-4xl">Suggest a new item</h2>
+        <h2 class="text-3xl font-bold tracking-tight text-inputBg sm:text-4xl">{{ 'FORM.NEW_ITEM' | translate }} !</h2>
     </div>
     <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 mt-10">
         <div formGroupName="body" class="sm:col-span-3">
             <label for="title"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Title
-                *</label>
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                {{ 'FORM.TITLE' | translate }}*</label>
             <div class="mt-2 relative">
                 <input id="title" formControlName="title" type="text" spellcheck="false" required
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                     focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg"
                     [ngClass]="{'focus:ring-red': title?.invalid && title?.touched}">
                 <span *ngIf="hasInput(title)" class="input-error absolute form-control-sm text-danger font-medium">
-                    <span *ngIf="title?.hasError('required')">* Title is required</span>
+                    <span *ngIf="title?.hasError('required')">* {{ 'FORM.TITLE' | translate }} {{ 'FORM.IS_REQUIRED' | translate }}</span>
                 </span>
             </div>
         </div>
         <div formGroupName="body" class="sm:col-span-3">
             <label for="routine"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Routine
-                *</label>
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                {{ 'FORM.ROUTINE' | translate }}*</label>
             <div class="mt-2 relative">
                 <div #routineInput id="routine" contentEditable formControlName="routine" spellcheck="false"
                     (input)="checkInput(routineInput)" required class="block w-full min-h-48 rounded-lg border-0 py-2 sm:py-2.5 px-3 text-gray-900 shadow-lg ring-1 ring-inset 
                     ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg 
                     leading-5 sm:leading-6 !bg-inputBg outline-none"></div>
                 <span *ngIf="hasInput(routine)" class="input-error absolute form-control-sm text-danger font-medium">
-                    <span *ngIf="routine?.hasError('required')">* Routine is required</span>
+                    <span *ngIf="routine?.hasError('required')">* {{ 'FORM.ROUTINE' | translate }} {{ 'FORM.IS_REQUIRED' | translate }}</span>
                 </span>
                 <!-- <span *ngIf="routineTyped"
                     class="input-error absolute form-control-sm text-success text-textColorVariable font-normal">
@@ -38,7 +38,7 @@
         <div formGroupName="body" [ngClass]="{'sm:col-span-1' : newCatSelected, 'sm:col-span-3' : !newCatSelected}">
             <label for="category"
                 class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
-                Category *
+                {{ 'FORM.CATEGORY' | translate }} *
             </label>
             <div class="mt-2 relative">
                 <select id="category" formControlName="category" required
@@ -49,17 +49,17 @@
                             <option [value]="cat.title">{{ cat.title }}</option>
                         </ng-container>
                     </ng-container>
-                    <option value="new">New category +</option>
+                    <option value="new">{{ 'FORM.NEW_CATEGORY' | translate }} +</option>
                 </select>
                 <span *ngIf="hasInput(category)" class="input-error absolute form-control-sm text-danger font-medium">
-                    <span *ngIf="category?.hasError('required')">* Category is required</span>
+                    <span *ngIf="category?.hasError('required')">* {{ 'FORM.CATEGORY' | translate }} {{ 'FORM.IS_REQUIRED' | translate }}</span>
                 </span>
             </div>
         </div>
         <div *ngIf="newCatSelected" formGroupName="body" class="sm:col-span-2">
             <label for="newCategory"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">New
-                Category</label>
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                {{ 'FORM.NEW_CATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <input id="newCategory" formControlName="newCategory" type="text" spellcheck="false"
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
@@ -69,8 +69,8 @@
         <div *ngIf="hasInput(category) && selectedCatHasSubCategories()" formGroupName="body"
             [ngClass]="{'sm:col-span-1' : newSubCatSelected, 'sm:col-span-3' : !newSubCatSelected}">
             <label for="subCategory"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Sub
-                Category</label>
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                {{ 'FORM.SUBCATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <select id="subCategory" formControlName="subCategory"
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 
@@ -80,14 +80,14 @@
                             <option [value]="subCat.title">{{ subCat.title }}</option>
                         </ng-container>
                     </ng-container>
-                    <option value="new">New sub category +</option>
+                    <option value="new">{{ 'FORM.NEW_SUBCATEGORY' | translate }} +</option>
                 </select>
             </div>
         </div>
         <div *ngIf="newSubCatSelected" formGroupName="body" class="sm:col-span-2">
             <label for="newSubCategory"
                 class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
-                New Sub Category</label>
+                {{ 'FORM.NEW_SUBCATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <input id="newSubCategory" formControlName="newSubCategory" type="text" spellcheck="false"
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
@@ -97,37 +97,36 @@
         <div class="w-full sm:col-span-3 border-b-2 border-borderColorLight"></div>
         <div>
             <label for="name"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Name
-                *</label>
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                {{ 'FORM.NAME' | translate }}*</label>
             <div class="mt-2 relative">
                 <input id="name" formControlName="name" type="text" spellcheck="false" autocomplete="name" required
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                     focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
                 <span *ngIf="hasInput(name)" class="input-error absolute form-control-sm text-danger font-medium">
-                    <span *ngIf="name?.hasError('required')">* Name is required</span>
-                    <span *ngIf="name?.hasError('pattern')">* Only letters allowed</span>
+                    <span *ngIf="name?.hasError('required')">* {{ 'FORM.NAME' | translate }} {{ 'FORM.IS_REQUIRED' | translate }}</span>
+                    <span *ngIf="name?.hasError('pattern')">* {{ 'FORM.ONLY_LETTERS' | translate }}</span>
                 </span>
             </div>
         </div>
         <div class="sm:col-span-2">
             <label for="email"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Email
-                *</label>
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                {{ 'FORM.EMAIL' | translate }}*</label>
             <div class="mt-2 relative">
                 <input id="email" formControlName="email" type="email" spellcheck="false" autocomplete="email" required
                     class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
                     focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
                 <span *ngIf="hasInput(email)" class="input-error absolute form-control-sm text-danger font-medium">
-                    <span *ngIf="email?.hasError('required')">* Email is required</span>
-                    <span *ngIf="email?.hasError('pattern')">* Enter valid email (e.g.
-                        example&#64;domain.com)</span>
+                    <span *ngIf="email?.hasError('required')">* {{ 'FORM.EMAIL' | translate }} {{ 'FORM.IS_REQUIRED' | translate }}</span>
+                    <span *ngIf="email?.hasError('pattern')">* {{ 'FORM.VALID_EMAIL' | translate }}</span>
                 </span>
             </div>
         </div>
         <div class="sm:col-span-3">
             <label for="message"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">Additional
-                Message</label>
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                {{ 'FORM.ADDITIONAL_MESSAGE' | translate }}</label>
             <div class="mt-2 relative">
                 <textarea formControlName="message" id="message" rows="3" spellcheck="false"
                     class="block w-full rounded-lg py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 
@@ -141,7 +140,7 @@
             justify-center rounded-lg bg-accentColor px-3 py-4 text-lg font-semibold 
             leading-6 text-white shadow-lg hover:bg-accentColorHover focus:outline-none focus-visible:ring-2 
             focus-visible:ring-offset-2 focus-visible:ring-accentColor disabled:opacity-60 disabled:hover:bg-accentColor">
-            <span *ngIf="!loading">Submit</span>
+            <span *ngIf="!loading">{{ 'FORM.BTN_SUBMIT' | translate }}</span>
             <div *ngIf="loading" class="spinner"></div>
         </button>
     </div>

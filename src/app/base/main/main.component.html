@@ -4,20 +4,20 @@
         from-command-sec-from to-command-btn-to ml-7 text-4xl font-semibold leading-6 text-white shadow-lg focus:outline-none focus-visible:ring-2 
         focus-visible:ring-offset-2 focus-visible:ring-accentColor disabled:opacity-60" [ngClass]="{'border-2 border-textColorPrimary': navService.activeLayout === 'command',
         'hover:bg-gradientHover hover:bg-blend-lighten': navService.activeLayout !== 'command'}">
-        <span>Commands</span>
+        <span>{{ 'MAIN.COMMANDS' | translate }}</span>
     </button>
     <button (click)="navService.setLayout('routine')"
         class="layout-btn flex-1 justify-center items-center rounded-lg bg-gradient-to-tr from-routine-sec-from to-routine-sec-to mr-7 text-4xl font-semibold 
         leading-6 text-white shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accentColor disabled:opacity-60"
         [ngClass]="{'border-2 border-textColorPrimary': navService.activeLayout === 'routine',
         'hover:bg-gradientHover hover:bg-blend-lighten': navService.activeLayout !== 'routine'}">
-        <span>Routines</span>
+        <span>{{ 'MAIN.ROUTINES' | translate }}</span>
     </button>
     <!-- <button (click)="navService.setLayout('routine')" 
         class="layout-btn flex-1 justify-center items-center rounded-lg bg-gradient-to-tr from-routine-sec-from to-routine-sec-to mr-7 text-4xl font-semibold 
         leading-6 text-white shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accentColor disabled:opacity-60"
         [ngClass]="{'border-2 border-textColorPrimary': navService.activeLayout === 'routine',
         'hover:bg-gradientHover hover:bg-blend-lighten': navService.activeLayout !== 'routine'}">
-        <span>Routines</span>
+        <span>{{ 'FUNCTIONS' | translate }}</span>
     </button> -->
 </div>
