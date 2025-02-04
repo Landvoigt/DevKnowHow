@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@interfaces/category.interface';
 import { FilterPipe } from '@pipes/filter.pipe';
 import { DataService } from '@services/data.service';
 import { NavigationService } from '@services/navigation.service';
 import { fadeIn, slideUpDownSlow } from '@utils/animations';
 import { Observable } from 'rxjs';
-import { TranslationService } from '@services/translation.service';
 
 @Component({
   selector: 'navbar',
@@ -26,12 +25,7 @@ export class NavbarComponent implements OnInit {
   userMenuOpen: boolean = false;
   mobileMenuOpen: boolean = false;
 
-  constructor(public navService: NavigationService, private router: Router, private dataService: DataService, private translateService: TranslateService) { 
-    this.translateService.get('BASE.NAVBAR.BTN_NEW').subscribe((translatedMessage: string) => {
-      console.log(translatedMessage);
-    });
-    
-  }
+  constructor(public navService: NavigationService, private router: Router, private dataService: DataService) { }
 
   ngOnInit(): void {
     this.dataService.loadCategories();

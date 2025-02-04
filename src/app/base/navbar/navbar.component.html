@@ -1,4 +1,5 @@
-<nav class="z-0 relative bg-gradient-to-r from-command-sec-from to-command-sec-to border-b-2 border-borderColorPopup slow-transition">
+<nav
+    class="z-0 relative bg-gradient-to-r from-command-sec-from to-command-sec-to border-b-2 border-borderColorPopup slow-transition">
     <div class="z-10 absolute top-0 left-0 h-full w-full bg-gradient-to-r from-routine-sec-from to-routine-sec-to 
         transition-all duration-700 ease-in-out" [ngClass]="{'opacity-0' : navService.activeLayout === 'command'}">
     </div>
@@ -72,7 +73,7 @@
 
     <!-- Mobile menu -->
     <div *ngIf="mobileMenuOpen" @slideUpDownSlow class="md:hidden" id="mobile-menu">
-        <div class="space-y-1 px-2 pb-3 pt-2">
+        <div class="relative z-20 space-y-1 px-2 pb-3 pt-2">
             <ng-container *ngIf="categories$ | async as categories">
                 <ng-container *ngFor="let cat of categories">
                     <a (click)="navService.category(cat.id); closeMobileMenu()"

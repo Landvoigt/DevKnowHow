@@ -17,7 +17,6 @@ export class DataService {
     this.rest.getCategories().subscribe({
       next: (cats: Category[]) => {
         this.categoriesSubject.next(cats || []);
-        console.log(cats);
       },
       error: (error) => this.error.handleHttpError(error, {}),
     });
