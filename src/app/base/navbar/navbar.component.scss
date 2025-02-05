@@ -3,14 +3,9 @@
 }
 
 .logo-text {
-    @media(max-width: 768px) {
-        font-size: 1.4rem;
-        margin-top: -0.125rem;
-    }
-
-    @media(max-width: 460px) {
-        display: none;
-    }
+    font-family: 'Changa';
+    font-size: 1.75rem;
+    margin-bottom: -0.25rem;
 }
 
 .add-btn {

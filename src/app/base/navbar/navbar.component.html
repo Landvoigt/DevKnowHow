@@ -25,9 +25,16 @@
                     </svg>
                 </button>
             </div>
-            <div class="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
+            <div class="flex flex-1 items-center md:items-stretch justify-start ml-12 pl-1 md:ml-0 md:pl-0">
                 <div class="flex flex-shrink-0 items-center" (click)="navService.main()">
-                    <span class="logo-text text-2xl text-textColorPrimary cursor-pointer">DevKnowHow</span>
+                    <span class="logo-text text-textColorPrimary cursor-pointer">
+                        <span class="text-textColorPrimary">De</span>
+                        <span class="text-textColorVariable">v</span>
+                        <span class="text-textColorPrimary">Kno</span>
+                        <span class="text-textColorVariable">w</span>
+                        <span class="text-textColorPrimary">Ho</span>
+                        <span class="text-textColorVariable">w</span>
+                    </span>
                 </div>
                 <div class="hidden md:ml-6 md:block">
                     <div class="flex space-x-4">
@@ -44,7 +51,6 @@
             </div>
             <div class="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
                 <span class="hidden sm:flex text-md text-textColorPrimary"></span>
-                <!-- Profile dropdown -->
                 <div class="relative ml-3">
                     <div>
                         <button (click)="navService.create()" type="submit"
@@ -59,12 +65,6 @@
                         class="absolute right-0 z-1000 mt-2 w-48 origin-top-right rounded-md 
                         bg-defaultColor shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none border border-borderColorPopup overflow-hidden" role="menu"
                         aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                        <!-- <a (click)="goToProfiles()"
-                            class="block px-4 py-2 text-md text-textColorPrimary hover:bg-navColorHover hover:text-white cursor-pointer"
-                            role="menuitem" tabindex="-1" id="user-menu-item-0">Profile</a>
-                        <a (click)="authService.logout()"
-                            class="block px-4 py-2 text-md text-textColorPrimary hover:bg-navColorHover hover:text-white cursor-pointer"
-                            role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a> -->
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@
     <div *ngIf="mobileMenuOpen" @slideUpDownSlow class="md:hidden" id="mobile-menu">
         <div class="relative z-20 space-y-1 px-2 pb-3 pt-2">
             <ng-container *ngIf="categories$ | async as categories">
-                <ng-container *ngFor="let cat of categories">
+                <ng-container *ngFor="let cat of categories | filter: navService.activeLayout">
                     <a (click)="navService.category(cat.id); closeMobileMenu()"
                         class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-navColorHover hover:text-white cursor-pointer"
                         [ngClass]="{'bg-navColorHover' : navService.activePage === cat.id, 'text-white' : navService.activePage === cat.id}">
