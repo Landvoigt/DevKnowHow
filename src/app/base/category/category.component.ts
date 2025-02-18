@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Command } from '@interfaces/command.interface';
 import { CommandService } from '@services/command.service';
@@ -9,11 +9,12 @@ import { ErrorService } from '@services/error.service';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '@services/data.service';
 import { Category } from '@interfaces/category.interface';
-import { map, Observable } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { fadeIn, staggeredFadeIn, subCategoryAnimation } from '@utils/animations';
 import { Routine } from '@interfaces/routine.interface';
 import { NavigationService } from '@services/navigation.service';
 import { FormsModule } from '@angular/forms';
+import { TranslationService } from '@services/translation.service';
 
 @Component({
   selector: 'app-category',
@@ -23,7 +24,9 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './category.component.scss',
   animations: [fadeIn, staggeredFadeIn, subCategoryAnimation]
 })
-export class CategoryComponent implements OnInit {
+export class CategoryComponent implements OnInit, OnDestroy {
+  private languageSubscription!: Subscription;
+
   categories$: Observable<Category[]> = this.dataService.categories$;
   categoryId: number | null = null;
   category: Category | undefined;
@@ -44,6 +47,7 @@ export class CategoryComponent implements OnInit {
     private rest: RestService,
     private error: ErrorService,
     private dataService: DataService,
+    private translationService: TranslationService,
     public commandService: CommandService,
     public navService: NavigationService) { }
 
@@ -51,6 +55,7 @@ export class CategoryComponent implements OnInit {
     this.getCategoryId();
     this.loadCachedFilters();
     this.loadData();
+    this.setupLanguageListener();
   }
 
   getCategoryId(): void {
@@ -102,6 +107,12 @@ export class CategoryComponent implements OnInit {
         });
       }
     }
+  }
+
+  setupLanguageListener() {
+    this.languageSubscription = this.translationService.languageChanged.subscribe(() => {
+      this.loadData();
+    });
   }
 
   onSearch(searchTerm: string): void {
@@ -182,5 +193,11 @@ export class CategoryComponent implements OnInit {
 
   getCurrentStorageName(): string {
     return this.navService.activeLayout === 'command' ? 'DevKnowHow_activeCommandFilters' : 'DevKnowHow_activeRoutineFilters';
+  }
+
+  ngOnDestroy(): void {
+    if (this.languageSubscription) {
+      this.languageSubscription.unsubscribe();
+    }
   }
 }
