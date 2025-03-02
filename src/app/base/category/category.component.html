@@ -1,5 +1,6 @@
 <ng-container *ngIf="category">
-    <div class="z-20 relative flex justify-center sm:justify-start gap-3 sm:gap-6 ml-4 sm:ml-8 mr-4 sm:mr-8 mb-4" style="margin-top: -0.75rem;">
+    <div class="z-20 relative flex justify-center sm:justify-start gap-3 sm:gap-6 ml-4 sm:ml-8 mr-4 sm:mr-8 mb-4"
+        style="margin-top: -0.75rem;">
         <div class="relative flex items-center h-9 w-56 !bg-inputBg rounded-lg">
             <div class="absolute left-2">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -18,7 +19,8 @@
                 </svg>
             </div>
         </div>
-        <select *ngIf="category?.sub_categories?.length" [(ngModel)]="activeSubCat" (change)="cacheFilters()"
+        <select *ngIf="category?.sub_categories?.length" id="activeSubCat" [(ngModel)]="activeSubCat"
+            (change)="cacheFilters()"
             class="h-9 w-40 rounded-lg bg-inputBg px-4 py-1.5 text-md leading-5 shadow-lg cursor-pointer focus-visible:ring-transparent border-none"
             [ngClass]="{'text-gray-600': !activeSubCat, 'text-gray-900 font-semibold' : activeSubCat}">
             <option [ngValue]="null" disabled [hidden]="true">{{ 'FORM.SUBCATEGORY' | translate }}</option>
@@ -27,7 +29,7 @@
                 {{ subCat.title }}
             </option>
         </select>
-        <select [(ngModel)]="activeOrder" (change)="applyOrder()"
+        <select id="activeOrder" [(ngModel)]="activeOrder" (change)="applyOrder()"
             class="h-9 w-40 rounded-lg bg-inputBg px-4 py-1.5 text-md leading-5 shadow-lg cursor-pointer focus-visible:ring-transparent border-none"
             [ngClass]="{'text-gray-600': !activeOrder, 'text-gray-900 font-semibold' : activeOrder}">
             <option [ngValue]="null" disabled [hidden]="true">{{ 'CATEGORY.ORDER' | translate }}</option>
@@ -52,12 +54,12 @@
                             rounded-full border-2 border-borderCopyIcon bg-bgCopyIcon hover:bg-white fast-transition">
                         </div>
                     </div>
-                    <span [innerHTML]="item.command | variable"
+                    <span [innerHTML]="item.command | variable | flag"
                         class="w-full max-w-full leading-6 text-textColorPrimary"
                         [ngClass]="{'truncate': hidden[i] !== true}"></span>
                 </div>
                 <div class="w-7/12 min-max-w-7-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-                    <span [innerHTML]="'(' + (item.description | variable) + ')'"
+                    <span [innerHTML]="'(' + (item.description | variable | flag) + ')'"
                         class="w-full max-w-full leading-6 text-textColorPrimary"
                         [ngClass]="{'truncate': hidden[i] !== true}"></span>
                 </div>
@@ -72,11 +74,11 @@
                         rounded-full border-2 border-[transparent] bg-[transparent] hover:bg-white fast-transition">
                         </div>
                     </div>
-                    <span *ngIf="item.example" [innerHTML]="item.example | variable"
+                    <span *ngIf="item.example" [innerHTML]="item.example | variable | flag"
                         class="w-full max-w-full leading-6 text-[17px] text-textColorSecondary"></span>
                 </div>
                 <div class="w-7/12 min-max-w-7-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-                    <span *ngIf="item.tooltip" [innerHTML]="'* ' + item.tooltip | variable"
+                    <span *ngIf="item.tooltip" [innerHTML]="'* ' + item.tooltip | variable | flag"
                         class="w-full max-w-full leading-6 text-base italic text-textColorSecondary"></span>
                 </div>
             </div>
@@ -94,7 +96,8 @@
                         rounded-full border-2 border-borderCopyIcon bg-bgCopyIcon hover:bg-white fast-transition">
                     </div>
                 </div>
-                <span [innerHTML]="item.routine | variable" class="w-full max-w-full leading-6 text-textColorPrimary"
+                <span [innerHTML]="item.routine | variable | flag"
+                    class="w-full max-w-full leading-6 text-textColorPrimary"
                     [ngClass]="{'truncate': hidden[i] !== true}"></span>
             </div>
         </div>

@@ -1,14 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'variable',
+  name: 'flag',
   standalone: true
 })
-export class VariablePipe implements PipeTransform {
-  private static regex = /\*(.*?)\*/g;
+export class FlagPipe implements PipeTransform {
+  private static regex = /\^(.*?)\^/g;
 
   transform(command: string): string {
-    return command ? command.replace(VariablePipe.regex, '<span class="text-textColorVariable">$1</span>') : '';
+    return command ? command.replace(FlagPipe.regex, '<span class="text-accentColorHover">$1</span>') : '';
   }
 
   static removeFormatting(command: string): string {

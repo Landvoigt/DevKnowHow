@@ -12,8 +12,8 @@ import { TranslationService } from './translation.service';
   providedIn: 'root'
 })
 export class RestService {
-  apiBaseUrl: string = 'http://127.0.0.1:8000/';
-  // apiBaseUrl: string = 'https://server-timvoigt.ch/';
+  // apiBaseUrl: string = 'http://127.0.0.1:8000/';
+  apiBaseUrl: string = 'https://server-timvoigt.ch/';
 
   constructor(private http: HttpClient, private navService: NavigationService, private translation: TranslationService) { }
 

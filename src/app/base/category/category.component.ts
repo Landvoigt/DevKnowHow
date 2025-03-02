@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Command } from '@interfaces/command.interface';
 import { CommandService } from '@services/command.service';
@@ -15,16 +15,19 @@ import { Routine } from '@interfaces/routine.interface';
 import { NavigationService } from '@services/navigation.service';
 import { FormsModule } from '@angular/forms';
 import { TranslationService } from '@services/translation.service';
+import { FlagPipe } from '@pipes/flag.pipe';
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [CommonModule, FormsModule, VariablePipe, TranslateModule],
+  imports: [CommonModule, FormsModule, VariablePipe, FlagPipe, TranslateModule],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss',
   animations: [fadeIn, staggeredFadeIn, subCategoryAnimation]
 })
 export class CategoryComponent implements OnInit, OnDestroy {
+  @ViewChild('searchInput') searchInput!: ElementRef;
+
   private languageSubscription!: Subscription;
 
   categories$: Observable<Category[]> = this.dataService.categories$;
@@ -91,6 +94,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
             this.commands = commands;
             this.filteredCommands = [...commands];
             this.orderCommands();
+            if (this.searchInput?.nativeElement.value) {
+              this.onSearch(this.searchInput.nativeElement.value);
+            }
           },
           error: (error) => this.error.handleHttpError(error, {}),
           complete: () => { }
@@ -101,6 +107,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
             this.routines = routines;
             this.filteredRoutines = [...routines];
             this.orderRoutines();
+            if (this.searchInput?.nativeElement.value) {
+              this.onSearch(this.searchInput.nativeElement.value);
+            }
           },
           error: (error) => this.error.handleHttpError(error, {}),
           complete: () => { }
@@ -118,11 +127,11 @@ export class CategoryComponent implements OnInit, OnDestroy {
   onSearch(searchTerm: string): void {
     if (this.navService.activeLayout === 'command') {
       this.filteredCommands = this.commands.filter((command) =>
-        command.command.toLowerCase().includes(searchTerm.toLowerCase())
+        command.command.toLowerCase().includes(searchTerm.toLowerCase()) || command.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     } else {
       this.filteredRoutines = this.routines.filter((routine) =>
-        routine.routine.toLowerCase().includes(searchTerm.toLowerCase())
+        routine.title.toLowerCase().includes(searchTerm.toLowerCase()) || routine.routine.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
   }

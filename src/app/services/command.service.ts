@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AlertService } from './alert.service';
 import { RestService } from './rest.service';
+import { FlagPipe } from '@pipes/flag.pipe';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,9 @@ export class CommandService {
   constructor(private restService: RestService, private alertService: AlertService) { }
 
   copy(text: string, commandId: number, index: number) {
-    navigator.clipboard.writeText(text).then(() => {
+    const cleanText = FlagPipe.removeFormatting((text));
+    
+    navigator.clipboard.writeText(cleanText).then(() => {
       this.activeItems[index] = true;
       this.showCopiedBanner();
 
