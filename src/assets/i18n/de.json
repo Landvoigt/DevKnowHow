@@ -43,7 +43,11 @@
     },
     "FOOTER": {
         "IMPRINT": "Impressum",
-        "PRIVACY_POLICY": "Datenschutz"
+        "PRIVACY_POLICY": "Datenschutz",
+        "SAY_THANKS": "Sag danke"
+    },
+    "APPRECIATION": {
+        "SAY_THANKS": "Sag danke"
     },
     "ERROR": {
         "UNAUTHORIZED": "Sie sind nicht autorisiert!",

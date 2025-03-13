@@ -4,6 +4,7 @@ import { CategoryComponent } from './base/category/category.component';
 import { CreateComponent } from './base/create/create.component';
 import { ImprintComponent } from './base/imprint/imprint.component';
 import { PolicyComponent } from './base/policy/policy.component';
+import { AppreciationComponent } from './base/appreciation/appreciation.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/main', pathMatch: 'full' },
@@ -14,6 +15,7 @@ export const routes: Routes = [
 
     { path: 'imprint', component: ImprintComponent },
     { path: 'policy', component: PolicyComponent },
+    { path: 'appreciation', component: AppreciationComponent },
 
     { path: '**', redirectTo: '/error' }
 ];

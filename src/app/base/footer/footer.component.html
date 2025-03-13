@@ -25,10 +25,15 @@
             </a>
         </div>
         <div class="flex sm:flex-col justify-start items-end gap-2 sm:gap-1 h-12 sm:h-full w-3/12 sm:pt-4">
-            <a (click)="navService.imprint()" class="cursor-pointer hover:text-accentColorHover text-sm default-transition">
+            <a (click)="navService.imprint()"
+                class="cursor-pointer hover:text-accentColorHover text-sm default-transition">
                 {{ 'FOOTER.IMPRINT' | translate }}</a>
-            <a (click)="navService.policy()" class="cursor-pointer hover:text-accentColorHover text-sm default-transition">
+            <a (click)="navService.policy()"
+                class="cursor-pointer hover:text-accentColorHover text-sm default-transition">
                 {{ 'FOOTER.PRIVACY_POLICY' | translate }}</a>
+            <a (click)="navService.appreciation()"
+                class="cursor-pointer hover:text-accentColorHover text-sm default-transition">
+                {{ 'FOOTER.SAY_THANKS' | translate }}</a>
         </div>
     </div>
     <div class="z-20 flex justify-between border-t border-borderColorLight pt-1">

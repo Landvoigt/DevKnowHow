@@ -53,7 +53,7 @@ export class NavigationService {
     }
   }
 
-  setupActivePageListener() {
+  setupActivePageListener(): void {
     this.router.events.pipe(
       filter(event => event instanceof NavigationStart || event instanceof NavigationEnd)
     ).subscribe((event: any) => {
@@ -65,31 +65,35 @@ export class NavigationService {
     });
   }
 
-  back() {
+  back(): void {
     this.location.back();
   }
 
-  main() {
+  main(): void {
     this.router.navigate(['main']);
   }
 
-  category(catId: number) {
+  category(catId: number): void {
     this.router.navigate(['/category/' + catId]);
   }
 
-  create() {
+  create(): void {
     this.router.navigate(['/create']);
   }
 
-  imprint() {
+  imprint(): void {
     this.router.navigate(['/imprint']);
   }
 
-  policy() {
+  policy(): void {
     this.router.navigate(['/policy']);
   }
 
-  error(params: any) {
+  appreciation(): void {
+    this.router.navigate(['/appreciation']);
+  }
+
+  error(params: any): void {
     this.router.navigate(['/error'], params);
   }
 }
