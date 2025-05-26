@@ -7,13 +7,13 @@ import { CommandRequest, RoutineRequest } from '@models/requests.model';
 import { NavigationService } from './navigation.service';
 import { Routine } from '@interfaces/routine.interface';
 import { TranslationService } from './translation.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RestService {
-  // apiBaseUrl: string = 'http://127.0.0.1:8000/';
-  apiBaseUrl: string = 'https://server-timvoigt.ch/';
+  private readonly apiBaseUrl: string = environment.API_BASE_URL;
 
   constructor(private http: HttpClient, private navService: NavigationService, private translation: TranslationService) { }
 

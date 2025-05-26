@@ -1,71 +1,10 @@
+@use "assets/scss/fonts.scss";
 @use "assets/scss/form.scss";
 @use 'assets/scss/keyframes.scss';
 
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
-
-@font-face {
-    font-display: swap;
-    font-family: 'Changa';
-    font-style: normal;
-    font-weight: 200;
-    src: url('assets/fonts/changa-v27-latin-200.woff2') format('woff2');
-}
-
-/* changa-300 - latin */
-@font-face {
-    font-display: swap;
-    font-family: 'Changa';
-    font-style: normal;
-    font-weight: 300;
-    src: url('assets/fonts/changa-v27-latin-300.woff2') format('woff2');
-}
-
-/* changa-regular - latin */
-@font-face {
-    font-display: swap;
-    font-family: 'Changa';
-    font-style: normal;
-    font-weight: 400;
-    src: url('assets/fonts/changa-v27-latin-regular.woff2') format('woff2');
-}
-
-/* changa-500 - latin */
-@font-face {
-    font-display: swap;
-    font-family: 'Changa';
-    font-style: normal;
-    font-weight: 500;
-    src: url('assets/fonts/changa-v27-latin-500.woff2') format('woff2');
-}
-
-/* changa-600 - latin */
-@font-face {
-    font-display: swap;
-    font-family: 'Changa';
-    font-style: normal;
-    font-weight: 600;
-    src: url('assets/fonts/changa-v27-latin-600.woff2') format('woff2');
-}
-
-/* changa-700 - latin */
-@font-face {
-    font-display: swap;
-    font-family: 'Changa';
-    font-style: normal;
-    font-weight: 700;
-    src: url('assets/fonts/changa-v27-latin-700.woff2') format('woff2');
-}
-
-/* changa-800 - latin */
-@font-face {
-    font-display: swap;
-    font-family: 'Changa';
-    font-style: normal;
-    font-weight: 800;
-    src: url('assets/fonts/changa-v27-latin-800.woff2') format('woff2');
-}
 
 html,
 body {
