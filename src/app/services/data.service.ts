@@ -27,3 +27,14 @@ export class DataService {
   }
 
 }
+
+
+// @Injectable({ providedIn: 'root' })
+// export class CategoryStore {
+//   private readonly rest = inject(RestService);
+
+//   readonly categories = toSignal(
+//     this.rest.getCategories(),
+//     { initialValue: [] }
+//   );
+// }

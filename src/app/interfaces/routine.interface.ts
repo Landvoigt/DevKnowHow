@@ -1,9 +1,17 @@
+import { Category } from "./category.interface";
+
 export interface Routine {
     id: number;
-    active: boolean;
+
     title: string;
     routine: string;
-    category: string;
-    sub_category: string;
+    category: Category[];
+    example: string;
+    tooltip: string;
+    alternatives: Routine[];
     copy_count: number;
+
+    active: boolean;
+    created_at: Date;
+    updated_at: Date;
 }

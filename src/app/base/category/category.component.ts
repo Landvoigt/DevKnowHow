@@ -34,8 +34,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
   categoryId: number | null = null;
   category: Category | undefined;
 
-  activeSubCat: Category | null = null;
-  activeSubCatId: number | null = null;
   activeOrder: 'copy' | 'asc' | 'dec' | null = null;
 
   commands: Command[] = [];
@@ -79,43 +77,28 @@ export class CategoryComponent implements OnInit, OnDestroy {
       ).subscribe(category => {
         this.category = category;
 
-        if (category && this.activeSubCatId) {
-          this.activeSubCat = category.sub_categories.find(subCat => subCat.id === this.activeSubCatId) || null;
-        }
+        // if (category && this.activeSubCatId) {
+        //   this.activeSubCat = category.sub_categories.find(subCat => subCat.id === this.activeSubCatId) || null;
+        // }
       });
     }
   }
 
   loadData(): void {
-    if (this.categoryId) {
-      if (this.navService.activeLayout === 'command') {
-        this.rest.getCommandsByCategory(this.categoryId).subscribe({
-          next: (commands: Command[]) => {
-            this.commands = commands;
-            this.filteredCommands = [...commands];
-            this.orderCommands();
-            if (this.searchInput?.nativeElement.value) {
-              this.onSearch(this.searchInput.nativeElement.value);
-            }
-          },
-          error: (error) => this.error.handleHttpError(error, {}),
-          complete: () => { }
-        });
-      } else {
-        this.rest.getRoutinesByCategory(this.categoryId).subscribe({
-          next: (routines: Routine[]) => {
-            this.routines = routines;
-            this.filteredRoutines = [...routines];
-            this.orderRoutines();
-            if (this.searchInput?.nativeElement.value) {
-              this.onSearch(this.searchInput.nativeElement.value);
-            }
-          },
-          error: (error) => this.error.handleHttpError(error, {}),
-          complete: () => { }
-        });
-      }
-    }
+    // if (this.categoryId) {
+    //   this.rest.getDetailedCategory(this.categoryId).subscribe({
+    //     next: (commands: Command[]) => {
+    //       this.commands = commands;
+    //       this.filteredCommands = [...commands];
+    //       this.orderCommands();
+    //       if (this.searchInput?.nativeElement.value) {
+    //         this.onSearch(this.searchInput.nativeElement.value);
+    //       }
+    //     },
+    //     error: (error) => this.error.handleHttpError(error, {}),
+    //     complete: () => { }
+    //   });
+    // }
   }
 
   setupLanguageListener() {
@@ -127,7 +110,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   onSearch(searchTerm: string): void {
     if (this.navService.activeLayout === 'command') {
       this.filteredCommands = this.commands.filter((command) =>
-        command.command.toLowerCase().includes(searchTerm.toLowerCase()) || command.description.toLowerCase().includes(searchTerm.toLowerCase())
+        command.title.toLowerCase().includes(searchTerm.toLowerCase()) || command.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     } else {
       this.filteredRoutines = this.routines.filter((routine) =>
@@ -149,14 +132,12 @@ export class CategoryComponent implements OnInit, OnDestroy {
     const savedData = sessionStorage.getItem(this.getCurrentStorageName());
     if (savedData) {
       const parsedData = JSON.parse(savedData);
-      this.activeSubCatId = parsedData.activeSubCat;
       this.activeOrder = parsedData.activeOrder;
     }
   }
 
   cacheFilters(): void {
     const data = {
-      activeSubCat: this.activeSubCat ? this.activeSubCat.id : null,
       activeOrder: this.activeOrder
     };
     sessionStorage.setItem(this.getCurrentStorageName(), JSON.stringify(data));
@@ -174,9 +155,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
   orderCommands(): void {
     if (this.activeOrder === 'asc') {
-      this.filteredCommands.sort((a, b) => this.compareStrings(a.command, b.command));
+      this.filteredCommands.sort((a, b) => this.compareStrings(a.title, b.title));
     } else if (this.activeOrder === 'dec') {
-      this.filteredCommands.sort((a, b) => this.compareStrings(b.command, a.command));
+      this.filteredCommands.sort((a, b) => this.compareStrings(b.title, a.title));
     } else if (this.activeOrder === 'copy') {
       this.filteredCommands.sort((a, b) => b.copy_count - a.copy_count);
     }
@@ -210,3 +191,72 @@ export class CategoryComponent implements OnInit, OnDestroy {
     }
   }
 }
+
+
+
+
+
+
+// @Component({
+//   standalone: true,
+//   selector: 'app-category',
+//   imports: [CommonModule, TranslateModule, FormsModule],
+//   templateUrl: './category.component.html',
+//   styleUrl: './category.component.scss',
+//   animations: [fadeIn, staggeredFadeIn, subCategoryAnimation],
+// })
+// export class CategoryComponent {
+
+//   private readonly route = inject(ActivatedRoute);
+//   private readonly rest = inject(RestService);
+//   private readonly translation = inject(TranslationService);
+//   private readonly navService = inject(NavigationService);
+
+//   private readonly categoryId = toSignal(
+//     this.route.paramMap.pipe(
+//       map(params => Number(params.get('id')))
+//     ),
+//     { initialValue: null }
+//   );
+
+//   private readonly language = toSignal(
+//     this.translation.languageChanged,
+//     { initialValue: this.translation.currentLang }
+//   );
+
+//   /** Reload when ID OR language changes */
+//   readonly category = toSignal(
+//     combineLatest([
+//       this.categoryId,
+//       this.language,
+//     ]).pipe(
+//       filter(([id]) => !!id),
+//       switchMap(([id]) => this.rest.getCategoryDetail(id!))
+//     ),
+//     { initialValue: null }
+//   );
+
+//   readonly commands = computed(() => this.category()?.commands ?? []);
+
+//   readonly activeOrder = signal<'copy' | 'asc' | 'dec' | null>(null);
+
+//   readonly filteredCommands = computed(() => {
+//     const cmds = [...this.commands()];
+//     const order = this.activeOrder();
+
+//     switch (order) {
+//       case 'asc':
+//         return cmds.sort((a, b) => a.title.localeCompare(b.title));
+//       case 'dec':
+//         return cmds.sort((a, b) => b.title.localeCompare(a.title));
+//       case 'copy':
+//         return cmds.sort((a, b) => b.copy_count - a.copy_count);
+//       default:
+//         return cmds;
+//     }
+//   });
+
+//   setOrder(order: 'copy' | 'asc' | 'dec') {
+//     this.activeOrder.set(order);
+//   }
+// }

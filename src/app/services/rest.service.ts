@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Category } from '@interfaces/category.interface';
+import { Category, CategoryDetail } from '@interfaces/category.interface';
 import { Command } from '@interfaces/command.interface';
 import { CommandRequest, RoutineRequest } from '@models/requests.model';
 import { NavigationService } from './navigation.service';
@@ -17,8 +17,12 @@ export class RestService {
 
   constructor(private http: HttpClient, private navService: NavigationService, private translation: TranslationService) { }
 
-  getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${this.apiBaseUrl}category/`, { headers: this.getHeaders() });
+  getCategories() {
+    return this.http.get<Category[]>(`${this.apiBaseUrl}category/`);
+  }
+  
+  getDetailedCategory(id: number) {
+    return this.http.get<CategoryDetail>(`${this.apiBaseUrl}category/${id}/`);
   }
 
   getCommands(searchValue: string): Observable<Command[]> {
@@ -37,12 +41,8 @@ export class RestService {
     }
   }
 
-  getCommandsByCategory(catId: number): Observable<Command[]> {
-    return this.http.get<Command[]>(`${this.apiBaseUrl}command/category/${catId}/`, { headers: this.getHeaders() });
-  }
-
   getRoutinesByCategory(catId: number): Observable<Routine[]> {
-    return this.http.get<Routine[]>(`${this.apiBaseUrl}routine/category/${catId}/`, { headers: this.getHeaders() });
+    return this.http.get<Routine[]>(`${this.apiBaseUrl}category/${catId}/`, { headers: this.getHeaders() });
   }
 
   createCommand(request: CommandRequest): Observable<any> {

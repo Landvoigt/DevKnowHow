@@ -196,14 +196,14 @@ export class CommandComponent {
 
   }
 
-  getSubCategories(): Observable<Category[]> {
-    return this.categories$.pipe(
-      map(categories => {
-        const category = categories.find(cat => cat.title === this.category?.value);
-        return category ? category.sub_categories : [];
-      })
-    );
-  }
+  // getSubCategories(): Observable<Category[]> {
+  //   return this.categories$.pipe(
+  //     map(categories => {
+  //       const category = categories.find(cat => cat.title === this.category?.value);
+  //       return category ? category.sub_categories : [];
+  //     })
+  //   );
+  // }
 
   // Form Getter
   get name() {
@@ -259,22 +259,22 @@ export class CommandComponent {
     return (field?.dirty || field?.touched) && !field?.pristine;
   }
 
-  selectedCatHasSubCategories(): boolean {
-    const selectedCategory = this.form.get('body.category')?.value;
+  // selectedCatHasSubCategories(): boolean {
+  //   const selectedCategory = this.form.get('body.category')?.value;
 
-    if (!selectedCategory || !this.categories$) {
-      return false;
-    }
+  //   if (!selectedCategory || !this.categories$) {
+  //     return false;
+  //   }
 
-    let hasSubCategories = false;
+  //   let hasSubCategories = false;
 
-    this.categories$.subscribe(categories => {
-      const category = categories.find(cat => cat.title === selectedCategory);
-      if (category && category.sub_categories && category.sub_categories.length > 0) {
-        hasSubCategories = true;
-      }
-    });
+  //   this.categories$.subscribe(categories => {
+  //     const category = categories.find(cat => cat.title === selectedCategory);
+  //     if (category && category.sub_categories && category.sub_categories.length > 0) {
+  //       hasSubCategories = true;
+  //     }
+  //   });
 
-    return hasSubCategories;
-  }
+  //   return hasSubCategories;
+  // }
 }

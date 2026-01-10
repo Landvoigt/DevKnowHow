@@ -19,7 +19,7 @@
                 </svg>
             </div>
         </div>
-        <select *ngIf="category?.sub_categories?.length" id="activeSubCat" [(ngModel)]="activeSubCat"
+        <!-- <select *ngIf="category?.sub_categories?.length" id="activeSubCat" [(ngModel)]="activeSubCat"
             (change)="cacheFilters()"
             class="h-9 w-40 rounded-lg bg-inputBg px-4 py-1.5 text-md leading-5 shadow-lg cursor-pointer focus-visible:ring-transparent border-none"
             [ngClass]="{'text-gray-600': !activeSubCat, 'text-gray-900 font-semibold' : activeSubCat}">
@@ -28,7 +28,7 @@
             <option *ngFor="let subCat of category?.sub_categories" [ngValue]="subCat">
                 {{ subCat.title }}
             </option>
-        </select>
+        </select> -->
         <select id="activeOrder" [(ngModel)]="activeOrder" (change)="applyOrder()"
             class="h-9 w-40 rounded-lg bg-inputBg px-4 py-1.5 text-md leading-5 shadow-lg cursor-pointer focus-visible:ring-transparent border-none"
             [ngClass]="{'text-gray-600': !activeOrder, 'text-gray-900 font-semibold' : activeOrder}">
@@ -43,46 +43,43 @@
 <div @fadeIn
     class="z-20 relative flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-textColorSecondary">
     <ng-container *ngFor="let item of filteredCommands || []; let i = index">
-        <ng-container *ngIf="!activeSubCat || activeSubCat?.title === item.sub_category">
-            <div @fadeIn (click)="toggleExtendedInfo(i)"
-                class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
-                [ngClass]="{'bg-tableBgSecondary' : i % 2 !== 0}">
-                <div class="w-5/12 min-max-w-5-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-                    <div (click)="commandService.copy(item.command, item.id, i); $event.stopPropagation()"
-                        class="h-6 flex justify-start items-center lg:mr-6 md:mr-6 sm:mr-6 mr-3 cursor-pointer rounded-full fast-transition">
-                        <div [ngClass]="{'clicked': commandService.activeItems[i]}" class="flex justify-center items-center p-3px 
+        <div @fadeIn (click)="toggleExtendedInfo(i)" class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
+            [ngClass]="{'bg-tableBgSecondary' : i % 2 !== 0}">
+            <div class="w-5/12 min-max-w-5-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
+                <div (click)="commandService.copy(item.title, item.id, i); $event.stopPropagation()"
+                    class="h-6 flex justify-start items-center lg:mr-6 md:mr-6 sm:mr-6 mr-3 cursor-pointer rounded-full fast-transition">
+                    <div [ngClass]="{'clicked': commandService.activeItems[i]}" class="flex justify-center items-center p-3px 
                             rounded-full border-2 border-borderCopyIcon bg-bgCopyIcon hover:bg-white fast-transition">
-                        </div>
                     </div>
-                    <span [innerHTML]="item.command | variable | flag"
-                        class="w-full max-w-full leading-6 text-textColorPrimary"
-                        [ngClass]="{'truncate': hidden[i] !== true}"></span>
                 </div>
-                <div class="w-7/12 min-max-w-7-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-                    <span [innerHTML]="'(' + (item.description | variable | flag) + ')'"
-                        class="w-full max-w-full leading-6 text-textColorPrimary"
-                        [ngClass]="{'truncate': hidden[i] !== true}"></span>
-                </div>
+                <span [innerHTML]="item.title | variable | flag"
+                    class="w-full max-w-full leading-6 text-textColorPrimary"
+                    [ngClass]="{'truncate': hidden[i] !== true}"></span>
             </div>
-            <div *ngIf="hidden[i] && (item.example || item.tooltip)"
-                class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pb-0.5"
-                [ngClass]="{'bg-tableBgSecondary' : i % 2 !== 0}">
-                <div class="w-5/12 min-max-w-5-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-                    <div
-                        class="h-6 flex justify-start items-center lg:mr-6 md:mr-6 sm:mr-6 mr-3 cursor-pointer rounded-full fast-transition">
-                        <div class="flex justify-center items-center p-3px 
+            <div class="w-7/12 min-max-w-7-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
+                <span [innerHTML]="'(' + (item.description | variable | flag) + ')'"
+                    class="w-full max-w-full leading-6 text-textColorPrimary"
+                    [ngClass]="{'truncate': hidden[i] !== true}"></span>
+            </div>
+        </div>
+        <div *ngIf="hidden[i] && (item.example || item.tooltip)"
+            class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pb-0.5"
+            [ngClass]="{'bg-tableBgSecondary' : i % 2 !== 0}">
+            <div class="w-5/12 min-max-w-5-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
+                <div
+                    class="h-6 flex justify-start items-center lg:mr-6 md:mr-6 sm:mr-6 mr-3 cursor-pointer rounded-full fast-transition">
+                    <div class="flex justify-center items-center p-3px 
                         rounded-full border-2 border-[transparent] bg-[transparent] hover:bg-white fast-transition">
-                        </div>
                     </div>
-                    <span *ngIf="item.example" [innerHTML]="item.example | variable | flag"
-                        class="w-full max-w-full leading-6 text-[17px] text-textColorSecondary"></span>
                 </div>
-                <div class="w-7/12 min-max-w-7-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-                    <span *ngIf="item.tooltip" [innerHTML]="'* ' + item.tooltip | variable | flag"
-                        class="w-full max-w-full leading-6 text-base italic text-textColorSecondary"></span>
-                </div>
+                <span *ngIf="item.example" [innerHTML]="item.example | variable | flag"
+                    class="w-full max-w-full leading-6 text-[17px] text-textColorSecondary"></span>
             </div>
-        </ng-container>
+            <div class="w-7/12 min-max-w-7-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
+                <span *ngIf="item.tooltip" [innerHTML]="'* ' + item.tooltip | variable | flag"
+                    class="w-full max-w-full leading-6 text-base italic text-textColorSecondary"></span>
+            </div>
+        </div>
     </ng-container>
 
     <ng-container *ngFor="let item of filteredRoutines || []; let i = index">

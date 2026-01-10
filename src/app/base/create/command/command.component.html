@@ -74,7 +74,7 @@
                             focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
             </div>
         </div>
-        <div *ngIf="hasInput(category) && selectedCatHasSubCategories()" formGroupName="body"
+        <!-- <div *ngIf="hasInput(category) && selectedCatHasSubCategories()" formGroupName="body"
             [ngClass]="{'sm:col-span-1' : newSubCatSelected, 'sm:col-span-3' : !newSubCatSelected}">
             <label for="subCategory"
                 class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
@@ -91,7 +91,7 @@
                     <option value="new">{{ 'FORM.NEW_SUBCATEGORY' | translate }} +</option>
                 </select>
             </div>
-        </div>
+        </div> -->
         <div *ngIf="newSubCatSelected" formGroupName="body" class="sm:col-span-2">
             <label for="newSubCategory"
                 class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">

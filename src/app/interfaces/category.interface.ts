@@ -1,9 +1,17 @@
+import { Command } from "./command.interface";
+
 export interface Category {
     id: number;
-    active: boolean;
+
     title: string;
     description: string;
     type: 'command' | 'routine' | 'function';
-    creation_date: Date;
-    sub_categories: Category[];
+
+    active: boolean;
+    created_at: Date;
+    updated_at: Date;
+}
+
+export interface CategoryDetail extends Category {
+    commands: Command[];
 }
