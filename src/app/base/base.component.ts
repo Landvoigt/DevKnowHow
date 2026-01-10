@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
-import { fadeInSuperSlow } from '@utils/animations';
 import { NavigationService } from '@services/navigation.service';
 
 @Component({
@@ -11,8 +10,7 @@ import { NavigationService } from '@services/navigation.service';
   standalone: true,
   imports: [RouterOutlet, CommonModule, NavbarComponent, FooterComponent],
   templateUrl: './base.component.html',
-  styleUrl: './base.component.scss',
-  animations: [fadeInSuperSlow]
+  styleUrl: './base.component.scss'
 })
 export class BaseComponent {
   closeMenu: boolean = false;

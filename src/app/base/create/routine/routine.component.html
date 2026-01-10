@@ -9,9 +9,9 @@
                 {{ 'FORM.TITLE' | translate }}*</label>
             <div class="mt-2 relative">
                 <input id="title" formControlName="title" type="text" spellcheck="false" required
-                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                    focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg"
-                    [ngClass]="{'focus:ring-red': title?.invalid && title?.touched}">
+                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
+                    focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-[#d2eaff]"
+                    [class.focus:ring-red]="title?.invalid && title?.touched">
                 <span *ngIf="hasInput(title)" class="input-error absolute form-control-sm text-danger font-medium">
                     <span *ngIf="title?.hasError('required')">* {{ 'FORM.TITLE' | translate }} {{ 'FORM.IS_REQUIRED' | translate }}</span>
                 </span>
@@ -23,32 +23,30 @@
                 {{ 'FORM.ROUTINE' | translate }}*</label>
             <div class="mt-2 relative">
                 <div #routineInput id="routine" contentEditable formControlName="routine" spellcheck="false"
-                    (input)="checkInput(routineInput)" required class="block w-full min-h-48 rounded-lg border-0 py-2 sm:py-2.5 px-3 text-gray-900 shadow-lg ring-1 ring-inset 
-                    ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg 
-                    leading-5 sm:leading-6 !bg-inputBg outline-none"></div>
+                    (input)="checkInput(routineInput)" required class="block w-full min-h-48 rounded-lg border-0 py-2 sm:py-2.5 px-3 text-gray-900 shadow-lg ring-1 ring-inset
+                    ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg
+                    leading-5 sm:leading-6 !bg-[#d2eaff] outline-none"></div>
                 <span *ngIf="hasInput(routine)" class="input-error absolute form-control-sm text-danger font-medium">
                     <span *ngIf="routine?.hasError('required')">* {{ 'FORM.ROUTINE' | translate }} {{ 'FORM.IS_REQUIRED' | translate }}</span>
                 </span>
-                <!-- <span *ngIf="routineTyped"
-                    class="input-error absolute form-control-sm text-success text-textColorVariable font-normal">
+                <!-- <span *ngIf="routineTyped()"
+                    class="input-error absolute form-control-sm text-success text-[#32ff7c] font-normal">
                     <span>* Use *VARIABLE* to mark a variable</span>
                 </span> -->
             </div>
         </div>
-        <div formGroupName="body" [ngClass]="{'sm:col-span-1' : newCatSelected, 'sm:col-span-3' : !newCatSelected}">
+        <div formGroupName="body" [class]="newCatSelected() ? 'sm:col-span-1' : 'sm:col-span-3'">
             <label for="category"
                 class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
                 {{ 'FORM.CATEGORY' | translate }} *
             </label>
             <div class="mt-2 relative">
                 <select id="category" formControlName="category" required
-                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 
-                    placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
-                    <ng-container *ngIf="categories$ | async as categories">
-                        <ng-container *ngFor="let cat of categories | filter: navService.activeLayout">
-                            <option [value]="cat.title">{{ cat.title }}</option>
-                        </ng-container>
-                    </ng-container>
+                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300
+                    placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-[#d2eaff]">
+                    @for (cat of categories() | filter: navService.activeLayout; track cat.title) {
+                        <option [value]="cat.title">{{ cat.title }}</option>
+                    }
                     <option value="new">{{ 'FORM.NEW_CATEGORY' | translate }} +</option>
                 </select>
                 <span *ngIf="hasInput(category)" class="input-error absolute form-control-sm text-danger font-medium">
@@ -56,53 +54,51 @@
                 </span>
             </div>
         </div>
-        <div *ngIf="newCatSelected" formGroupName="body" class="sm:col-span-2">
+        <div *ngIf="newCatSelected()" formGroupName="body" class="sm:col-span-2">
             <label for="newCategory"
                 class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
                 {{ 'FORM.NEW_CATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <input id="newCategory" formControlName="newCategory" type="text" spellcheck="false"
-                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                    focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
+                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
+                    focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-[#d2eaff]">
             </div>
         </div>
         <!-- <div *ngIf="hasInput(category) && selectedCatHasSubCategories()" formGroupName="body"
-            [ngClass]="{'sm:col-span-1' : newSubCatSelected, 'sm:col-span-3' : !newSubCatSelected}">
+            [class]="newSubCatSelected() ? 'sm:col-span-1' : 'sm:col-span-3'">
             <label for="subCategory"
                 class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
                 {{ 'FORM.SUBCATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <select id="subCategory" formControlName="subCategory"
-                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 
-                    placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
-                    <ng-container *ngIf="getSubCategories() | async as subCategories">
-                        <ng-container *ngFor="let subCat of subCategories">
-                            <option [value]="subCat.title">{{ subCat.title }}</option>
-                        </ng-container>
-                    </ng-container>
+                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300
+                    placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-[#d2eaff]">
+                    @for (subCat of getSubCategories() | async; track subCat.title) {
+                        <option [value]="subCat.title">{{ subCat.title }}</option>
+                    }
                     <option value="new">{{ 'FORM.NEW_SUBCATEGORY' | translate }} +</option>
                 </select>
             </div>
         </div> -->
-        <div *ngIf="newSubCatSelected" formGroupName="body" class="sm:col-span-2">
+        <!-- <div *ngIf="newSubCatSelected()" formGroupName="body" class="sm:col-span-2">
             <label for="newSubCategory"
                 class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
                 {{ 'FORM.NEW_SUBCATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <input id="newSubCategory" formControlName="newSubCategory" type="text" spellcheck="false"
-                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                    focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
+                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
+                    focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-[#d2eaff]">
             </div>
-        </div>
-        <div class="w-full sm:col-span-3 border-b-2 border-borderColorLight"></div>
+        </div> -->
+        <div class="w-full sm:col-span-3 border-b-2 border-[#e5e7eb38]"></div>
         <div>
             <label for="name"
                 class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
                 {{ 'FORM.NAME' | translate }}*</label>
             <div class="mt-2 relative">
                 <input id="name" formControlName="name" type="text" spellcheck="false" autocomplete="name" required
-                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                    focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
+                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
+                    focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-[#d2eaff]">
                 <span *ngIf="hasInput(name)" class="input-error absolute form-control-sm text-danger font-medium">
                     <span *ngIf="name?.hasError('required')">* {{ 'FORM.NAME' | translate }} {{ 'FORM.IS_REQUIRED' | translate }}</span>
                     <span *ngIf="name?.hasError('pattern')">* {{ 'FORM.ONLY_LETTERS' | translate }}</span>
@@ -115,8 +111,8 @@
                 {{ 'FORM.EMAIL' | translate }}*</label>
             <div class="mt-2 relative">
                 <input id="email" formControlName="email" type="email" spellcheck="false" autocomplete="email" required
-                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                    focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg">
+                    class="block w-full rounded-lg border-0 py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400
+                    focus:ring-2 focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg text-md sm:text-lg leading-5 sm:leading-6 !bg-[#d2eaff]">
                 <span *ngIf="hasInput(email)" class="input-error absolute form-control-sm text-danger font-medium">
                     <span *ngIf="email?.hasError('required')">* {{ 'FORM.EMAIL' | translate }} {{ 'FORM.IS_REQUIRED' | translate }}</span>
                     <span *ngIf="email?.hasError('pattern')">* {{ 'FORM.VALID_EMAIL' | translate }}</span>
@@ -129,19 +125,19 @@
                 {{ 'FORM.ADDITIONAL_MESSAGE' | translate }}</label>
             <div class="mt-2 relative">
                 <textarea formControlName="message" id="message" rows="3" spellcheck="false"
-                    class="block w-full rounded-lg py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 
-                    focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-inputBg"></textarea>
+                    class="block w-full rounded-lg py-2 sm:py-2.5 text-gray-900 shadow-lg ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2
+                    focus:ring-inset focus:ring-accentColorHover text-md sm:text-lg leading-5 sm:leading-6 !bg-[#d2eaff]"></textarea>
             </div>
         </div>
     </div>
     <div class="mt-20">
-        <button *ngIf="form" type="submit" [disabled]="form.invalid || loading"
-            class="submit-btn flex w-full 
-            justify-center rounded-lg bg-accentColor px-3 py-4 text-lg font-semibold 
-            leading-6 text-white shadow-lg hover:bg-accentColorHover focus:outline-none focus-visible:ring-2 
-            focus-visible:ring-offset-2 focus-visible:ring-accentColor disabled:opacity-60 disabled:hover:bg-accentColor">
-            <span *ngIf="!loading">{{ 'FORM.BTN_SUBMIT' | translate }}</span>
-            <div *ngIf="loading" class="spinner"></div>
+        <button *ngIf="form" type="submit" [disabled]="form.invalid || loading()"
+            class="submit-btn flex w-full
+            justify-center rounded-lg bg-[#0082c2] px-3 py-4 text-lg font-semibold
+            leading-6 text-white shadow-lg hover:bg-[#47aee1] focus:outline-none focus-visible:ring-2
+            focus-visible:ring-offset-2 focus-visible:ring-accentColor disabled:opacity-60 disabled:hover:bg-[#0082c2]">
+            <span *ngIf="!loading()">{{ 'FORM.BTN_SUBMIT' | translate }}</span>
+            <div *ngIf="loading()" class="spinner"></div>
         </button>
     </div>
 </form>

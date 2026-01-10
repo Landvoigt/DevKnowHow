@@ -16,9 +16,8 @@ export class ErrorService {
    * @param key The translation key for the error message.
    */
   private showError(key: string): void {
-    this.translationService.translateMessage(key).subscribe((translatedMessage: string) => {
-      this.alertService.showAlert(translatedMessage, 'error');
-    });
+    const message = this.translationService.translateInstant(key);
+    this.alertService.showAlert(message, 'error');
   }
 
 

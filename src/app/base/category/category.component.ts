@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, signal, effect, computed, ChangeDetectionStrategy } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Command } from '@interfaces/command.interface';
 import { CommandService } from '@services/command.service';
@@ -9,8 +9,6 @@ import { ErrorService } from '@services/error.service';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '@services/data.service';
 import { Category } from '@interfaces/category.interface';
-import { map, Observable, Subscription } from 'rxjs';
-import { fadeIn, staggeredFadeIn, subCategoryAnimation } from '@utils/animations';
 import { Routine } from '@interfaces/routine.interface';
 import { NavigationService } from '@services/navigation.service';
 import { FormsModule } from '@angular/forms';
@@ -22,100 +20,86 @@ import { FlagPipe } from '@pipes/flag.pipe';
   standalone: true,
   imports: [CommonModule, FormsModule, VariablePipe, FlagPipe, TranslateModule],
   templateUrl: './category.component.html',
-  styleUrl: './category.component.scss',
-  animations: [fadeIn, staggeredFadeIn, subCategoryAnimation]
+  styleUrl: './category.component.scss'
 })
-export class CategoryComponent implements OnInit, OnDestroy {
+export class CategoryComponent {
   @ViewChild('searchInput') searchInput!: ElementRef;
 
-  private languageSubscription!: Subscription;
+  private readonly route = inject(ActivatedRoute);
+  private readonly rest = inject(RestService);
+  private readonly error = inject(ErrorService);
+  private readonly dataService = inject(DataService);
+  private readonly translationService = inject(TranslationService);
+  public readonly commandService = inject(CommandService);
+  public readonly navService = inject(NavigationService);
 
-  categories$: Observable<Category[]> = this.dataService.categories$;
-  categoryId: number | null = null;
-  category: Category | undefined;
+  public readonly categories = this.dataService.categories;
 
-  activeOrder: 'copy' | 'asc' | 'dec' | null = null;
+  public readonly categoryId = signal<number | null>(null);
+  public readonly category = signal<Category | undefined>(undefined);
 
-  commands: Command[] = [];
-  routines: Routine[] = [];
-  filteredCommands: Command[] = [];
-  filteredRoutines: Routine[] = [];
+  public readonly activeOrder = signal<'copy' | 'asc' | 'dec' | null>(null);
 
-  hidden: { [key: number]: boolean } = {};
+  public readonly commands = signal<Command[]>([]);
+  public readonly routines = signal<Routine[]>([]);
+  public readonly filteredCommands = signal<Command[]>([]);
+  public readonly filteredRoutines = signal<Routine[]>([]);
 
-  constructor(
-    private route: ActivatedRoute,
-    private rest: RestService,
-    private error: ErrorService,
-    private dataService: DataService,
-    private translationService: TranslationService,
-    public commandService: CommandService,
-    public navService: NavigationService) { }
+  public readonly hidden = signal<{ [key: number]: boolean }>({});
 
-  ngOnInit(): void {
-    this.getCategoryId();
-    this.loadCachedFilters();
-    this.loadData();
-    this.setupLanguageListener();
-  }
-
-  getCategoryId(): void {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
+  constructor() {
+    effect(() => {
+      const id = this.categoryId();
       if (id) {
-        this.categoryId = +id;
         this.loadCategory();
         this.loadData();
       }
     });
+
+    effect(() => {
+      this.translationService.language();
+      this.loadData();
+    });
+
+    this.getCategoryId();
+    this.loadCachedFilters();
   }
 
-  loadCategory(): void {
-    if (this.categoryId) {
-      this.categories$.pipe(
-        map(categories => categories.find(cat => cat.id === this.categoryId))
-      ).subscribe(category => {
-        this.category = category;
-
-        // if (category && this.activeSubCatId) {
-        //   this.activeSubCat = category.sub_categories.find(subCat => subCat.id === this.activeSubCatId) || null;
-        // }
+  private getCategoryId(): void {
+    effect(() => {
+      this.route.paramMap.subscribe(params => {
+        const id = params.get('id');
+        if (id) {
+          this.categoryId.set(+id);
+        }
       });
+    });
+  }
+
+  private loadCategory(): void {
+    const id = this.categoryId();
+    if (id) {
+      const categories = this.categories();
+      const foundCategory = categories.find(cat => cat.id === id);
+      this.category.set(foundCategory);
     }
   }
 
-  loadData(): void {
-    // if (this.categoryId) {
-    //   this.rest.getDetailedCategory(this.categoryId).subscribe({
-    //     next: (commands: Command[]) => {
-    //       this.commands = commands;
-    //       this.filteredCommands = [...commands];
-    //       this.orderCommands();
-    //       if (this.searchInput?.nativeElement.value) {
-    //         this.onSearch(this.searchInput.nativeElement.value);
-    //       }
-    //     },
-    //     error: (error) => this.error.handleHttpError(error, {}),
-    //     complete: () => { }
-    //   });
-    // }
-  }
-
-  setupLanguageListener() {
-    this.languageSubscription = this.translationService.languageChanged.subscribe(() => {
-      this.loadData();
-    });
+  private loadData(): void {
+    // Placeholder for data loading logic
   }
 
   onSearch(searchTerm: string): void {
     if (this.navService.activeLayout === 'command') {
-      this.filteredCommands = this.commands.filter((command) =>
+      const cmds = this.commands();
+      this.filteredCommands.set(cmds.filter((command) =>
         command.title.toLowerCase().includes(searchTerm.toLowerCase()) || command.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      ));
     } else {
-      this.filteredRoutines = this.routines.filter((routine) =>
+      const rts = this.routines();
+      this.filteredRoutines.set(rts.filter((routine) =>
         routine.title.toLowerCase().includes(searchTerm.toLowerCase()) || routine.routine.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      ));
     }
   }
 
@@ -125,20 +109,21 @@ export class CategoryComponent implements OnInit, OnDestroy {
   }
 
   toggleExtendedInfo(index: number): void {
-    this.hidden[index] = !this.hidden[index];
+    const currentHidden = this.hidden();
+    this.hidden.set({ ...currentHidden, [index]: !currentHidden[index] });
   }
 
   loadCachedFilters(): void {
     const savedData = sessionStorage.getItem(this.getCurrentStorageName());
     if (savedData) {
       const parsedData = JSON.parse(savedData);
-      this.activeOrder = parsedData.activeOrder;
+      this.activeOrder.set(parsedData.activeOrder);
     }
   }
 
   cacheFilters(): void {
     const data = {
-      activeOrder: this.activeOrder
+      activeOrder: this.activeOrder()
     };
     sessionStorage.setItem(this.getCurrentStorageName(), JSON.stringify(data));
   }
@@ -154,23 +139,29 @@ export class CategoryComponent implements OnInit, OnDestroy {
   }
 
   orderCommands(): void {
-    if (this.activeOrder === 'asc') {
-      this.filteredCommands.sort((a, b) => this.compareStrings(a.title, b.title));
-    } else if (this.activeOrder === 'dec') {
-      this.filteredCommands.sort((a, b) => this.compareStrings(b.title, a.title));
-    } else if (this.activeOrder === 'copy') {
-      this.filteredCommands.sort((a, b) => b.copy_count - a.copy_count);
+    const order = this.activeOrder();
+    const cmds = [...this.commands()];
+    if (order === 'asc') {
+      cmds.sort((a, b) => this.compareStrings(a.title, b.title));
+    } else if (order === 'dec') {
+      cmds.sort((a, b) => this.compareStrings(b.title, a.title));
+    } else if (order === 'copy') {
+      cmds.sort((a, b) => b.copy_count - a.copy_count);
     }
+    this.filteredCommands.set(cmds);
   }
 
   orderRoutines(): void {
-    if (this.activeOrder === 'asc') {
-      this.filteredRoutines.sort((a, b) => this.compareStrings(a.routine, b.routine));
-    } else if (this.activeOrder === 'dec') {
-      this.filteredRoutines.sort((a, b) => this.compareStrings(b.routine, a.routine));
-    } else if (this.activeOrder === 'copy') {
-      this.filteredRoutines.sort((a, b) => b.copy_count - a.copy_count);
+    const order = this.activeOrder();
+    const rts = [...this.routines()];
+    if (order === 'asc') {
+      rts.sort((a, b) => this.compareStrings(a.routine, b.routine));
+    } else if (order === 'dec') {
+      rts.sort((a, b) => this.compareStrings(b.routine, a.routine));
+    } else if (order === 'copy') {
+      rts.sort((a, b) => b.copy_count - a.copy_count);
     }
+    this.filteredRoutines.set(rts);
   }
 
   compareStrings(str1: string, str2: string): number {
@@ -181,17 +172,16 @@ export class CategoryComponent implements OnInit, OnDestroy {
     return 0;
   }
 
+  onOrderChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    this.activeOrder.set(value as 'copy' | 'asc' | 'dec' | null);
+    this.applyOrder();
+  }
+
   getCurrentStorageName(): string {
     return this.navService.activeLayout === 'command' ? 'DevKnowHow_activeCommandFilters' : 'DevKnowHow_activeRoutineFilters';
   }
-
-  ngOnDestroy(): void {
-    if (this.languageSubscription) {
-      this.languageSubscription.unsubscribe();
-    }
-  }
 }
-
 
 
 

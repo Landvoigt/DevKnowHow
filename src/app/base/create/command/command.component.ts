@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, signal, computed, effect, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormGroup, AbstractControl } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@interfaces/category.interface';
@@ -11,7 +11,6 @@ import { DataService } from '@services/data.service';
 import { ErrorService } from '@services/error.service';
 import { NavigationService } from '@services/navigation.service';
 import { RestService } from '@services/rest.service';
-import { map, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 @Component({
@@ -19,59 +18,55 @@ import { debounceTime } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule, FilterPipe],
   templateUrl: './command.component.html',
-  styleUrl: './command.component.scss'
+  styleUrl: './command.component.scss',
+  host: {
+    '(document:click)': 'onDocumentClick($event)',
+    '(window:beforeunload)': 'saveOnUnload($event)'
+  }
 })
-export class CommandComponent {
+export class CommandComponent implements OnInit {
   @ViewChild('commandInput', { static: true }) commandInput!: ElementRef<HTMLInputElement>;
   @ViewChild('descriptionInput', { static: true }) descriptionInput!: ElementRef<HTMLTextAreaElement>;
 
-  public form: FormGroup<CreateFormCommandModel> = createFormCommand();
+  private readonly restService = inject(RestService);
+  private readonly errorService = inject(ErrorService);
+  private readonly alertService = inject(AlertService);
+  private readonly dataService = inject(DataService);
+  public readonly navService = inject(NavigationService);
 
-  categories$: Observable<Category[]> = this.dataService.categories$;
+  public readonly form: FormGroup<CreateFormCommandModel> = createFormCommand();
 
-  loading: boolean = false;
-  closeMenu: boolean = false;
+  public readonly categories = this.dataService.categories;
 
-  newCatSelected: boolean = false;
-  newSubCatSelected: boolean = false;
+  public readonly loading = signal(false);
 
-  commandTyped: boolean = false;
-  descriptionTyped: boolean = false;
+  public readonly newCatSelected = signal(false);
 
-  constructor(
-    private restService: RestService,
-    private errorService: ErrorService,
-    private alertService: AlertService,
-    private dataService: DataService,
-    public navService: NavigationService) {
+  public readonly commandTyped = signal(false);
+  public readonly descriptionTyped = signal(false);
 
+  constructor() {
     this.setupCaching();
+    effect(() => {
+      const selectedType = this.category?.value;
+      this.newCatSelected.set(selectedType === 'new');
+    });
   }
 
   ngOnInit(): void {
     this.loadCachedItem();
     this.dataService.loadCategories();
-    this.setupCategoryListener();
-    this.setupSubCategoryListener();
     this.setupDefaultCategory();
   }
 
-  setupCategoryListener() {
-    this.category?.valueChanges.subscribe(() => {
-      this.checkNewCategorySelection();
-    });
-  }
-
-  setupSubCategoryListener() {
-    this.subCategory?.valueChanges.subscribe(() => {
-      this.checkNewSubCategorySelection();
-    });
-  }
-
-  setupDefaultCategory() {
-    this.categories$.subscribe(categories => {
+  private setupDefaultCategory() {
+    effect(() => {
+      const categories = this.categories();
       if (categories?.length > 0 && !this.form.get('category')?.value) {
-        this.form.patchValue({ body: { category: categories.filter(cat => cat.type === this.navService.activeLayout)[0].title } });
+        const filtered = categories.filter((cat: Category) => cat.type === this.navService.activeLayout);
+        if (filtered.length > 0) {
+          this.form.patchValue({ body: { category: filtered[0].title } });
+        }
       }
     });
   }
@@ -95,19 +90,9 @@ export class CommandComponent {
     sessionStorage.setItem('DevKnowHow_unsavedCommandItem', JSON.stringify(formData));
   }
 
-  checkNewCategorySelection() {
-    const selectedType = this.category?.value;
-    this.newCatSelected = selectedType === 'new';
-  }
-
-  checkNewSubCategorySelection() {
-    const selectedType = this.subCategory?.value;
-    this.newSubCatSelected = selectedType === 'new';
-  }
-
   onSubmitCommand() {
     if (this.form.valid) {
-      this.loading = true;
+      this.loading.set(true);
 
       const { name, email, message } = this.form.value;
       const bodyValue = this.getBodyValues();
@@ -145,23 +130,22 @@ export class CommandComponent {
     this.alertService.showAlert('Thank you for your submission!', 'success');
     this.form.reset();
     sessionStorage.removeItem('DevKnowHow_unsavedCommandItem');
-    this.loading = false;
+    this.loading.set(false);
   }
 
   onCreationError(err: any) {
     this.errorService.handleContactError(err);
-    this.loading = false;
+    this.loading.set(false);
   }
 
-  @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
 
-    if (!this.commandInput?.nativeElement.contains(target) && this.commandTyped) {
-      this.commandTyped = false;
+    if (!this.commandInput?.nativeElement.contains(target) && this.commandTyped()) {
+      this.commandTyped.set(false);
     }
-    if (!this.descriptionInput?.nativeElement.contains(target) && this.descriptionTyped) {
-      this.descriptionTyped = false;
+    if (!this.descriptionInput?.nativeElement.contains(target) && this.descriptionTyped()) {
+      this.descriptionTyped.set(false);
     }
   }
 
@@ -169,13 +153,12 @@ export class CommandComponent {
     const value = nativeElement.value;
 
     if (nativeElement === this.commandInput.nativeElement) {
-      this.commandTyped = value.length > 2;
+      this.commandTyped.set(value.length > 2);
     } else if (nativeElement === this.descriptionInput.nativeElement) {
-      this.descriptionTyped = value.length > 2;
+      this.descriptionTyped.set(value.length > 2);
     }
   }
 
-  @HostListener('window:beforeunload', ['$event'])
   saveOnUnload(event: BeforeUnloadEvent) {
     this.cacheOpenItem();
   }
@@ -195,15 +178,6 @@ export class CommandComponent {
     };
 
   }
-
-  // getSubCategories(): Observable<Category[]> {
-  //   return this.categories$.pipe(
-  //     map(categories => {
-  //       const category = categories.find(cat => cat.title === this.category?.value);
-  //       return category ? category.sub_categories : [];
-  //     })
-  //   );
-  // }
 
   // Form Getter
   get name() {
@@ -258,23 +232,4 @@ export class CommandComponent {
   hasInput(field: AbstractControl<string | null, string | null> | null) {
     return (field?.dirty || field?.touched) && !field?.pristine;
   }
-
-  // selectedCatHasSubCategories(): boolean {
-  //   const selectedCategory = this.form.get('body.category')?.value;
-
-  //   if (!selectedCategory || !this.categories$) {
-  //     return false;
-  //   }
-
-  //   let hasSubCategories = false;
-
-  //   this.categories$.subscribe(categories => {
-  //     const category = categories.find(cat => cat.title === selectedCategory);
-  //     if (category && category.sub_categories && category.sub_categories.length > 0) {
-  //       hasSubCategories = true;
-  //     }
-  //   });
-
-  //   return hasSubCategories;
-  // }
 }

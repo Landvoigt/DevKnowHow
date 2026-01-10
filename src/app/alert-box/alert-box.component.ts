@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { AlertService } from '@services/alert.service';
 import { CommonModule } from '@angular/common';
 import { Alert } from '@interfaces/alert.interface';
-import { fadeInAlert } from '@utils/animations';
 
 @Component({
   selector: 'app-alert-box',
@@ -10,7 +9,6 @@ import { fadeInAlert } from '@utils/animations';
   imports: [CommonModule],
   templateUrl: './alert-box.component.html',
   styleUrl: './alert-box.component.scss',
-  animations: [fadeInAlert]
 })
 
 export class AlertBoxComponent {

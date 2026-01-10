@@ -4,21 +4,12 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": [],
-    "paths": {
-      "@assets/*": ["src/assets/*"],
-      "@auth/*": ["src/app/auth/*"],
-      "@services/*": ["src/app/services/*"],
-      "@interfaces/*": ["src/app/interfaces/*"],
-      "@models/*": ["src/app/models/*"],
-      "@pipes/*": ["src/app/pipes/*"],
-      "@utils/*": ["src/app/utils/*"],
-    }
+    "types": []
   },
-  "files": [
-    "src/main.ts"
-  ],
   "include": [
-    "src/**/*.d.ts"
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts"
   ]
 }

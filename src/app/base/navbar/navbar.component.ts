@@ -1,40 +1,39 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, input, inject, signal, effect, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@interfaces/category.interface';
 import { FilterPipe } from '@pipes/filter.pipe';
 import { DataService } from '@services/data.service';
 import { NavigationService } from '@services/navigation.service';
-import { fadeIn, slideUpDownSlow } from '@utils/animations';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'navbar',
   standalone: true,
   imports: [CommonModule, TranslateModule, FilterPipe],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss',
-  animations: [fadeIn, slideUpDownSlow]
+  styleUrl: './navbar.component.scss'
 })
-export class NavbarComponent implements OnInit {
-  @Input() closeMenu: boolean = false;
+export class NavbarComponent {
+  closeMenu = input<boolean>(false);
 
-  categories$: Observable<Category[]> = this.dataService.categories$;
+  public readonly navService = inject(NavigationService);
+  private readonly router = inject(Router);
+  private readonly dataService = inject(DataService);
 
-  userMenuOpen: boolean = false;
-  mobileMenuOpen: boolean = false;
+  public readonly categories = this.dataService.categories;
 
-  constructor(public navService: NavigationService, private router: Router, private dataService: DataService) { }
+  public readonly userMenuOpen = signal(false);
+  public readonly mobileMenuOpen = signal(false);
 
-  ngOnInit(): void {
+  constructor() {
     this.dataService.loadCategories();
-  }
 
-  ngOnChanges() {
-    if (this.closeMenu) {
-      this.closeMobileMenu();
-    }
+    effect(() => {
+      if (this.closeMenu()) {
+        this.closeMobileMenu();
+      }
+    });
   }
 
   changePage(cat: Category) {
@@ -43,10 +42,18 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleMobileMenu() {
-    this.mobileMenuOpen = !this.mobileMenuOpen;
+    this.mobileMenuOpen.update(open => !open);
   }
 
   closeMobileMenu() {
-    this.mobileMenuOpen = false;
+    this.mobileMenuOpen.set(false);
+  }
+
+  toggleUserMenu() {
+    this.userMenuOpen.update(open => !open);
+  }
+
+  closeUserMenu() {
+    this.userMenuOpen.set(false);
   }
 }

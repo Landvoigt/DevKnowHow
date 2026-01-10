@@ -1,8 +1,8 @@
-<div @fadeIn class="z-20 relative bg-gradient-to-r px-14 py-8" [ngClass]="{'from-command-prim-from to-command-prim-to' : navService.activeLayout === 'command', 
-    'from-routine-prim-from to-routine-prim-to' : navService.activeLayout === 'routine'}">
+<div class="z-20 relative bg-gradient-to-r px-14 py-8" [ngClass]="{'bg-command-prim-gradient' : navService.activeLayout === 'command', 
+    'bg-routine-prim-gradient' : navService.activeLayout === 'routine'}">
     <div class="space-y-6 mx-auto max-w-xl">
         <div class="mx-auto max-w-2xl text-center">
-            <h2 class="text-3xl font-bold tracking-tight text-textColorPrimary sm:text-4xl">
+            <h2 class="text-3xl font-bold tracking-tight text-[#f0f8ff] sm:text-4xl">
                 {{ 'APPRECIATION.SAY_THANKS' | translate }}</h2>
         </div>
 

@@ -1,12 +1,12 @@
 <div
     class="relative z-0 flex flex-col justify-between h-58 sm:h-44 w-full gap-2 sm:gap-8 pt-5 pb-5 pl-8 pr-8 
-        bg-gradient-to-r from-command-sec-from to-command-sec-to border-t-2 border-borderColorPopup text-textColorPrimary">
-    <div class="z-10 absolute top-0 left-0 h-full w-full bg-gradient-to-r from-routine-sec-from to-routine-sec-to 
+        bg-command-sec-gradient border-t-2 border-[#e3d9ffb8] text-[#f0f8ff]">
+    <div class="z-10 absolute top-0 left-0 h-full w-full bg-routine-sec-gradient 
         transition-all duration-700 ease-in-out" [ngClass]="{'opacity-0' : navService.activeLayout === 'command'}">
     </div>
     <div class="z-20 flex flex-col sm:flex-row justify-between items-start flex-1 footer-mobile">
         <div class="flex flex-col justify-start gap-1 h-12 sm:h-full w-3/12 sm:pt-4">
-            <span (click)="scrollTop()" class="logo-text text-xl text-textColorPrimary cursor-pointer">
+            <span (click)="scrollTop()" class="logo-text text-xl text-[#f0f8ff] cursor-pointer">
                 DevKnowHow
             </span>
             <span class="logo-text text-sm">Reach Unlimited Knowledge</span>
@@ -36,13 +36,13 @@
                 {{ 'FOOTER.SAY_THANKS' | translate }}</a>
         </div>
     </div>
-    <div class="z-20 flex justify-between border-t border-borderColorLight pt-1">
+    <div class="z-20 flex justify-between border-t border-[#e5e7eb38] pt-1">
         <div class="text-xs">© 2025 DevKnowHow</div>
         <div class="flex gap-2">
             <a (click)="translation.setLanguage('en')" class="text-xs cursor-pointer default-transition"
-                [ngClass]="{'text-textColorTertiary hover:text-accentColorHover': translation.currentLanguage !== 'en'}">english</a>
+                [ngClass]="{'text-[#f0f8ff80] hover:text-accentColorHover': translation.language() !== 'en'}">english</a>
             <a (click)="translation.setLanguage('de')" class="text-xs cursor-pointer default-transition"
-                [ngClass]="{'text-textColorTertiary hover:text-accentColorHover': translation.currentLanguage !== 'de'}">deutsch</a>
+                [ngClass]="{'text-[#f0f8ff80] hover:text-accentColorHover': translation.language() !== 'de'}">deutsch</a>
         </div>
     </div>
 </div>

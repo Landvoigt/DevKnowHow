@@ -1,12 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category, CategoryDetail } from '@interfaces/category.interface';
 import { Command } from '@interfaces/command.interface';
 import { CommandRequest, RoutineRequest } from '@models/requests.model';
 import { NavigationService } from './navigation.service';
 import { Routine } from '@interfaces/routine.interface';
-import { TranslationService } from './translation.service';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -15,7 +14,8 @@ import { environment } from 'src/environments/environment';
 export class RestService {
   private readonly apiBaseUrl: string = environment.API_BASE_URL;
 
-  constructor(private http: HttpClient, private navService: NavigationService, private translation: TranslationService) { }
+  private readonly http = inject(HttpClient);
+  private readonly navService = inject(NavigationService);
 
   getCategories() {
     return this.http.get<Category[]>(`${this.apiBaseUrl}category/`);
@@ -27,22 +27,22 @@ export class RestService {
 
   getCommands(searchValue: string): Observable<Command[]> {
     if (searchValue) {
-      return this.http.get<Command[]>(`${this.apiBaseUrl}command/?search=${searchValue}`, { headers: this.getHeaders() });
+      return this.http.get<Command[]>(`${this.apiBaseUrl}command/?search=${searchValue}`);
     } else {
-      return this.http.get<Command[]>(`${this.apiBaseUrl}command/`, { headers: this.getHeaders() });
+      return this.http.get<Command[]>(`${this.apiBaseUrl}command/`);
     }
   }
 
   getRoutines(searchValue: string): Observable<Routine[]> {
     if (searchValue) {
-      return this.http.get<Routine[]>(`${this.apiBaseUrl}routine/?search=${searchValue}`, { headers: this.getHeaders() });
+      return this.http.get<Routine[]>(`${this.apiBaseUrl}routine/?search=${searchValue}`);
     } else {
-      return this.http.get<Routine[]>(`${this.apiBaseUrl}routine/`, { headers: this.getHeaders() });
+      return this.http.get<Routine[]>(`${this.apiBaseUrl}routine/`);
     }
   }
 
   getRoutinesByCategory(catId: number): Observable<Routine[]> {
-    return this.http.get<Routine[]>(`${this.apiBaseUrl}category/${catId}/`, { headers: this.getHeaders() });
+    return this.http.get<Routine[]>(`${this.apiBaseUrl}category/${catId}/`);
   }
 
   createCommand(request: CommandRequest): Observable<any> {
@@ -59,14 +59,6 @@ export class RestService {
     } else {
       return this.http.post<any>(`${this.apiBaseUrl}routine/${id}/increment_copy/`, {});
     }
-  }
-
-  getHeaders(): HttpHeaders {
-    let headers: { [key: string]: string } = {
-      'Accept-Language': this.translation.currentLanguage
-    };
-
-    return new HttpHeaders(headers);
   }
 
 }

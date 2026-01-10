@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, signal, computed, effect, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormGroup, AbstractControl } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@interfaces/category.interface';
@@ -11,7 +11,7 @@ import { DataService } from '@services/data.service';
 import { ErrorService } from '@services/error.service';
 import { NavigationService } from '@services/navigation.service';
 import { RestService } from '@services/rest.service';
-import { debounceTime, map, Observable } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { ContentEditableDirective } from 'src/app/directives/content-editable.directive';
 
 @Component({
@@ -19,57 +19,54 @@ import { ContentEditableDirective } from 'src/app/directives/content-editable.di
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule, FilterPipe, ContentEditableDirective],
   templateUrl: './routine.component.html',
-  styleUrl: './routine.component.scss'
+  styleUrl: './routine.component.scss',
+  host: {
+    '(document:click)': 'onDocumentClick($event)',
+    '(window:beforeunload)': 'saveOnUnload($event)'
+  }
 })
-export class RoutineComponent {
+export class RoutineComponent implements OnInit {
   @ViewChild('routineInput', { static: true }) routineInput!: ElementRef<HTMLDivElement>;
 
-  public form: FormGroup<CreateFormRoutineModel> = createFormRoutine();
+  private readonly restService = inject(RestService);
+  private readonly errorService = inject(ErrorService);
+  private readonly alertService = inject(AlertService);
+  private readonly dataService = inject(DataService);
+  public readonly navService = inject(NavigationService);
 
-  categories$: Observable<Category[]> = this.dataService.categories$;
+  public readonly form: FormGroup<CreateFormRoutineModel> = createFormRoutine();
 
-  loading: boolean = false;
-  closeMenu: boolean = false;
+  public readonly categories = this.dataService.categories;
 
-  newCatSelected: boolean = false;
-  newSubCatSelected: boolean = false;
+  public readonly loading = signal(false);
+  public readonly closeMenu = signal(false);
 
-  routineTyped: boolean = false;
+  public readonly newCatSelected = signal(false);
 
-  constructor(
-    private restService: RestService,
-    private errorService: ErrorService,
-    private alertService: AlertService,
-    private dataService: DataService,
-    public navService: NavigationService) {
+  public readonly routineTyped = signal(false);
 
+  constructor() {
     this.setupCaching();
+    effect(() => {
+      const selectedType = this.category?.value;
+      this.newCatSelected.set(selectedType === 'new');
+    });
   }
 
   ngOnInit(): void {
     this.loadCachedItem();
     this.dataService.loadCategories();
-    this.setupCategoryListener();
-    this.setupSubCategoryListener();
     this.setupDefaultCategory();
   }
 
-  setupCategoryListener() {
-    this.category?.valueChanges.subscribe(() => {
-      this.checkNewCategorySelection();
-    });
-  }
-
-  setupSubCategoryListener() {
-    this.subCategory?.valueChanges.subscribe(() => {
-      this.checkNewSubCategorySelection();
-    });
-  }
-
-  setupDefaultCategory() {
-    this.categories$.subscribe(categories => {
+  private setupDefaultCategory() {
+    effect(() => {
+      const categories = this.categories();
       if (categories?.length > 0 && !this.form.get('category')?.value) {
-        this.form.patchValue({ body: { category: categories.filter(cat => cat.type === this.navService.activeLayout)[0].title } });
+        const filtered = categories.filter((cat: Category) => cat.type === this.navService.activeLayout);
+        if (filtered.length > 0) {
+          this.form.patchValue({ body: { category: filtered[0].title } });
+        }
       }
     });
   }
@@ -93,19 +90,9 @@ export class RoutineComponent {
     sessionStorage.setItem('DevKnowHow_unsavedRoutineItem', JSON.stringify(formData));
   }
 
-  checkNewCategorySelection() {
-    const selectedType = this.category?.value;
-    this.newCatSelected = selectedType === 'new';
-  }
-
-  checkNewSubCategorySelection() {
-    const selectedType = this.subCategory?.value;
-    this.newSubCatSelected = selectedType === 'new';
-  }
-
   onSubmitRoutine() {
     if (this.form.valid) {
-      this.loading = true;
+      this.loading.set(true);
 
       const { name, email, message } = this.form.value;
       const bodyValue = this.getBodyValues();
@@ -122,7 +109,6 @@ export class RoutineComponent {
     const bodyValue = this.body.value;
 
     this.setCategory(bodyValue);
-    this.setSubCategory(bodyValue);
 
     return bodyValue;
   }
@@ -133,30 +119,23 @@ export class RoutineComponent {
     }
   }
 
-  setSubCategory(bodyValue: any) {
-    if (this.subCategory && this.newSubCategory?.value != null) {
-      bodyValue.subCategory = this.newSubCategory.value;
-    }
-  }
-
   onCreationSubmitted(response: any) {
     this.alertService.showAlert('Thank you for your submission!', 'success');
     this.form.reset();
     sessionStorage.removeItem('DevKnowHow_unsavedRoutineItem');
-    this.loading = false;
+    this.loading.set(false);
   }
 
   onCreationError(err: any) {
     this.errorService.handleContactError(err);
-    this.loading = false;
+    this.loading.set(false);
   }
 
-  @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
 
-    if (!this.routineInput?.nativeElement.contains(target) && this.routineTyped) {
-      this.routineTyped = false;
+    if (!this.routineInput?.nativeElement.contains(target) && this.routineTyped()) {
+      this.routineTyped.set(false);
     }
   }
 
@@ -164,11 +143,10 @@ export class RoutineComponent {
     const value = nativeElement.textContent?.trim() || '';
 
     if (nativeElement === this.routineInput.nativeElement) {
-      this.routineTyped = value.length > 2;
+      this.routineTyped.set(value.length > 2);
     }
   }
 
-  @HostListener('window:beforeunload', ['$event'])
   saveOnUnload(event: BeforeUnloadEvent) {
     this.cacheOpenItem();
   }
@@ -185,15 +163,6 @@ export class RoutineComponent {
       creator_message: message || '',
     };
   }
-
-  // getSubCategories(): Observable<Category[]> {
-  //   return this.categories$.pipe(
-  //     map(categories => {
-  //       const category = categories.find(cat => cat.title === this.category?.value);
-  //       return category ? category.sub_categories : [];
-  //     })
-  //   );
-  // }
 
   // Form Getter
   get name() {
@@ -237,26 +206,7 @@ export class RoutineComponent {
   }
 
   // Conditions
-  hasInput(control: AbstractControl<string | null, string | null> | null) {
-    return (control?.dirty || control?.touched) && !control?.pristine;
+  hasInput(field: AbstractControl<string | null, string | null> | null) {
+    return (field?.dirty || field?.touched) && !field?.pristine;
   }
-
-  // selectedCatHasSubCategories(): boolean {
-  //   const selectedCategory = this.form.get('body.category')?.value;
-
-  //   if (!selectedCategory || !this.categories$) {
-  //     return false;
-  //   }
-
-  //   let hasSubCategories = false;
-
-  //   this.categories$.subscribe(categories => {
-  //     const category = categories.find(cat => cat.title === selectedCategory);
-  //     if (category && category.sub_categories && category.sub_categories.length > 0) {
-  //       hasSubCategories = true;
-  //     }
-  //   });
-
-  //   return hasSubCategories;
-  // }
 }

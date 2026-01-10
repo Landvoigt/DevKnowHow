@@ -1,10 +1,70 @@
 @use "assets/scss/fonts.scss";
 @use "assets/scss/form.scss";
-@use 'assets/scss/keyframes.scss';
+@use "assets/scss/keyframes.scss";
 
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+:root {
+  --font-display: "Satoshi", "sans-serif";
+  --breakpoint-3xl: 120rem;
+
+  --accentColor: #0082c2;
+  --accentColorHover: #47aee1;
+
+  --textColorPrimary: #f0f8ff;
+  --textColorSecondary: #f0f8ffbf;
+  --textColorTertiary: #f0f8ff80;
+  --textColorVariable: #32ff7c;
+
+  --defaultColor: #1d1d1d;
+
+  --borderColorPopup: #e3d9ffb8;
+  --borderColorLight: #e5e7eb38;
+
+  --bgCopyIcon: #01071d;
+  --borderCopyIcon: #ededede6;
+
+  --tableBgSecondary: #f0f8ff0d;
+
+  --inputBg: #d2eaff;
+
+  --navColorHover: #bad5ff70;
+
+  --gradientHover: #f3968133;
+
+  --command-prim-from: #01071d;
+  --command-prim-to: #172c06;
+  --command-sec-from: #077c91;
+  --command-sec-to: #08490d;
+
+  --routine-prim-from: #1e131c;
+  --routine-prim-to: #44080e;
+  --routine-sec-from: #89240d;
+  --routine-sec-to: #120021;
+  
+  --command-btn-to: #09330c;
+
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+}
+
+.bg-command-prim-gradient {
+    background-image: linear-gradient(to right, var(--command-prim-from), var(--command-prim-to));
+}
+
+.bg-command-sec-gradient {
+    background-image: linear-gradient(to right, var(--command-sec-from), var(--command-sec-to));
+}
+
+.bg-routine-prim-gradient {
+    background-image: linear-gradient(to right, var(--routine-prim-from), var(--routine-prim-to));
+}
+
+.bg-routine-sec-gradient {
+    background-image: linear-gradient(to right, var(--routine-sec-from), var(--routine-sec-to));
+}
+
+.bg-command-btn-gradient {
+    background-image: linear-gradient(to right, var(--routine-sec-from), var(--routine-sec-to));
+}
 
 html,
 body {
@@ -21,7 +81,8 @@ body {
 }
 
 .slow-transition {
-    transition: --tw-gradient-from 0.5s ease-in-out,
+    transition:
+        --tw-gradient-from 0.5s ease-in-out,
         --tw-gradient-to 0.5s ease-in-out;
 }
 
