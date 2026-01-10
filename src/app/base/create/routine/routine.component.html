@@ -5,7 +5,7 @@
     <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 mt-10">
         <div formGroupName="body" class="sm:col-span-3">
             <label for="title"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.TITLE' | translate }}*</label>
             <div class="mt-2 relative">
                 <input id="title" formControlName="title" type="text" spellcheck="false" required
@@ -19,7 +19,7 @@
         </div>
         <div formGroupName="body" class="sm:col-span-3">
             <label for="routine"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.ROUTINE' | translate }}*</label>
             <div class="mt-2 relative">
                 <div #routineInput id="routine" contentEditable formControlName="routine" spellcheck="false"
@@ -37,7 +37,7 @@
         </div>
         <div formGroupName="body" [class]="newCatSelected() ? 'sm:col-span-1' : 'sm:col-span-3'">
             <label for="category"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.CATEGORY' | translate }} *
             </label>
             <div class="mt-2 relative">
@@ -56,7 +56,7 @@
         </div>
         <div *ngIf="newCatSelected()" formGroupName="body" class="sm:col-span-2">
             <label for="newCategory"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.NEW_CATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <input id="newCategory" formControlName="newCategory" type="text" spellcheck="false"
@@ -67,7 +67,7 @@
         <!-- <div *ngIf="hasInput(category) && selectedCatHasSubCategories()" formGroupName="body"
             [class]="newSubCatSelected() ? 'sm:col-span-1' : 'sm:col-span-3'">
             <label for="subCategory"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.SUBCATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <select id="subCategory" formControlName="subCategory"
@@ -82,7 +82,7 @@
         </div> -->
         <!-- <div *ngIf="newSubCatSelected()" formGroupName="body" class="sm:col-span-2">
             <label for="newSubCategory"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.NEW_SUBCATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <input id="newSubCategory" formControlName="newSubCategory" type="text" spellcheck="false"
@@ -93,7 +93,7 @@
         <div class="w-full sm:col-span-3 border-b-2 border-[#e5e7eb38]"></div>
         <div>
             <label for="name"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.NAME' | translate }}*</label>
             <div class="mt-2 relative">
                 <input id="name" formControlName="name" type="text" spellcheck="false" autocomplete="name" required
@@ -107,7 +107,7 @@
         </div>
         <div class="sm:col-span-2">
             <label for="email"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.EMAIL' | translate }}*</label>
             <div class="mt-2 relative">
                 <input id="email" formControlName="email" type="email" spellcheck="false" autocomplete="email" required
@@ -121,7 +121,7 @@
         </div>
         <div class="sm:col-span-3">
             <label for="message"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.ADDITIONAL_MESSAGE' | translate }}</label>
             <div class="mt-2 relative">
                 <textarea formControlName="message" id="message" rows="3" spellcheck="false"

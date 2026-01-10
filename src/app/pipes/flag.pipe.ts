@@ -8,7 +8,7 @@ export class FlagPipe implements PipeTransform {
   private static regex = /\^(.*?)\^/g;
 
   transform(command: string): string {
-    return command ? command.replace(FlagPipe.regex, '<span class="text-accentColorHover">$1</span>') : '';
+    return command ? command.replace(FlagPipe.regex, '<span class="text-[#47aee1]">$1</span>') : '';
   }
 
   static removeFormatting(command: string): string {

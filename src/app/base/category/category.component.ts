@@ -1,252 +1,127 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, inject, signal, effect, computed, ChangeDetectionStrategy } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { Command } from '@interfaces/command.interface';
-import { CommandService } from '@services/command.service';
-import { VariablePipe } from '@pipes/variable.pipe';
-import { RestService } from '@services/rest.service';
-import { ErrorService } from '@services/error.service';
+import { Component, ElementRef, ViewChild, inject, signal, computed, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DataService } from '@services/data.service';
-import { Category } from '@interfaces/category.interface';
-import { Routine } from '@interfaces/routine.interface';
-import { NavigationService } from '@services/navigation.service';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { toSignal, toObservable } from '@angular/core/rxjs-interop';
+import { combineLatest, filter, map, switchMap } from 'rxjs';
+
+import { Command } from '@interfaces/command.interface';
+import { Category } from '@interfaces/category.interface';
+
+import { RestService } from '@services/rest.service';
+import { DataService } from '@services/data.service';
+import { NavigationService } from '@services/navigation.service';
 import { TranslationService } from '@services/translation.service';
+import { CommandService } from '@services/command.service';
+import { ErrorService } from '@services/error.service';
+
+import { VariablePipe } from '@pipes/variable.pipe';
 import { FlagPipe } from '@pipes/flag.pipe';
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [CommonModule, FormsModule, VariablePipe, FlagPipe, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, VariablePipe, FlagPipe],
   templateUrl: './category.component.html',
-  styleUrl: './category.component.scss'
+  styleUrl: './category.component.scss',
 })
 export class CategoryComponent {
-  @ViewChild('searchInput') searchInput!: ElementRef;
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   private readonly route = inject(ActivatedRoute);
   private readonly rest = inject(RestService);
-  private readonly error = inject(ErrorService);
   private readonly dataService = inject(DataService);
-  private readonly translationService = inject(TranslationService);
-  public readonly commandService = inject(CommandService);
+  private readonly translation = inject(TranslationService);
+  private readonly error = inject(ErrorService);
+
   public readonly navService = inject(NavigationService);
+  public readonly commandService = inject(CommandService);
 
-  public readonly categories = this.dataService.categories;
+  readonly categories = this.dataService.categories;
 
-  public readonly categoryId = signal<number | null>(null);
-  public readonly category = signal<Category | undefined>(undefined);
+  readonly categoryId = toSignal(
+    this.route.paramMap.pipe(
+      map(params => Number(params.get('id'))),
+      filter(Boolean)
+    ),
+    { initialValue: null }
+  );
 
-  public readonly activeOrder = signal<'copy' | 'asc' | 'dec' | null>(null);
+  readonly language = this.translation.language;
 
-  public readonly commands = signal<Command[]>([]);
-  public readonly routines = signal<Routine[]>([]);
-  public readonly filteredCommands = signal<Command[]>([]);
-  public readonly filteredRoutines = signal<Routine[]>([]);
+  readonly categoryDetail = toSignal(
+    combineLatest([
+      toObservable(this.categoryId).pipe(filter(Boolean)),
+      toObservable(this.language)
+    ]).pipe(
+      switchMap(([id]) => this.rest.getDetailedCategory(id))
+    ),
+    { initialValue: null }
+  );
 
-  public readonly hidden = signal<{ [key: number]: boolean }>({});
-
-  constructor() {
-    effect(() => {
-      const id = this.categoryId();
-      if (id) {
-        this.loadCategory();
-        this.loadData();
-      }
-    });
-
-    effect(() => {
-      this.translationService.language();
-      this.loadData();
-    });
-
-    this.getCategoryId();
-    this.loadCachedFilters();
-  }
-
-  private getCategoryId(): void {
-    effect(() => {
-      this.route.paramMap.subscribe(params => {
-        const id = params.get('id');
-        if (id) {
-          this.categoryId.set(+id);
-        }
-      });
-    });
-  }
-
-  private loadCategory(): void {
+  readonly category = computed<Category | undefined>(() => {
     const id = this.categoryId();
-    if (id) {
-      const categories = this.categories();
-      const foundCategory = categories.find(cat => cat.id === id);
-      this.category.set(foundCategory);
+    return this.categories().find(cat => cat.id === id);
+  });
+
+  readonly commands = computed<Command[]>(() => this.categoryDetail()?.commands ?? []);
+
+  readonly activeOrder = signal<'copy' | 'asc' | 'dec' | null>(null);
+  readonly searchTerm = signal('');
+  readonly hidden = signal<Record<number, boolean>>({});
+
+  readonly filteredCommands = computed(() => {
+    let result = [...this.commands()];
+    const search = this.searchTerm().toLowerCase();
+    const order = this.activeOrder();
+
+    if (search) {
+      result = result.filter(cmd =>
+        cmd.title.toLowerCase().includes(search) ||
+        cmd.description.toLowerCase().includes(search)
+      );
     }
-  }
 
-  private loadData(): void {
-    // Placeholder for data loading logic
-  }
-
-  onSearch(searchTerm: string): void {
-    if (this.navService.activeLayout === 'command') {
-      const cmds = this.commands();
-      this.filteredCommands.set(cmds.filter((command) =>
-        command.title.toLowerCase().includes(searchTerm.toLowerCase()) || command.description.toLowerCase().includes(searchTerm.toLowerCase())
-      ));
-    } else {
-      const rts = this.routines();
-      this.filteredRoutines.set(rts.filter((routine) =>
-        routine.title.toLowerCase().includes(searchTerm.toLowerCase()) || routine.routine.toLowerCase().includes(searchTerm.toLowerCase())
-      ));
+    switch (order) {
+      case 'asc':
+        return result.sort((a, b) => a.title.localeCompare(b.title));
+      case 'dec':
+        return result.sort((a, b) => b.title.localeCompare(a.title));
+      case 'copy':
+        return result.sort((a, b) => b.copy_count - a.copy_count);
+      default:
+        return result;
     }
+  });
+
+  onSearch(value: string): void {
+    this.searchTerm.set(value);
   }
 
-  cancelSearch(search: HTMLInputElement) {
-    search.value = '';
-    this.onSearch('');
+  cancelSearch(): void {
+    this.searchInput.nativeElement.value = '';
+    this.searchTerm.set('');
   }
 
   toggleExtendedInfo(index: number): void {
-    const currentHidden = this.hidden();
-    this.hidden.set({ ...currentHidden, [index]: !currentHidden[index] });
-  }
-
-  loadCachedFilters(): void {
-    const savedData = sessionStorage.getItem(this.getCurrentStorageName());
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      this.activeOrder.set(parsedData.activeOrder);
-    }
-  }
-
-  cacheFilters(): void {
-    const data = {
-      activeOrder: this.activeOrder()
-    };
-    sessionStorage.setItem(this.getCurrentStorageName(), JSON.stringify(data));
-  }
-
-  applyOrder(): void {
-    this.cacheFilters();
-    if (this.navService.activeLayout === 'command') {
-      this.orderCommands();
-    }
-    if (this.navService.activeLayout === 'routine') {
-      this.orderRoutines();
-    }
-  }
-
-  orderCommands(): void {
-    const order = this.activeOrder();
-    const cmds = [...this.commands()];
-    if (order === 'asc') {
-      cmds.sort((a, b) => this.compareStrings(a.title, b.title));
-    } else if (order === 'dec') {
-      cmds.sort((a, b) => this.compareStrings(b.title, a.title));
-    } else if (order === 'copy') {
-      cmds.sort((a, b) => b.copy_count - a.copy_count);
-    }
-    this.filteredCommands.set(cmds);
-  }
-
-  orderRoutines(): void {
-    const order = this.activeOrder();
-    const rts = [...this.routines()];
-    if (order === 'asc') {
-      rts.sort((a, b) => this.compareStrings(a.routine, b.routine));
-    } else if (order === 'dec') {
-      rts.sort((a, b) => this.compareStrings(b.routine, a.routine));
-    } else if (order === 'copy') {
-      rts.sort((a, b) => b.copy_count - a.copy_count);
-    }
-    this.filteredRoutines.set(rts);
-  }
-
-  compareStrings(str1: string, str2: string): number {
-    const s1 = str1.toLowerCase();
-    const s2 = str2.toLowerCase();
-    if (s1 < s2) return -1;
-    if (s1 > s2) return 1;
-    return 0;
+    this.hidden.update(h => ({ ...h, [index]: !h[index] }));
   }
 
   onOrderChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
-    this.activeOrder.set(value as 'copy' | 'asc' | 'dec' | null);
-    this.applyOrder();
+    this.activeOrder.set(value as any);
+    this.cacheFilters();
   }
 
-  getCurrentStorageName(): string {
-    return this.navService.activeLayout === 'command' ? 'DevKnowHow_activeCommandFilters' : 'DevKnowHow_activeRoutineFilters';
+  loadCachedFilters(): void {
+    const saved = sessionStorage.getItem('DevKnowHow_activeCommandFilters');
+    if (saved) {
+      this.activeOrder.set(JSON.parse(saved).activeOrder);
+    }
+  }
+
+  cacheFilters(): void {
+    sessionStorage.setItem('DevKnowHow_activeCommandFilters', JSON.stringify({ activeOrder: this.activeOrder() }));
   }
 }
-
-
-
-
-
-// @Component({
-//   standalone: true,
-//   selector: 'app-category',
-//   imports: [CommonModule, TranslateModule, FormsModule],
-//   templateUrl: './category.component.html',
-//   styleUrl: './category.component.scss',
-//   animations: [fadeIn, staggeredFadeIn, subCategoryAnimation],
-// })
-// export class CategoryComponent {
-
-//   private readonly route = inject(ActivatedRoute);
-//   private readonly rest = inject(RestService);
-//   private readonly translation = inject(TranslationService);
-//   private readonly navService = inject(NavigationService);
-
-//   private readonly categoryId = toSignal(
-//     this.route.paramMap.pipe(
-//       map(params => Number(params.get('id')))
-//     ),
-//     { initialValue: null }
-//   );
-
-//   private readonly language = toSignal(
-//     this.translation.languageChanged,
-//     { initialValue: this.translation.currentLang }
-//   );
-
-//   /** Reload when ID OR language changes */
-//   readonly category = toSignal(
-//     combineLatest([
-//       this.categoryId,
-//       this.language,
-//     ]).pipe(
-//       filter(([id]) => !!id),
-//       switchMap(([id]) => this.rest.getCategoryDetail(id!))
-//     ),
-//     { initialValue: null }
-//   );
-
-//   readonly commands = computed(() => this.category()?.commands ?? []);
-
-//   readonly activeOrder = signal<'copy' | 'asc' | 'dec' | null>(null);
-
-//   readonly filteredCommands = computed(() => {
-//     const cmds = [...this.commands()];
-//     const order = this.activeOrder();
-
-//     switch (order) {
-//       case 'asc':
-//         return cmds.sort((a, b) => a.title.localeCompare(b.title));
-//       case 'dec':
-//         return cmds.sort((a, b) => b.title.localeCompare(a.title));
-//       case 'copy':
-//         return cmds.sort((a, b) => b.copy_count - a.copy_count);
-//       default:
-//         return cmds;
-//     }
-//   });
-
-//   setOrder(order: 'copy' | 'asc' | 'dec') {
-//     this.activeOrder.set(order);
-//   }
-// }

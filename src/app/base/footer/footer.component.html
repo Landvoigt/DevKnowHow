@@ -26,23 +26,23 @@
         </div>
         <div class="flex sm:flex-col justify-start items-end gap-2 sm:gap-1 h-12 sm:h-full w-3/12 sm:pt-4">
             <a (click)="navService.imprint()"
-                class="cursor-pointer hover:text-accentColorHover text-sm default-transition">
+                class="cursor-pointer hover:text-[#47aee1] text-sm default-transition">
                 {{ 'FOOTER.IMPRINT' | translate }}</a>
             <a (click)="navService.policy()"
-                class="cursor-pointer hover:text-accentColorHover text-sm default-transition">
+                class="cursor-pointer hover:text-[#47aee1] text-sm default-transition">
                 {{ 'FOOTER.PRIVACY_POLICY' | translate }}</a>
-            <a (click)="navService.appreciation()"
-                class="cursor-pointer hover:text-accentColorHover text-sm default-transition">
-                {{ 'FOOTER.SAY_THANKS' | translate }}</a>
+            <!-- <a (click)="navService.appreciation()"
+                class="cursor-pointer hover:text-[#47aee1] text-sm default-transition">
+                {{ 'FOOTER.SAY_THANKS' | translate }}</a> -->
         </div>
     </div>
     <div class="z-20 flex justify-between border-t border-[#e5e7eb38] pt-1">
         <div class="text-xs">© 2025 DevKnowHow</div>
         <div class="flex gap-2">
             <a (click)="translation.setLanguage('en')" class="text-xs cursor-pointer default-transition"
-                [ngClass]="{'text-[#f0f8ff80] hover:text-accentColorHover': translation.language() !== 'en'}">english</a>
+                [ngClass]="{'text-[#f0f8ff80] hover:text-[#47aee1]': translation.language() !== 'en'}">english</a>
             <a (click)="translation.setLanguage('de')" class="text-xs cursor-pointer default-transition"
-                [ngClass]="{'text-[#f0f8ff80] hover:text-accentColorHover': translation.language() !== 'de'}">deutsch</a>
+                [ngClass]="{'text-[#f0f8ff80] hover:text-[#47aee1]': translation.language() !== 'de'}">deutsch</a>
         </div>
     </div>
 </div>

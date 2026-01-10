@@ -7,15 +7,16 @@ import { PolicyComponent } from './base/policy/policy.component';
 import { AppreciationComponent } from './base/appreciation/appreciation.component';
 
 export const routes: Routes = [
-    { path: '', redirectTo: '/main', pathMatch: 'full' },
+    // { path: '', redirectTo: '/main', pathMatch: 'full' },
+    { path: '', redirectTo: '/category/1', pathMatch: 'full' },
 
-    { path: 'main', component: MainComponent },
+    // { path: 'main', component: MainComponent },
     { path: 'category/:id', component: CategoryComponent },
-    { path: 'create', component: CreateComponent },
+    // { path: 'create', component: CreateComponent },
 
     { path: 'imprint', component: ImprintComponent },
     { path: 'policy', component: PolicyComponent },
-    { path: 'appreciation', component: AppreciationComponent },
+    // { path: 'appreciation', component: AppreciationComponent },
 
     { path: '**', redirectTo: '/error' }
 ];

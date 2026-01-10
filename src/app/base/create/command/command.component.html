@@ -1,11 +1,11 @@
 <form [formGroup]="form" (ngSubmit)="onSubmitCommand()" class="space-y-6 mx-auto max-w-6xl">
     <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-3xl font-bold tracking-tight text-aliceblue sm:text-4xl">{{ 'FORM.NEW_ITEM' | translate }} !</h2>
+        <h2 class="text-3xl font-bold tracking-tight text-[#f0f8ff] sm:text-4xl">{{ 'FORM.NEW_ITEM' | translate }} !</h2>
     </div>
     <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 mt-10">
         <div formGroupName="body" class="sm:col-span-3">
             <label for="command"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.COMMAND' | translate }}*</label>
             <div class="mt-2 relative">
                 <input #commandInput id="command" formControlName="command" type="text" spellcheck="false" required
@@ -24,7 +24,7 @@
         </div>
         <div formGroupName="body" class="sm:col-span-3">
             <label for="description"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.DESCRIPTION' | translate }}*</label>
             <div class="mt-2 relative">
                 <textarea #descriptionInput id="description" formControlName="description" rows="3" spellcheck="false"
@@ -44,7 +44,7 @@
         </div>
         <div formGroupName="body" [ngClass]="{'sm:col-span-1' : newCatSelected, 'sm:col-span-3' : !newCatSelected}">
             <label for="category"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.CATEGORY' | translate }} *
             </label>
             <div class="mt-2 relative">
@@ -64,7 +64,7 @@
         </div>
         <div *ngIf="newCatSelected" formGroupName="body" class="sm:col-span-2">
             <label for="newCategory"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.NEW_CATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <input id="newCategory" formControlName="newCategory" type="text" spellcheck="false"
@@ -75,7 +75,7 @@
         <!-- <div *ngIf="hasInput(category) && selectedCatHasSubCategories()" formGroupName="body"
             [ngClass]="{'sm:col-span-1' : newSubCatSelected, 'sm:col-span-3' : !newSubCatSelected}">
             <label for="subCategory"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.SUBCATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <select id="subCategory" formControlName="subCategory"
@@ -92,7 +92,7 @@
         </div> -->
         <!-- <div *ngIf="newSubCatSelected" formGroupName="body" class="sm:col-span-2">
             <label for="newSubCategory"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.NEW_SUBCATEGORY' | translate }}</label>
             <div class="mt-2 relative">
                 <input id="newSubCategory" formControlName="newSubCategory" type="text" spellcheck="false"
@@ -102,7 +102,7 @@
         </div> -->
         <div formGroupName="body" class="sm:col-span-3">
             <label for="example"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">{{
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">{{
                 'FORM.EXAMPLE' | translate }}</label>
             <div class="mt-2 relative">
                 <input id="example" formControlName="example" type="text" spellcheck="false"
@@ -112,7 +112,7 @@
         </div>
         <div formGroupName="body" class="sm:col-span-3">
             <label for="tooltip"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">{{
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">{{
                 'FORM.TOOLTIP' | translate }}</label>
             <div class="mt-2 relative">
                 <input id="tooltip" formControlName="tooltip" type="text" spellcheck="false"
@@ -123,7 +123,7 @@
         <div class="w-full sm:col-span-3 border-b-2 border-[#e5e7eb38]"></div>
         <div>
             <label for="name"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.NAME' | translate }}*</label>
             <div class="mt-2 relative">
                 <input id="name" formControlName="name" type="text" spellcheck="false" autocomplete="name" required
@@ -138,7 +138,7 @@
         </div>
         <div class="sm:col-span-2">
             <label for="email"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.EMAIL' | translate }}*</label>
             <div class="mt-2 relative">
                 <input id="email" formControlName="email" type="email" spellcheck="false" autocomplete="email" required
@@ -153,7 +153,7 @@
         </div>
         <div class="sm:col-span-3">
             <label for="message"
-                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-aliceblue">
+                class="block text-md sm:text-lg md:text-lg lg:text-lg font-medium leading-6 text-[#f0f8ff]">
                 {{ 'FORM.ADDITIONAL_MESSAGE' | translate }}</label>
             <div class="mt-2 relative">
                 <textarea formControlName="message" id="message" rows="3" spellcheck="false"
