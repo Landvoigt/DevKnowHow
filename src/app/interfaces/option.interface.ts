@@ -3,6 +3,9 @@ export interface Option {
     
     title: string;
     description: string;
+    level: number;
+    combinable: boolean;
+    value: boolean;
 
     active: boolean;
     created_at: Date;

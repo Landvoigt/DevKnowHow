@@ -18,11 +18,12 @@ import { ErrorService } from '@services/error.service';
 
 import { VariablePipe } from '@pipes/variable.pipe';
 import { FlagPipe } from '@pipes/flag.pipe';
+import { CommandComponent } from '../command/command.component';
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, VariablePipe, FlagPipe],
+  imports: [CommonModule, FormsModule, TranslateModule, CommandComponent],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss',
 })

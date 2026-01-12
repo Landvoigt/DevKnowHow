@@ -10,8 +10,8 @@
             </svg>
         </div>
         <input #searchInput id="search" (input)="onSearch(searchInput.value)" type="text" spellcheck="false"
-            placeholder="{{ 'CATEGORY.SEARCH' | translate }}..." class="pl-8 pr-8 pb-2.5 w-full h-full rounded-lg !bg-[#d2eaff] text-gray-900 placeholder:text-gray-600 
-                    text-md leading-4 focus-visible:ring-transparent border-none" />
+            placeholder="{{ 'CATEGORY.SEARCH' | translate }}..." class="pl-8 pr-8 w-full h-full rounded-lg !bg-[#d2eaff] text-gray-900 placeholder:text-gray-600 
+                    text-md leading-4 outline-hidden border-none" />
         <div class="absolute right-2 cursor-pointer" (click)="cancelSearch()">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-1125rem">
@@ -19,18 +19,8 @@
             </svg>
         </div>
     </div>
-    <!-- <select *ngIf="category?.sub_categories?.length" id="activeSubCat" [(ngModel)]="activeSubCat"
-            (change)="cacheFilters()"
-            class="h-9 w-40 rounded-lg bg-[#d2eaff] px-4 py-1.5 text-md leading-5 shadow-lg cursor-pointer focus-visible:ring-transparent border-none"
-            [ngClass]="{'text-gray-600': !activeSubCat, 'text-gray-900 font-semibold' : activeSubCat}">
-            <option [ngValue]="null" disabled [hidden]="true">{{ 'FORM.SUBCATEGORY' | translate }}</option>
-            <option [ngValue]="null" *ngIf="activeSubCat !== null">{{ 'CATEGORY.CANCEL' | translate }}</option>
-            <option *ngFor="let subCat of category?.sub_categories" [ngValue]="subCat">
-                {{ subCat.title }}
-            </option>
-        </select> -->
     <select id="activeOrder" [value]="activeOrder()" (change)="onOrderChange($event)"
-        class="h-9 w-40 rounded-lg bg-[#d2eaff] px-4 py-1.5 text-md leading-5 shadow-lg cursor-pointer focus-visible:ring-transparent border-none"
+        class="h-9 w-40 rounded-lg bg-[#d2eaff] px-4 py-1.5 text-md leading-5 shadow-lg cursor-pointer outline-hidden border-none"
         [class.text-gray-600]="!activeOrder()" [class.text-gray-900]="activeOrder()"
         [class.font-semibold]="activeOrder()">
         <option [ngValue]="null" disabled [hidden]="true">{{ 'CATEGORY.ORDER' | translate }}</option>
@@ -45,47 +35,7 @@
 }
 <div class="z-20 relative flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-[#f0f8ffbf]">
     @for (item of filteredCommands(); track item.id; let i = $index) {
-    <div (click)="toggleExtendedInfo(i)" class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
-        [ngClass]="{'bg-[#f0f8ff0d]' : i % 2 !== 0}">
-        <div class="w-5/12 min-max-w-5-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-            <div (click)="commandService.copy(item.title, item.id, i); $event.stopPropagation()"
-                class="h-6 flex justify-start items-center lg:mr-6 md:mr-6 sm:mr-6 mr-3 cursor-pointer rounded-full fast-transition">
-                <div [class.clicked]="commandService.activeItems[i]" class="flex justify-center items-center p-3px 
-                            rounded-full border-2 border-[#ededede6] bg-[#01071d] hover:bg-white fast-transition">
-                </div>
-            </div>
-            <span [innerHTML]="item.title | variable | flag" class="w-full max-w-full leading-6 text-[#f0f8ff]"
-                [class.truncate]="hidden()[i] !== true"></span>
-        </div>
-        <div class="w-7/12 min-max-w-7-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-            <span [innerHTML]="'(' + (item.description | variable | flag) + ')'"
-                class="w-full max-w-full leading-6 text-[#f0f8ff]" [class.truncate]="hidden()[i] !== true"></span>
-        </div>
-    </div>
-    @if (hidden()[i] && (item.example || item.tooltip)) {
-    <div class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pb-0.5" [ngClass]="{'bg-[#f0f8ff0d]' : i % 2 !== 0}">
-        <div class="w-5/12 min-max-w-5-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-            <div
-                class="h-6 flex justify-start items-center lg:mr-6 md:mr-6 sm:mr-6 mr-3 cursor-pointer rounded-full fast-transition">
-                <div class="flex justify-center items-center p-3px 
-                        rounded-full border-2 border-[transparent] bg-[transparent] hover:bg-white fast-transition">
-                </div>
-            </div>
-            @if (item.example) {
-            <span [innerHTML]="item.example | variable | flag"
-                class="w-full max-w-full leading-6 text-[17px] text-[#f0f8ffbf]">
-            </span>
-            }
-        </div>
-        <div class="w-7/12 min-max-w-7-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-            @if (item.tooltip) {
-            <span [innerHTML]="'* ' + item.tooltip | variable | flag"
-                class="w-full max-w-full leading-6 text-base italic text-[#f0f8ffbf]">
-            </span>
-            }
-        </div>
-    </div>
-    }
+    <app-command [command]="item" [index]="i" [hidden]="hidden()"></app-command>
     }
 
     <!-- @for (item of filteredRoutines(); track item.id; let i = $index) {
@@ -95,7 +45,7 @@
         <div class="w-full flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
             <div (click)="commandService.copy(item.routine, item.id, i); $event.stopPropagation()"
                 class="h-6 flex justify-start items-center lg:mr-6 md:mr-6 sm:mr-6 mr-3 cursor-pointer rounded-full fast-transition">
-                <div [class.clicked]="commandService.activeItems[i]" class="flex justify-center items-center p-3px 
+                <div [class.clicked]="commandService.activeItems[i]" class="flex justify-center items-center p-copy-icon 
                         rounded-full border-2 border-[#ededede6] bg-[#01071d] hover:bg-white fast-transition">
                 </div>
             </div>

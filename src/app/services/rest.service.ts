@@ -20,9 +20,14 @@ export class RestService {
   getCategories() {
     return this.http.get<Category[]>(`${this.apiBaseUrl}category/`);
   }
-  
+
   getDetailedCategory(id: number) {
-    return this.http.get<CategoryDetail>(`${this.apiBaseUrl}category/${id}/`);
+    const observable = this.http.get<CategoryDetail>(`${this.apiBaseUrl}category/${id}/`);
+    observable.subscribe(category => {
+      console.log(category);
+    });
+    return observable;
+    // return this.http.get<CategoryDetail>(`${this.apiBaseUrl}category/${id}/`);
   }
 
   getCommands(searchValue: string): Observable<Command[]> {

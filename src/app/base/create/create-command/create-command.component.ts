@@ -3,8 +3,8 @@ import { Component, ElementRef, ViewChild, inject, signal, computed, effect, OnI
 import { ReactiveFormsModule, FormsModule, FormGroup, AbstractControl } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@interfaces/category.interface';
-import { createFormRoutine, CreateFormRoutineModel } from '@interfaces/create.interface';
-import { RoutineRequest } from '@models/requests.model';
+import { createFormCommand, CreateFormCommandModel } from '@interfaces/create.interface';
+import { CommandRequest } from '@models/requests.model';
 import { FilterPipe } from '@pipes/filter.pipe';
 import { AlertService } from '@services/alert.service';
 import { DataService } from '@services/data.service';
@@ -12,21 +12,21 @@ import { ErrorService } from '@services/error.service';
 import { NavigationService } from '@services/navigation.service';
 import { RestService } from '@services/rest.service';
 import { debounceTime } from 'rxjs/operators';
-import { ContentEditableDirective } from 'src/app/directives/content-editable.directive';
 
 @Component({
-  selector: 'app-routine',
+  selector: 'app-create-command',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule, FilterPipe, ContentEditableDirective],
-  templateUrl: './routine.component.html',
-  styleUrl: './routine.component.scss',
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, TranslateModule, FilterPipe],
+  templateUrl: './create-command.component.html',
+  styleUrl: './create-command.component.scss',
   host: {
     '(document:click)': 'onDocumentClick($event)',
     '(window:beforeunload)': 'saveOnUnload($event)'
   }
 })
-export class RoutineComponent implements OnInit {
-  @ViewChild('routineInput', { static: true }) routineInput!: ElementRef<HTMLDivElement>;
+export class CreateCommandComponent implements OnInit {
+  @ViewChild('commandInput', { static: true }) commandInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('descriptionInput', { static: true }) descriptionInput!: ElementRef<HTMLTextAreaElement>;
 
   private readonly restService = inject(RestService);
   private readonly errorService = inject(ErrorService);
@@ -34,16 +34,16 @@ export class RoutineComponent implements OnInit {
   private readonly dataService = inject(DataService);
   public readonly navService = inject(NavigationService);
 
-  public readonly form: FormGroup<CreateFormRoutineModel> = createFormRoutine();
+  public readonly form: FormGroup<CreateFormCommandModel> = createFormCommand();
 
   public readonly categories = this.dataService.categories;
 
   public readonly loading = signal(false);
-  public readonly closeMenu = signal(false);
 
   public readonly newCatSelected = signal(false);
 
-  public readonly routineTyped = signal(false);
+  public readonly commandTyped = signal(false);
+  public readonly descriptionTyped = signal(false);
 
   constructor() {
     this.setupCaching();
@@ -78,7 +78,7 @@ export class RoutineComponent implements OnInit {
   }
 
   loadCachedItem() {
-    const savedData = sessionStorage.getItem('DevKnowHow_unsavedRoutineItem');
+    const savedData = sessionStorage.getItem('DevKnowHow_unsavedCommandItem');
     if (savedData) {
       const parsedData = JSON.parse(savedData);
       this.form.patchValue(parsedData);
@@ -87,18 +87,18 @@ export class RoutineComponent implements OnInit {
 
   cacheOpenItem() {
     const formData = this.form.getRawValue();
-    sessionStorage.setItem('DevKnowHow_unsavedRoutineItem', JSON.stringify(formData));
+    sessionStorage.setItem('DevKnowHow_unsavedCommandItem', JSON.stringify(formData));
   }
 
-  onSubmitRoutine() {
+  onSubmitCommand() {
     if (this.form.valid) {
       this.loading.set(true);
 
       const { name, email, message } = this.form.value;
       const bodyValue = this.getBodyValues();
-      const payload: RoutineRequest = this.getRoutineRequest(bodyValue, name, email, message);
+      const payload: CommandRequest = this.getCommandRequest(bodyValue, name, email, message);
 
-      this.restService.createRoutine(payload).subscribe({
+      this.restService.createCommand(payload).subscribe({
         next: (response) => this.onCreationSubmitted(response),
         error: (err) => this.onCreationError(err),
       });
@@ -109,6 +109,7 @@ export class RoutineComponent implements OnInit {
     const bodyValue = this.body.value;
 
     this.setCategory(bodyValue);
+    this.setSubCategory(bodyValue);
 
     return bodyValue;
   }
@@ -119,10 +120,16 @@ export class RoutineComponent implements OnInit {
     }
   }
 
+  setSubCategory(bodyValue: any) {
+    if (this.subCategory && this.newSubCategory?.value != null) {
+      bodyValue.subCategory = this.newSubCategory.value;
+    }
+  }
+
   onCreationSubmitted(response: any) {
     this.alertService.showAlert('Thank you for your submission!', 'success');
     this.form.reset();
-    sessionStorage.removeItem('DevKnowHow_unsavedRoutineItem');
+    sessionStorage.removeItem('DevKnowHow_unsavedCommandItem');
     this.loading.set(false);
   }
 
@@ -134,16 +141,21 @@ export class RoutineComponent implements OnInit {
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
 
-    if (!this.routineInput?.nativeElement.contains(target) && this.routineTyped()) {
-      this.routineTyped.set(false);
+    if (!this.commandInput?.nativeElement.contains(target) && this.commandTyped()) {
+      this.commandTyped.set(false);
+    }
+    if (!this.descriptionInput?.nativeElement.contains(target) && this.descriptionTyped()) {
+      this.descriptionTyped.set(false);
     }
   }
 
-  checkInput(nativeElement: HTMLElement) {
-    const value = nativeElement.textContent?.trim() || '';
+  checkInput(nativeElement: HTMLInputElement | HTMLTextAreaElement) {
+    const value = nativeElement.value;
 
-    if (nativeElement === this.routineInput.nativeElement) {
-      this.routineTyped.set(value.length > 2);
+    if (nativeElement === this.commandInput.nativeElement) {
+      this.commandTyped.set(value.length > 2);
+    } else if (nativeElement === this.descriptionInput.nativeElement) {
+      this.descriptionTyped.set(value.length > 2);
     }
   }
 
@@ -152,16 +164,19 @@ export class RoutineComponent implements OnInit {
   }
 
   // Getter
-  getRoutineRequest(bodyValue: any, name: string | null | undefined, email: string | null | undefined, message: string | null | undefined): RoutineRequest {
+  getCommandRequest(bodyValue: any, name: string | null | undefined, email: string | null | undefined, message: string | null | undefined): CommandRequest {
     return {
-      title: bodyValue.title,
-      routine: bodyValue.routine,
+      command: bodyValue.command,
+      description: bodyValue.description,
       category: bodyValue.category,
       sub_category: bodyValue.subCategory || '',
+      example: bodyValue.example || '',
+      tooltip: bodyValue.tooltip || '',
       creator_name: name || undefined,
       creator_email: email || undefined,
       creator_message: message || '',
     };
+
   }
 
   // Form Getter
@@ -177,12 +192,12 @@ export class RoutineComponent implements OnInit {
     return this.form.get('body') as FormGroup;
   }
 
-  get title() {
-    return this.body.get('title');
+  get command() {
+    return this.body.get('command');
   }
 
-  get routine() {
-    return this.body.get('routine');
+  get description() {
+    return this.body.get('description');
   }
 
   get category() {
@@ -199,6 +214,14 @@ export class RoutineComponent implements OnInit {
 
   get newSubCategory() {
     return this.body.get('newSubCategory');
+  }
+
+  get example() {
+    return this.body.get('example');
+  }
+
+  get tooltip() {
+    return this.body.get('tooltip');
   }
 
   get message() {

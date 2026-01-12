@@ -1,25 +1,21 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { Alert } from '@interfaces/alert.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
-  private alertSubject = new BehaviorSubject<Alert | null>(null);
-
-  getAlert(): Observable<Alert | null> {
-    return this.alertSubject.asObservable();
-  }
+  readonly alert = signal<Alert | null>(null);
 
   showAlert(message: string, type: 'success' | 'error' | 'info' | 'warning') {
-    this.alertSubject.next({ message, type });
+    this.alert.set({ message, type });
+
     setTimeout(() => {
-      this.alertSubject.next(null);
+      this.clearAlert();
     }, 2750);
   }
 
   clearAlert() {
-    this.alertSubject.next(null);
+    this.alert.set(null);
   }
 }

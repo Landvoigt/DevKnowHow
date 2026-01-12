@@ -9,8 +9,8 @@ export interface Command {
     description: string;
     example: string;
     tooltip: string;
-    options: Option[];
-    alternatives: Command[];
+    option: Option[];
+    alternative: Command[];
     copy_count: number;
 
     active: boolean;

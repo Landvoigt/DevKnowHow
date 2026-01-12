@@ -1,6 +1,6 @@
 <div class="z-20 relative px-6 pb-4 lg:px-8" [ngClass]="{'bg-command-prim-gradient' : navService.activeLayout === 'command', 
     'bg-routine-prim-gradient' : navService.activeLayout === 'routine'}"
     style="height: calc(100% - 66px);">
-    <app-command *ngIf="navService.activeLayout === 'command'"></app-command>
-    <!-- <app-routine *ngIf="navService.activeLayout === 'routine'"></app-routine> -->
+    <app-create-command *ngIf="navService.activeLayout === 'command'"></app-create-command>
+    <!-- <app-create-routine *ngIf="navService.activeLayout === 'routine'"></app-create-routine> -->
 </div>

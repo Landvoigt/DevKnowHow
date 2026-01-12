@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { AlertService } from '@services/alert.service';
 import { CommonModule } from '@angular/common';
-import { Alert } from '@interfaces/alert.interface';
 
 @Component({
   selector: 'app-alert-box',
@@ -10,29 +9,16 @@ import { Alert } from '@interfaces/alert.interface';
   templateUrl: './alert-box.component.html',
   styleUrl: './alert-box.component.scss',
 })
-
 export class AlertBoxComponent {
-  message: string = '';
-  type: 'success' | 'error' | 'info' | 'warning' = 'info';
+  private alertService = inject(AlertService);
 
-  constructor(private alertService: AlertService) {}
+  alert = this.alertService.alert;
 
-  ngOnInit(): void {
-    this.alertService.getAlert().subscribe((alert: Alert | null) => {
-      if (alert) {
-        this.message = alert.message;
-        this.type = alert.type;
-        setTimeout(() => {
-          this.close();
-        }, 2750);
-      } else {
-        this.message = '';
-        this.type = 'info';
-      }
-    });
-  }
+  message = computed(() => this.alert()?.message ?? '');
+  type = computed(() => this.alert()?.type ?? 'info');
 
   close() {
-    this.message = '';
+    this.alertService.clearAlert();
   }
+  
 }
