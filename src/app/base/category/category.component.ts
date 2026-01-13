@@ -68,7 +68,7 @@ export class CategoryComponent {
 
   readonly commands = computed<Command[]>(() => this.categoryDetail()?.commands ?? []);
 
-  readonly activeOrder = signal<'copy' | 'asc' | 'dec' | null>(null);
+  readonly activeOrder = signal<'copy' | 'asc' | 'dec' | null>('asc');
   readonly searchTerm = signal('');
   readonly hidden = signal<Record<number, boolean>>({});
 
@@ -119,6 +119,8 @@ export class CategoryComponent {
     const saved = sessionStorage.getItem('DevKnowHow_activeCommandFilters');
     if (saved) {
       this.activeOrder.set(JSON.parse(saved).activeOrder);
+    } else {
+      this.activeOrder.set('asc');
     }
   }
 

@@ -27,9 +27,9 @@
         @if (activeOrder() !== null) {
         <option [ngValue]="null">{{ 'CATEGORY.CANCEL' | translate }}</option>
         }
-        <option value="copy">{{ 'CATEGORY.COPY_COUNT' | translate }}</option>
         <option value="asc">{{ 'CATEGORY.ASCENDING' | translate }}</option>
         <option value="dec">{{ 'CATEGORY.DESCENDING' | translate }}</option>
+        <option value="copy">{{ 'CATEGORY.COPY_COUNT' | translate }}</option>
     </select>
 </div>
 }
