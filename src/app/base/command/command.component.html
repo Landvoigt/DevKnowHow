@@ -1,112 +1,138 @@
-<div (click)="toggleExtendedInfo()" class="flex lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
-    [ngClass]="{'bg-[#f0f8ff0d]' : index % 2 !== 0, 'items-center' : !hidden[index], 'items-start' : hidden[index]}">
-    <div class="w-5/12 min-max-w-5-12 flex justify-start items-center lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-        <div (click)="copy(); $event.stopPropagation()"
-            class="flex justify-start items-center lg:mr-6 md:mr-6 sm:mr-6 mr-3 mt-0.5 cursor-pointer rounded-full fast-transition">
-            <div [class.clicked]="commandService.activeItems()[index] === true" class="w-3 h-3 flex justify-center items-center
-                rounded-full border-2 border-[#ededede6] bg-[#01071d] hover:bg-white fast-transition"
-                [ngClass]="{'bg-[#f0f8ff0d]' : index % 2 !== 0}">
+<div (click)="toggleExtendedInfo()" class="grid grid-cols-12 items-start lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1"
+    [ngClass]="{ 'bg-[#f0f8ff0d]': index % 2 !== 0 }">
+    <div class="col-span-5 flex items-start gap-3 lg:mr-7 md:mr-4 sm:mr-4 mr-2">
+
+        <!-- COPY / CLEAR -->
+        <div (click)="copy(); $event.stopPropagation()" class="flex items-center mt-1.25 gap-2 cursor-pointer shrink-0">
+            <div [class.clicked]="commandService.activeItems()[index] === true"
+                class="flex-none w-3 h-3 rounded-full border-2 border-[#ededede6] bg-[#01071d] hover:bg-white overflow-visible"
+                [ngClass]="{ 'bg-[#f0f8ff0d]': index % 2 !== 0 }" style="align-self: center;">
+            </div>
+
+            <div class="flex-none w-4 flex items-center justify-center">
+                <svg (click)="clear(); $event.stopPropagation()" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"
+                    class="size-4 transition-opacity text-[#f0f8ff] hover:text-[#bb444e]"
+                    [class.opacity-0]="!changesApplied()" [class.pointer-events-none]="!changesApplied()">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
             </div>
         </div>
-        <span class="w-full max-w-full leading-6 text-[#f0f8ff]" [class.truncate]="!hidden[index]">
+
+        <!-- TITLE -->
+        <div class="flex-1 min-w-0 leading-6 text-[#f0f8ff]">
             @if (showExample()) {
-            <span class="text-[#47aee1]" [innerHTML]="command.example"></span>
+            <span class="text-[#e69130]" [innerHTML]="command.example"></span>
             } @else {
             @if (activeAlternativeItem()) {
-            <span class="text-[#47aee1]">{{ activeAlternativeItem()!.title }}</span>
+            <span class="text-[#c66dce]">{{ activeAlternativeItem()!.title }}</span>
             } @else {
             <span [innerHTML]="command.title | variable"></span>
             @for (opt of activeOptions(); track opt.id) {
-            <span class="text-[#47aee1]">{{ opt.title }}</span>
-            }
-            }
-            }
-        </span>
-        @if (activeOptions().length) {
-        <svg (click)="clear()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z" />
-        </svg>
-        }
-    </div>
-    <div class="w-7/12 min-max-w-7-12 flex justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-        <span class="w-full max-w-full leading-6 text-[#f0f8ff]" [class.truncate]="!hidden[index]">
-            <span [innerHTML]="'(' + (command.description | variable) + (activeOptions().length ? ',' : ')')"></span>
-            @for (opt of activeOptions(); track opt.id) {
-            <span class="text-[#47aee1]">
-                {{ opt.description }}
+            <span [class.text-[#4af6f7]]="opt.level === 0" [class.text-[#50c1f9]]="opt.level === 1"
+                [class.text-[#326bf1]]="opt.level === 2">
+                {{ ' ' + opt.title }}
+                @if (opt.value) {
+                <span class="text-[#32ff7c]">{{ 'COMMAND.VALUE' | translate }}</span>
+                }
             </span>
             }
-        </span>
+            }
+            }
+        </div>
+
+        <span class="leading-6 text-[#f0f8ffbf] shrink-0">–</span>
+    </div>
+    <div class="col-span-7 flex lg:mr-7 md:mr-4 sm:mr-4 mr-2">
+        <div class="w-full min-w-0 leading-6 text-[#f0f8ff]">
+            <span [innerHTML]="command.description | variable"></span>
+            @for (opt of activeOptionDescriptions(); track opt.id) {
+            <span [class.text-[#4af6f7]]="opt.level === 0" [class.text-[#50c1f9]]="opt.level === 1"
+                [class.text-[#326bf1]]="opt.level === 2">
+                {{ opt.text }}
+            </span>
+            }
+        </div>
     </div>
 </div>
 @if (hidden[index] && (command.option.length || command.alternative.length || command.example || command.tooltip)) {
-<div class="flex items-center lg:pl-14 md:pl-7 sm:pl-7 pl-5 pb-0.5" [ngClass]="{'bg-[#f0f8ff0d]' : index % 2 !== 0}">
-    <div class="w-5/12 min-max-w-5-12 flex flex-col justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-        @if (command.option.length) {
-        <div class="flex ml-9">
-            <span class="w-full max-w-full leading-6 text-sm text-[#f0f8ffbf]">
-                Options
-            </span>
-        </div>
-        }
-        @if (command.alternative.length) {
-        <div class="flex ml-9">
-            <span class="w-full max-w-full leading-6 text-sm text-[#f0f8ffbf]">
-                Alternatives
-            </span>
-        </div>
-        }
-        @if (command.example) {
-        <div class="flex ml-9">
-            <span class="w-full max-w-full leading-6 text-sm text-[#f0f8ffbf]">
-                Example
-            </span>
-        </div>
-        }
-        @if (command.tooltip) {
-        <div class="flex ml-9">
-            <span class="w-full max-w-full leading-6 text-sm text-[#f0f8ffbf]">
+<div class="grid lg:pl-14 md:pl-7 sm:pl-7 pl-5" [ngClass]="{ 'bg-[#f0f8ff0d]': index % 2 !== 0 }">
+
+    <!-- TOOLTIP -->
+    @if (command.tooltip) {
+    <div class="grid grid-cols-12 items-center">
+        <div class="col-span-5 pl-12.25">
+            <span class="text-sm text-[#f0f8ffbf] leading-6">
                 Tooltip
             </span>
         </div>
-        }
+        <div class="col-span-7 pl-0.25 flex items-center">
+            <span [innerHTML]="command.tooltip" class="text-sm leading-6 text-[#f0f8ffbf]"></span>
+        </div>
     </div>
-    <div class="w-7/12 min-max-w-7-12 flex flex-col justify-start items-start lg:mr-14 md:mr-7 sm:mr-7 mr-5">
-        @if (command.option.length) {
-        <div class="flex gap-2">
-            @for (opt of command.option; track opt.id) {
-            <span (click)="toggleOption(opt); $event.stopPropagation()" class="px-1 py-0.25 rounded text-xs font-medium cursor-pointer border default-transition 
-                hover:bg-[#f0f8ff] hover:text-[#01071d]" [class.bg-[#f0f8ff]]="isOptionSelected(opt)"
-                [class.text-[#01071d]]="isOptionSelected(opt)">
+    }
+
+    <!-- OPTIONS -->
+    @if (command.option.length) {
+    <div class="grid grid-cols-12 items-center">
+        <div class="col-span-5 pl-12.25">
+            <span class="text-sm text-[#4af6f7] leading-6">
+                Options
+            </span>
+        </div>
+        <div class="col-span-7 flex flex-wrap gap-1 leading-6 pl-0.25">
+            @for (opt of sortedOptions(); track opt.id) {
+            <span (click)="toggleOption(opt); $event.stopPropagation()" class="px-1 py-0.25 rounded text-xs font-medium 
+                cursor-pointer border default-transition whitespace-nowrap hover:text-[#000000]"
+                [class.hover:bg-[#4af6f7]]="opt.level === 0" [class.border-[#4af6f7]]="opt.level === 0"
+                [class.hover:bg-[#50c1f9]]="opt.level === 1" [class.border-[#50c1f9]]="opt.level === 1"
+                [class.hover:bg-[#326bf1]]="opt.level === 2" [class.border-[#326bf1]]="opt.level === 2"
+                [class.bg-[#4af6f7]]="isOptionSelected(opt) && opt.level === 0"
+                [class.bg-[#50c1f9]]="isOptionSelected(opt) && opt.level === 1"
+                [class.bg-[#326bf1]]="isOptionSelected(opt) && opt.level === 2"
+                [class.text-[#000000]]="isOptionSelected(opt)">
                 {{ opt.title }}
             </span>
             }
         </div>
-        }
-        @if (command.alternative.length) {
-        <div class="flex gap-2">
+    </div>
+    }
+
+    <!-- ALTERNATIVES -->
+    @if (command.alternative.length) {
+    <div class="grid grid-cols-12 items-center">
+        <div class="col-span-5 pl-12.25">
+            <span class="text-sm text-[#c66dce] leading-6">
+                Alternatives
+            </span>
+        </div>
+        <div class="col-span-7 flex flex-wrap gap-1 leading-6 pl-0.25">
             @for (alt of command.alternative; track alt.id) {
-            <span (click)="toggleAlternative(alt.id); $event.stopPropagation()"
-                class="leading-6 text-sm text-[#f0f8ffbf] cursor-pointer hover:text-[#f0f8ff]"
-                [class.text-[#47aee1]]="activeAlternative() === alt.id"
-                [class.text-[#f0f8ffbf]]="activeAlternative() !== alt.id">
+            <span (click)="toggleAlternative(alt.id); $event.stopPropagation()" class="px-1 py-0.25 rounded text-xs font-medium 
+                cursor-pointer border default-transition hover:bg-[#c66dce] hover:text-[#000000] border-[#c66dce] 
+                whitespace-nowrap" [class.bg-[#c66dce]]="activeAlternative() === alt.id"
+                [class.text-[#000000]]="activeAlternative() === alt.id">
                 {{ alt.title }}
             </span>
             }
         </div>
-        }
-        @if (command.example) {
-        <div class="flex" (click)="toggleExample(); $event.stopPropagation()">
-            <span [innerHTML]="command.example" class="leading-6 text-sm text-[#f0f8ffbf]"></span>
-        </div>
-        }
-        @if (command.tooltip) {
-        <div class="flex">
-            <span [innerHTML]="command.tooltip" class="leading-6 text-sm text-[#f0f8ffbf]"></span>
-        </div>
-        }
     </div>
+    }
+
+    <!-- EXAMPLE -->
+    @if (command.example) {
+    <div class="grid grid-cols-12 items-center">
+        <div class="col-span-5 pl-12.25">
+            <span class="text-sm text-[#e69130] leading-6">
+                Example
+            </span>
+        </div>
+        <div class="col-span-7 pl-0.25 flex items-center">
+            <span (click)="toggleExample(); $event.stopPropagation()" [innerHTML]="command.example" class="px-1 py-0.25 rounded text-xs font-medium 
+                cursor-pointer border default-transition hover:bg-[#e69130] hover:text-[#000000] border-[#e69130] 
+                whitespace-nowrap" [class.bg-[#e69130]]="showExample()" [class.text-[#000000]]="showExample()"></span>
+        </div>
+    </div>
+    }
 </div>
 }

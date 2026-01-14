@@ -16,8 +16,6 @@ import { TranslationService } from '@services/translation.service';
 import { CommandService } from '@services/command.service';
 import { ErrorService } from '@services/error.service';
 
-import { VariablePipe } from '@pipes/variable.pipe';
-import { FlagPipe } from '@pipes/flag.pipe';
 import { CommandComponent } from '../command/command.component';
 
 @Component({

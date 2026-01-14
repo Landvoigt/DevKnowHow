@@ -36,6 +36,9 @@
         "VALID_EMAIL": "Enter valid email (e.g. example&#64;domain.com)",
         "BTN_SUBMIT": "Submit"
     },
+    "COMMAND": {
+        "VALUE": "value"
+    },
     "IMPRINT": {
         "IMPRINT": "Imprint",
         "INSTANCE": "Responsible Instance",

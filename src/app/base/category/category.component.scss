@@ -1,43 +1,6 @@
-.clicked {
-    position: relative;
-    background-color: #32ff7c !important;
-    border-color: #fff !important;
-    animation: pulse 775ms ease-out forwards;
-}
-
 .size-1125rem {
     width: 1.125rem;
     height: 1.125rem;
-}
-
-.min-max-w-5-12 {
-    min-width: calc(41.666667% - 3.5rem);
-    max-width: calc(41.666667% - 3.5rem);
-
-    @media(max-width: 1023px) {
-        min-width: calc(41.666667% - 2rem);
-        max-width: calc(41.666667% - 2rem);
-    }
-
-    @media(max-width: 639px) {
-        min-width: calc(41.666667% - 1.25rem);
-        max-width: calc(41.666667% - 1.25rem);
-    }
-}
-
-.min-max-w-7-12 {
-    min-width: calc(58.333333% - 3.5rem);
-    max-width: calc(58.333333% - 3.5rem);
-
-    @media(max-width: 1023px) {
-        min-width: calc(58.333333% - 2rem);
-        max-width: calc(58.333333% - 2rem);
-    }
-
-    @media(max-width: 639px) {
-        min-width: calc(58.333333% - 1.25rem);
-        max-width: calc(58.333333% - 1.25rem);
-    }
 }
 
 option {

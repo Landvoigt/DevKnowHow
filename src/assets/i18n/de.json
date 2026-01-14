@@ -36,6 +36,9 @@
         "VALID_EMAIL": "Gültige E-Mail eingeben (z.B. beispiel&#64;domain.com)",
         "BTN_SUBMIT": "Absenden"
     },
+    "COMMAND": {
+        "VALUE": "Wert"
+    },
     "IMPRINT": {
         "IMPRINT": "Impressum",
         "INSTANCE": "Verantwortliche Instanz",
