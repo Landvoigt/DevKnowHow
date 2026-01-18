@@ -19,7 +19,7 @@ COPY . .
 RUN ng build --configuration production
 
 FROM nginx:alpine
-COPY --from=build /app/dist/quizstrike/browser/. /usr/share/nginx/html
+COPY --from=build /app/dist/devknowhow/browser/. /usr/share/nginx/html
 
 ENV NODE_ENV=production
 
