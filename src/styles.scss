@@ -105,3 +105,11 @@ select::selection {
 app-main {
     display: contents;
 }
+
+/* Prevent non-interactive elements from being focusable */
+div:not(button):not([role="button"]):not([tabindex]),
+span:not(button):not([role="button"]):not([tabindex]) {
+    outline: none;
+    -webkit-user-select: none;
+    user-select: none;
+}

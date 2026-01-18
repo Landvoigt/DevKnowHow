@@ -25,7 +25,7 @@
                 </button>
             </div>
             <div class="flex flex-1 items-center md:items-stretch justify-start ml-12 pl-1 md:ml-0 md:pl-0">
-                <div class="flex flex-shrink-0 items-center" (click)="navService.category(1)">
+                <button class="flex flex-shrink-0 items-center" (click)="navService.category(1)">
                     <span class="logo-text text-[#f0f8ff] cursor-pointer">
                         <span class="text-[#f0f8ff]">De</span>
                         <span class="text-[#32ff7c]">v</span>
@@ -34,7 +34,7 @@
                         <span class="text-[#f0f8ff]">Ho</span>
                         <span class="text-[#32ff7c]">w</span>
                     </span>
-                </div>
+                </button>
                 <div class="hidden md:ml-6 md:block">
                     <div class="flex space-x-4">
                         @for (cat of categories() | filter: navService.activeLayout; track cat.id) {
