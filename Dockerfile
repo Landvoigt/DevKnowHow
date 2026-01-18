@@ -19,7 +19,8 @@ COPY . .
 RUN ng build --configuration production
 
 FROM nginx:alpine
-COPY --from=build /app/dist/devknowhow/browser/. /usr/share/nginx/html
+COPY --from=build /app/dist/DevKnowHow/browser/. /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 ENV NODE_ENV=production
 
