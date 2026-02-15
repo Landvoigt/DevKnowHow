@@ -24,26 +24,47 @@
                     </svg>
                 </button>
             </div>
-            <div class="flex flex-1 items-center md:items-stretch justify-start ml-12 pl-1 md:ml-0 md:pl-0">
-                <button class="flex flex-shrink-0 items-center" (click)="navService.category(1)">
-                    <span class="logo-text text-[#f0f8ff] cursor-pointer">
-                        <span class="text-[#f0f8ff]">De</span>
-                        <span class="text-[#32ff7c]">v</span>
-                        <span class="text-[#f0f8ff]">Kno</span>
-                        <span class="text-[#32ff7c]">w</span>
-                        <span class="text-[#f0f8ff]">Ho</span>
-                        <span class="text-[#32ff7c]">w</span>
-                    </span>
-                </button>
-                <div class="hidden md:ml-6 md:block">
-                    <div class="flex space-x-4">
-                        @for (cat of categories() | filter: navService.activeLayout; track cat.id) {
-                        <a (click)="navService.category(cat.id)"
-                            class="rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-[#bad5ff70] hover:text-white cursor-pointer default-transition"
-                            [ngClass]="{'bg-[#bad5ff70]' : navService.activePage === cat.id}"
-                            [class.text-white]="navService.activePage === cat.id">
-                            {{ cat.title }}</a>
-                        }
+            <div class="flex items-center justify-between w-full ml-12 pl-1 md:ml-0 md:pl-0">
+                <div class="flex items-center space-x-6 w-3/4">
+                    <button class="flex flex-shrink-0 items-center" (click)="navService.category(1)">
+                        <span class="logo-text text-[#f0f8ff] cursor-pointer">
+                            <span class="text-[#f0f8ff]">De</span>
+                            <span class="text-[#32ff7c]">v</span>
+                            <span class="text-[#f0f8ff]">Kno</span>
+                            <span class="text-[#32ff7c]">w</span>
+                            <span class="text-[#f0f8ff]">Ho</span>
+                            <span class="text-[#32ff7c]">w</span>
+                        </span>
+                    </button>
+                    <div class="hidden md:block">
+                        <div class="flex space-x-4">
+                            @for (cat of categories() | filter: navService.activeLayout; track cat.id) {
+                            <a (click)="navService.category(cat.id)"
+                                class="rounded-md px-3 py-2 text-md font-medium text-gray-300 hover:bg-[#bad5ff70] hover:text-white cursor-pointer default-transition"
+                                [ngClass]="{'bg-[#bad5ff70]' : navService.activePage === cat.id && !advancedSearch.value.trim()}"
+                                [class.text-white]="navService.activePage === cat.id && !advancedSearch.value.trim()">
+                                {{ cat.title }}</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="relative flex-shrink-0 flex items-center h-10 w-1/4 !bg-[#d2eaff] rounded-lg">
+                    <div class="absolute left-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-1125rem">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                    </div>
+                    <input #advancedSearch id="advancedSearch" (input)="search(advancedSearch.value)"
+                        type="text" spellcheck="false" placeholder="{{ 'CATEGORY.SEARCH' | translate }}..." class="pl-8 pr-8 w-full h-full rounded-lg !bg-[#d2eaff] text-gray-900 placeholder:text-gray-600 
+                    text-md leading-4 outline-hidden border-none" />
+                    <div class="absolute right-2 cursor-pointer"
+                        (click)="cancelSearch(advancedSearch.value); advancedSearch.value = ''">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-1125rem">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
                     </div>
                 </div>
             </div>

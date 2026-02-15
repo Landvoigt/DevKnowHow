@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category, CategoryDetail } from '@interfaces/category.interface';
@@ -7,6 +7,7 @@ import { CommandRequest, RoutineRequest } from '@models/requests.model';
 import { NavigationService } from './navigation.service';
 import { Routine } from '@interfaces/routine.interface';
 import { environment } from 'src/environments/environment';
+import { SearchResult } from '@interfaces/search.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +23,7 @@ export class RestService {
   }
 
   getDetailedCategory(id: number) {
-    const observable = this.http.get<CategoryDetail>(`${this.apiBaseUrl}category/${id}/`);
-    observable.subscribe(category => {
-      console.log(category);
-    });
-    return observable;
-    // return this.http.get<CategoryDetail>(`${this.apiBaseUrl}category/${id}/`);
+    return this.http.get<CategoryDetail>(`${this.apiBaseUrl}category/${id}/`);
   }
 
   getCommands(searchValue: string): Observable<Command[]> {
@@ -64,6 +60,10 @@ export class RestService {
     } else {
       return this.http.post<any>(`${this.apiBaseUrl}routine/${id}/increment_copy/`, {});
     }
+  }
+
+  search(query: string): Observable<SearchResult> {
+    return this.http.get<SearchResult>(`${this.apiBaseUrl}search/?q=${encodeURIComponent(query)}`);
   }
 
 }

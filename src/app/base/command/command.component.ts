@@ -6,10 +6,11 @@ import { Command } from '@interfaces/command.interface';
 import { Option } from '@interfaces/option.interface';
 import { CommandService } from '@services/command.service';
 import { VariablePipe } from '@pipes/variable.pipe';
+import { SearchPipe } from '@pipes/search.pipe';
 
 @Component({
   selector: 'app-command',
-  imports: [CommonModule, TranslateModule, VariablePipe],
+  imports: [CommonModule, TranslateModule, VariablePipe, SearchPipe],
   templateUrl: './command.component.html',
   styleUrl: './command.component.scss',
 })
@@ -27,9 +28,17 @@ export class CommandComponent implements OnInit, OnChanges {
     return [...this.command.option].sort((a, b) => a.level - b.level);
   });
 
-  readonly activeOptions = computed(() =>
-    this.sortedOptions().filter(opt => this.optionState()[opt.id])
-  );
+  readonly activeOptionsWithValue = computed(() => {
+    const selectedIds = new Set(
+      Object.entries(this.optionState())
+        .filter(([id, selected]) => selected)
+        .map(([id]) => Number(id))
+    );
+
+    return this.command.option
+      .filter(opt => selectedIds.has(opt.id))
+      .map(opt => ({ ...opt, displayValue: opt.value }));
+  });
 
   readonly activeAlternative = signal<number | null>(null);
 
@@ -40,7 +49,7 @@ export class CommandComponent implements OnInit, OnChanges {
   readonly showExample = signal<boolean>(false);
 
   readonly changesApplied = computed<boolean>(() => {
-    return (this.activeOptions().length > 0 || this.showExample() === true || this.activeAlternative() !== null);
+    return (this.activeOptionsWithValue().length > 0 || this.showExample() === true || this.activeAlternative() !== null);
   });
 
   readonly activeOptionDescriptions = computed(() => {
@@ -147,8 +156,8 @@ export class CommandComponent implements OnInit, OnChanges {
       textToCopy = this.activeAlternativeItem()!.title;
     } else {
       textToCopy = this.command.title;
-      for (const opt of this.activeOptions()) {
-        textToCopy += ' ' + opt.title;
+      for (const opt of this.activeOptionsWithValue()) {
+        textToCopy += ' ' + opt.title + (opt.displayValue ? ` *${opt.displayValue}*` : '');
       }
     }
 

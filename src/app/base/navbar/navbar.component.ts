@@ -17,9 +17,9 @@ import { NavigationService } from '@services/navigation.service';
 export class NavbarComponent {
   closeMenu = input<boolean>(false);
 
-  public readonly navService = inject(NavigationService);
   private readonly router = inject(Router);
-  private readonly dataService = inject(DataService);
+  public readonly navService = inject(NavigationService);
+  public readonly dataService = inject(DataService);
 
   public readonly categories = this.dataService.categories;
 
@@ -39,6 +39,23 @@ export class NavbarComponent {
   changePage(cat: Category) {
     this.closeMobileMenu();
     this.router.navigate([`category/${cat.id}/`]);
+  }
+
+  search(query: string) {
+    if (!query.trim()) {
+      this.cancelSearch(query);
+    } else {
+      this.dataService.search(query);
+    }
+  }
+
+  cancelSearch(currentQuery?: string) {
+    const query = currentQuery ?? this.dataService.searchQuery;
+    this.dataService.clearSearchResults();
+
+    if (query && query.trim()) {
+      this.navService.category(1);
+    }
   }
 
   toggleMobileMenu() {

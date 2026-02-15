@@ -5,7 +5,7 @@ export interface Option {
     description: string;
     level: number;
     combinable: boolean;
-    value: boolean;
+    value: string;
 
     active: boolean;
     created_at: Date;

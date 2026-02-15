@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, inject, signal, computed, } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -26,8 +26,6 @@ import { CommandComponent } from '../command/command.component';
   styleUrl: './category.component.scss',
 })
 export class CategoryComponent {
-  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
-
   private readonly route = inject(ActivatedRoute);
   private readonly rest = inject(RestService);
   private readonly dataService = inject(DataService);
@@ -67,49 +65,31 @@ export class CategoryComponent {
   readonly commands = computed<Command[]>(() => this.categoryDetail()?.commands ?? []);
 
   readonly activeOrder = signal<'copy' | 'asc' | 'dec' | null>('asc');
-  readonly searchTerm = signal('');
   readonly hidden = signal<Record<number, boolean>>({});
 
-  readonly filteredCommands = computed(() => {
-    let result = [...this.commands()];
-    const search = this.searchTerm().toLowerCase();
+  readonly filteredCommands = computed<Command[]>(() => {
+    const searchResults = this.dataService.searchResults();
+
+    const result = searchResults && searchResults.length > 0
+      ? [...searchResults]
+      : [...this.commands()];
+
     const order = this.activeOrder();
 
-    if (search) {
-      result = result.filter(cmd =>
-        cmd.title.toLowerCase().includes(search) ||
-        cmd.description.toLowerCase().includes(search)
-      );
-    }
-
     switch (order) {
-      case 'asc':
-        return result.sort((a, b) => a.title.localeCompare(b.title));
-      case 'dec':
-        return result.sort((a, b) => b.title.localeCompare(a.title));
-      case 'copy':
-        return result.sort((a, b) => b.copy_count - a.copy_count);
-      default:
-        return result;
+      case 'asc': return result.sort((a, b) => a.title.localeCompare(b.title));
+      case 'dec': return result.sort((a, b) => b.title.localeCompare(a.title));
+      case 'copy': return result.sort((a, b) => b.copy_count - a.copy_count);
+      default: return result;
     }
   });
-
-  onSearch(value: string): void {
-    this.searchTerm.set(value);
-  }
-
-  cancelSearch(): void {
-    this.searchInput.nativeElement.value = '';
-    this.searchTerm.set('');
-  }
 
   toggleExtendedInfo(index: number): void {
     this.hidden.update(h => ({ ...h, [index]: !h[index] }));
   }
 
-  onOrderChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    this.activeOrder.set(value as any);
+  onOrderChange(value: 'asc' | 'dec' | 'copy'): void {
+    this.activeOrder.set(value);
     this.cacheFilters();
   }
 
