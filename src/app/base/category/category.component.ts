@@ -70,7 +70,7 @@ export class CategoryComponent {
   readonly filteredCommands = computed<Command[]>(() => {
     const searchResults = this.dataService.searchResults();
 
-    const result = searchResults && searchResults.length > 0
+    const result = searchResults !== null
       ? [...searchResults]
       : [...this.commands()];
 

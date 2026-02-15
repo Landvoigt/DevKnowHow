@@ -18,6 +18,6 @@ export class SearchPipe implements PipeTransform {
         const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const regex = new RegExp(`(${escapedQuery})`, 'gi');
 
-        return text.replace(regex, '<span class="text-[#c66dce]">$1</span>');
+        return text.replace(regex, '<span class="text-[#a736b1]">$1</span>');
     }
 }
