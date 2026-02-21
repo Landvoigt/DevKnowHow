@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, inject, signal, effect, ChangeDetectionStrategy } from '@angular/core';
+import { Component, input, inject, signal, effect, ChangeDetectionStrategy, ViewChild, ElementRef, AfterViewInit, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@interfaces/category.interface';
@@ -14,8 +14,8 @@ import { NavigationService } from '@services/navigation.service';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
-export class NavbarComponent {
-  closeMenu = input<boolean>(false);
+export class NavbarComponent implements AfterViewInit {
+  @ViewChild('categoryContainer') categoryContainer!: ElementRef<HTMLDivElement>;
 
   private readonly router = inject(Router);
   public readonly navService = inject(NavigationService);
@@ -26,14 +26,54 @@ export class NavbarComponent {
   public readonly userMenuOpen = signal(false);
   public readonly mobileMenuOpen = signal(false);
 
+  closeMenu = input<boolean>(false);
+
+  private scrollLeft = signal(0);
+  private scrollWidth = signal(0);
+  private clientWidth = signal(0);
+
+  showLeftArrow = computed(() => this.canScroll() && this.scrollLeft() > 0);
+  showRightArrow = computed(() => this.canScroll() && this.scrollLeft() + this.clientWidth() < this.scrollWidth() - 1);
+
+  private canScroll = computed(() => this.scrollWidth() > this.clientWidth() + 1);
+
   constructor() {
     this.dataService.loadCategories();
+
+    effect(() => {
+      this.categories();
+      this.navService.activeLayout;
+      queueMicrotask(() => this.measure());
+    });
 
     effect(() => {
       if (this.closeMenu()) {
         this.closeMobileMenu();
       }
     });
+  }
+
+  ngAfterViewInit() {
+    const el = this.categoryContainer.nativeElement;
+
+    this.measure();
+
+    el.addEventListener('scroll', () => this.scrollLeft.set(el.scrollLeft));
+
+    new ResizeObserver(() => this.measure()).observe(el);
+  }
+
+  private measure() {
+    const el = this.categoryContainer?.nativeElement;
+    if (!el) return;
+
+    this.scrollLeft.set(el.scrollLeft);
+    this.scrollWidth.set(el.scrollWidth);
+    this.clientWidth.set(el.clientWidth);
+  }
+
+  scrollCategories(amount: number) {
+    this.categoryContainer.nativeElement.scrollBy({ left: amount, behavior: 'smooth' });
   }
 
   changePage(cat: Category) {

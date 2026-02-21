@@ -3,14 +3,23 @@
 }
 
 .logo-text {
-    font-family: 'Changa';
+    font-family: "Changa";
     font-size: 1.75rem;
     margin-bottom: -0.25rem;
 }
 
 .add-btn {
-    @media(max-width: 768px) {
+    @media (max-width: 768px) {
         font-size: 1rem;
-        padding: .375rem .75rem;
+        padding: 0.375rem 0.75rem;
     }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }

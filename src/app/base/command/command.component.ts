@@ -19,6 +19,12 @@ export class CommandComponent implements OnInit, OnChanges {
   @Input() index!: number;
   @Input() hidden!: Record<number, boolean>;
 
+  private readonly levelColors = [
+    '#4af6f7',
+    '#16b2ff',
+    '#2b6bff'
+  ];
+
   public readonly commandService = inject(CommandService);
 
   readonly optionState = signal<Record<number, boolean>>({});
@@ -37,6 +43,7 @@ export class CommandComponent implements OnInit, OnChanges {
 
     return this.command.option
       .filter(opt => selectedIds.has(opt.id))
+      .sort((a, b) => a.level - b.level)
       .map(opt => ({ ...opt, displayValue: opt.value }));
   });
 
@@ -58,6 +65,7 @@ export class CommandComponent implements OnInit, OnChanges {
 
     return cmd.option
       .filter(opt => selectedIds.has(String(opt.id)))
+      .sort((a, b) => a.level - b.level)
       .map(opt => {
         const prefix = opt.title.startsWith('--') ? '--' : opt.title.startsWith('-') ? '-' : '';
         return { id: opt.id, text: `${prefix}${opt.description}`, level: opt.level };
@@ -159,6 +167,9 @@ export class CommandComponent implements OnInit, OnChanges {
       for (const opt of this.activeOptionsWithValue()) {
         textToCopy += ' ' + opt.title + (opt.displayValue ? ` *${opt.displayValue}*` : '');
       }
+      if (this.command.context) {
+        textToCopy += ' ' + this.command.context;
+      }
     }
 
     this.commandService.copy(textToCopy, this.command.id, this.index);
@@ -167,4 +178,9 @@ export class CommandComponent implements OnInit, OnChanges {
   isOptionSelected(option: Option): boolean {
     return this.optionState()[option.id] === true;
   }
+
+  getColorByLevel(level: number): string {
+    return this.levelColors[level % this.levelColors.length];
+  }
+
 }

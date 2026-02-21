@@ -5,8 +5,10 @@ export interface Command {
     id: number;
 
     title: string;
-    category: Category[];
     description: string;
+    context: string;
+    context_description: string;
+    category: Category[];
     example: string;
     tooltip: string;
     option: Option[];

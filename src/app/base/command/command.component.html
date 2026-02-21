@@ -1,4 +1,5 @@
-<div (click)="toggleExtendedInfo()" class="grid grid-cols-12 items-start lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1 cursor-default"
+<div (click)="toggleExtendedInfo()"
+    class="grid grid-cols-12 items-start lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1 cursor-default"
     [ngClass]="{ 'bg-[#f0f8ff0d]': index % 2 !== 0 }">
     <div class="col-span-5 flex items-start gap-3 lg:mr-7 md:mr-4 sm:mr-4 mr-2">
 
@@ -29,13 +30,15 @@
             } @else {
             <span [innerHTML]="command.title | variable | search"></span>
             @for (opt of activeOptionsWithValue(); track opt.id) {
-            <span [class.text-[#4af6f7]]="opt.level === 0" [class.text-[#50c1f9]]="opt.level === 1"
-                [class.text-[#326bf1]]="opt.level === 2">
-                {{ ' ' + opt.title }}
+            <span class="inline-block whitespace-nowrap ml-2" [style.color]="getColorByLevel(opt.level)">
+                {{ opt.title }}
                 @if (opt.displayValue) {
                 <span class="text-[#32ff7c]">{{ opt.displayValue }}</span>
                 }
             </span>
+            }
+            @if (command.context) {
+            <span class="ml-2" [innerHTML]="command.context | variable"></span>
             }
             }
             }
@@ -47,10 +50,12 @@
         <div class="w-full min-w-0 leading-6 text-[#f0f8ff]">
             <span [innerHTML]="command.description | variable | search"></span>
             @for (opt of activeOptionDescriptions(); track opt.id) {
-            <span [class.text-[#4af6f7]]="opt.level === 0" [class.text-[#50c1f9]]="opt.level === 1"
-                [class.text-[#326bf1]]="opt.level === 2">
+            <span class="inline-block whitespace-nowrap ml-2" [style.color]="getColorByLevel(opt.level)">
                 {{ opt.text }}
             </span>
+            }
+            @if (command.context) {
+            <span class="ml-2" [innerHTML]="command.context_description | variable"></span>
             }
         </div>
     </div>
@@ -84,12 +89,9 @@
             @for (opt of sortedOptions(); track opt.id) {
             <span (click)="toggleOption(opt); $event.stopPropagation()" class="px-1 py-0.25 rounded text-xs font-medium 
                 cursor-pointer border default-transition whitespace-nowrap hover:text-[#000000]"
-                [class.hover:bg-[#4af6f7]]="opt.level === 0" [class.border-[#4af6f7]]="opt.level === 0"
-                [class.hover:bg-[#50c1f9]]="opt.level === 1" [class.border-[#50c1f9]]="opt.level === 1"
-                [class.hover:bg-[#326bf1]]="opt.level === 2" [class.border-[#326bf1]]="opt.level === 2"
-                [class.bg-[#4af6f7]]="isOptionSelected(opt) && opt.level === 0"
-                [class.bg-[#50c1f9]]="isOptionSelected(opt) && opt.level === 1"
-                [class.bg-[#326bf1]]="isOptionSelected(opt) && opt.level === 2"
+                [style.background-color]="isOptionSelected(opt) ? getColorByLevel(opt.level) : null"
+                [style.border-color]="getColorByLevel(opt.level)" [class.hover:bg-[#4af6f7]]="opt.level % 3 === 0"
+                [class.hover:bg-[#16b2ff]]="opt.level % 3 === 1" [class.hover:bg-[#2b6bff]]="opt.level % 3 === 2"
                 [class.text-[#000000]]="isOptionSelected(opt)">
                 {{ opt.title }}
             </span>
