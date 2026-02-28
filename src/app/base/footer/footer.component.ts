@@ -17,9 +17,6 @@ export class FooterComponent {
   constructor(public navService: NavigationService, public translation: TranslationService) { }
 
   scrollTop() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

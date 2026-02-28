@@ -1,6 +1,6 @@
 <div (click)="toggleExtendedInfo()"
     class="grid grid-cols-12 items-start lg:pl-14 md:pl-7 sm:pl-7 pl-5 pt-0.5 pb-1 cursor-default"
-    [ngClass]="{ 'bg-[#f0f8ff0d]': index % 2 !== 0 }">
+    [ngClass]="{'bg-[#f0f8ff0d]': index % 2 !== 0}">
     <div class="col-span-5 flex items-start gap-3 lg:mr-7 md:mr-4 sm:mr-4 mr-2">
 
         <!-- COPY / CLEAR -->
@@ -29,7 +29,7 @@
             <span class="text-[#fff665] mb-1">{{ activeAlternativeItem()!.title }}</span>
             } @else {
             <span [innerHTML]="command.title | variable | search" class="mb-1"
-                [ngClass]="{'mr-1.5': activeOptionsWithValue().length > 0}"></span>
+                [ngClass]="{'mr-1.5': activeOptionsWithValue().length > 0 || command.context}"></span>
             @for (opt of activeOptionsWithValue(); track opt.id) {
             <span
                 class="inline-block whitespace-nowrap border rounded leading-5 default-transition px-1 py-0.5 mr-1.5 mb-1"
@@ -52,7 +52,7 @@
     <div class="col-span-7 flex lg:mr-7 md:mr-4 sm:mr-4 mr-2">
         <div class="w-full min-w-0 leading-6 text-[#f0f8ff]">
             <span [innerHTML]="command.description | variable | search" class="mb-1"
-                [ngClass]="{'mr-1.5': activeOptionsWithValue().length > 0}"></span>
+                [ngClass]="{'mr-1.5': activeOptionsWithValue().length > 0 || command.context}"></span>
             @for (opt of activeOptionDescriptions(); track opt.id) {
             <span
                 class="inline-block whitespace-nowrap border rounded leading-5 default-transition px-1 py-0.5 mr-1.5 mb-1"
