@@ -9,7 +9,7 @@ export interface Command {
     context: string;
     context_description: string;
     category: Category[];
-    example: string;
+    example: string[];
     tooltip: string;
     option: Option[];
     alternative: Command[];

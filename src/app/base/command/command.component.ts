@@ -53,10 +53,14 @@ export class CommandComponent implements OnInit, OnChanges {
     this.command.alternative.find(a => a.id === this.activeAlternative()) ?? null
   );
 
-  readonly showExample = signal<boolean>(false);
+  readonly activeExample = signal<string | null>(null);
+
+  readonly activeExampleItem = computed(() =>
+    this.command.example.find(a => a === this.activeExample()) ?? null
+  );
 
   readonly changesApplied = computed<boolean>(() => {
-    return (this.activeOptionsWithValue().length > 0 || this.showExample() === true || this.activeAlternative() !== null);
+    return (this.activeOptionsWithValue().length > 0 || this.activeExample() !== null || this.activeAlternative() !== null);
   });
 
   readonly activeOptionDescriptions = computed(() => {
@@ -68,7 +72,8 @@ export class CommandComponent implements OnInit, OnChanges {
       .sort((a, b) => a.level - b.level)
       .map(opt => {
         const prefix = opt.title.startsWith('--') ? '--' : opt.title.startsWith('-') ? '-' : '';
-        return { id: opt.id, text: `${prefix}${opt.description}`, level: opt.level };
+        const description = opt.description ? (prefix + opt.description) : opt.title;
+        return { id: opt.id, text: description, level: opt.level };
       });
   });
 
@@ -105,7 +110,7 @@ export class CommandComponent implements OnInit, OnChanges {
 
   toggleOption(option: Option): void {
     this.activeAlternative.set(null);
-    this.showExample.set(false);
+    this.activeExample.set(null);
 
     const state = { ...this.optionState() };
     const newValue = !state[option.id];
@@ -132,15 +137,14 @@ export class CommandComponent implements OnInit, OnChanges {
     }
   }
 
-  toggleExample(): void {
-    const next = !this.showExample();
+  toggleExample(ex: string): void {
+    const isActive = this.activeExample() === ex;
 
-    if (next) {
-      this.clearOptions();
-      this.activeAlternative.set(null);
+    this.clear();
+
+    if (!isActive) {
+      this.activeExample.set(ex);
     }
-
-    this.showExample.set(next);
   }
 
   clearOptions(): void {
@@ -151,15 +155,15 @@ export class CommandComponent implements OnInit, OnChanges {
 
   clear(): void {
     this.activeAlternative.set(null);
-    this.showExample.set(false);
+    this.activeExample.set(null);
     this.clearOptions();
   }
 
   copy(): void {
     let textToCopy = '';
 
-    if (this.showExample()) {
-      textToCopy = this.command.example;
+    if (this.activeExample()) {
+      textToCopy = this.activeExample()!;
     } else if (this.activeAlternativeItem()) {
       textToCopy = this.activeAlternativeItem()!.title;
     } else {
