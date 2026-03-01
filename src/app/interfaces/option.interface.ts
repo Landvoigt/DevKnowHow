@@ -5,6 +5,7 @@ export interface Option {
     description: string;
     level: number;
     combinable: boolean;
+    standalone: boolean;
     value: string;
 
     active: boolean;

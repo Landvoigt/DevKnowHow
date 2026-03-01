@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
@@ -15,10 +15,14 @@ import { NavigationService } from '@services/navigation.service';
 export class BaseComponent {
   closeMenu: boolean = false;
 
-  constructor(public navService: NavigationService) { }
+  constructor(private cdr: ChangeDetectorRef, public navService: NavigationService) { }
 
   closeUserMenu() {
     this.closeMenu = true;
-    setTimeout(() => this.closeMenu = false, 10);
+
+    setTimeout(() => {
+      this.closeMenu = false;
+      this.cdr.detectChanges();
+    });
   }
 }

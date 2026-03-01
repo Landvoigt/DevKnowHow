@@ -35,29 +35,22 @@ export class CommandComponent implements OnInit, OnChanges {
   });
 
   readonly activeOptionsWithValue = computed(() => {
-    const selectedIds = new Set(
-      Object.entries(this.optionState())
-        .filter(([id, selected]) => selected)
-        .map(([id]) => Number(id))
-    );
+    const selectedIds = new Set(Object.entries(this.optionState()).filter(([id, selected]) => selected).map(([id]) => Number(id)));
+    const activeOptions = this.command.option.filter(opt => selectedIds.has(opt.id)).sort((a, b) => a.level - b.level);
+    const standaloneOption = activeOptions.find(opt => opt.standalone);
 
-    return this.command.option
-      .filter(opt => selectedIds.has(opt.id))
-      .sort((a, b) => a.level - b.level)
-      .map(opt => ({ ...opt, displayValue: opt.value }));
+    if (standaloneOption) {
+      return [{ ...standaloneOption, displayValue: standaloneOption.value }];
+    }
+
+    return activeOptions.map(opt => ({ ...opt, displayValue: opt.value }));
   });
 
   readonly activeAlternative = signal<number | null>(null);
-
-  readonly activeAlternativeItem = computed(() =>
-    this.command.alternative.find(a => a.id === this.activeAlternative()) ?? null
-  );
+  readonly activeAlternativeItem = computed(() => this.command.alternative.find(a => a.id === this.activeAlternative()) ?? null);
 
   readonly activeExample = signal<string | null>(null);
-
-  readonly activeExampleItem = computed(() =>
-    this.command.example.find(a => a === this.activeExample()) ?? null
-  );
+  readonly activeExampleItem = computed(() => this.command.example.find(a => a === this.activeExample()) ?? null);
 
   readonly changesApplied = computed<boolean>(() => {
     return (this.activeOptionsWithValue().length > 0 || this.activeExample() !== null || this.activeAlternative() !== null);
@@ -65,16 +58,16 @@ export class CommandComponent implements OnInit, OnChanges {
 
   readonly activeOptionDescriptions = computed(() => {
     const cmd = this.command;
-    const selectedIds = new Set(Object.keys(this.optionState()).filter(id => this.optionState()[Number(id)]));
+    const selectedIds = new Set(Object.entries(this.optionState()).filter(([_, selected]) => selected).map(([id]) => Number(id)));
+    const activeOptions = cmd.option.filter(opt => selectedIds.has(opt.id)).sort((a, b) => a.level - b.level);
+    const standaloneOption = activeOptions.find(opt => opt.standalone);
+    const optionsToRender = standaloneOption ? [standaloneOption] : activeOptions;
 
-    return cmd.option
-      .filter(opt => selectedIds.has(String(opt.id)))
-      .sort((a, b) => a.level - b.level)
-      .map(opt => {
-        const prefix = opt.title.startsWith('--') ? '--' : opt.title.startsWith('-') ? '-' : '';
-        const description = opt.description ? (prefix + opt.description) : opt.title;
-        return { id: opt.id, text: description, level: opt.level };
-      });
+    return optionsToRender.map(opt => {
+      const prefix = opt.title.startsWith('--') ? '--' : opt.title.startsWith('-') ? '-' : '';
+      const description = opt.description ? prefix + opt.description : opt.title;
+      return { id: opt.id, text: description, level: opt.level };
+    });
   });
 
   ngOnInit(): void {
@@ -114,6 +107,24 @@ export class CommandComponent implements OnInit, OnChanges {
 
     const state = { ...this.optionState() };
     const newValue = !state[option.id];
+
+    if (newValue && option.standalone) {
+      for (const opt of this.sortedOptions()) {
+        state[opt.id] = false;
+      }
+
+      state[option.id] = true;
+      this.optionState.set(state);
+      return;
+    }
+
+    if (newValue && !option.standalone) {
+      for (const opt of this.sortedOptions()) {
+        if (opt.standalone) {
+          state[opt.id] = false;
+        }
+      }
+    }
 
     if (newValue && !option.combinable) {
       for (const opt of this.sortedOptions()) {
