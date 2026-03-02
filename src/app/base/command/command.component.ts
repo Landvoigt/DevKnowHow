@@ -34,16 +34,16 @@ export class CommandComponent implements OnInit, OnChanges {
     return [...this.command.option].sort((a, b) => a.level - b.level);
   });
 
-  readonly activeOptionsWithValue = computed(() => {
+  readonly activeOptions = computed(() => {
     const selectedIds = new Set(Object.entries(this.optionState()).filter(([id, selected]) => selected).map(([id]) => Number(id)));
     const activeOptions = this.command.option.filter(opt => selectedIds.has(opt.id)).sort((a, b) => a.level - b.level);
     const standaloneOption = activeOptions.find(opt => opt.standalone);
 
     if (standaloneOption) {
-      return [{ ...standaloneOption, displayValue: standaloneOption.value }];
+      return [{ ...standaloneOption }];
     }
 
-    return activeOptions.map(opt => ({ ...opt, displayValue: opt.value }));
+    return activeOptions.map(opt => ({ ...opt }));
   });
 
   readonly activeAlternative = signal<number | null>(null);
@@ -53,7 +53,7 @@ export class CommandComponent implements OnInit, OnChanges {
   readonly activeExampleItem = computed(() => this.command.example.find(a => a === this.activeExample()) ?? null);
 
   readonly changesApplied = computed<boolean>(() => {
-    return (this.activeOptionsWithValue().length > 0 || this.activeExample() !== null || this.activeAlternative() !== null);
+    return (this.activeOptions().length > 0 || this.activeExample() !== null || this.activeAlternative() !== null);
   });
 
   readonly activeOptionDescriptions = computed(() => {
@@ -66,7 +66,7 @@ export class CommandComponent implements OnInit, OnChanges {
     return optionsToRender.map(opt => {
       const prefix = opt.title.startsWith('--') ? '--' : opt.title.startsWith('-') ? '-' : '';
       const description = opt.description ? prefix + opt.description : opt.title;
-      return { id: opt.id, text: description, level: opt.level };
+      return { id: opt.id, description, level: opt.level };
     });
   });
 
@@ -179,8 +179,8 @@ export class CommandComponent implements OnInit, OnChanges {
       textToCopy = this.activeAlternativeItem()!.title;
     } else {
       textToCopy = this.command.title;
-      for (const opt of this.activeOptionsWithValue()) {
-        textToCopy += ' ' + opt.title + (opt.displayValue ? ` *${opt.displayValue}*` : '');
+      for (const opt of this.activeOptions()) {
+        textToCopy += ' ' + opt.title;
       }
       if (this.command.context) {
         textToCopy += ' ' + this.command.context;
