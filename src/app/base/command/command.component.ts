@@ -6,11 +6,12 @@ import { Command } from '@interfaces/command.interface';
 import { Option } from '@interfaces/option.interface';
 import { CommandService } from '@services/command.service';
 import { VariablePipe } from '@pipes/variable.pipe';
+import { StripPipe } from '@pipes/strip.pipe';
 import { SearchPipe } from '@pipes/search.pipe';
 
 @Component({
   selector: 'app-command',
-  imports: [CommonModule, TranslateModule, VariablePipe, SearchPipe],
+  imports: [CommonModule, TranslateModule, VariablePipe, StripPipe, SearchPipe],
   templateUrl: './command.component.html',
   styleUrl: './command.component.scss',
 })
