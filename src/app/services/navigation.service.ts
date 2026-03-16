@@ -8,7 +8,7 @@ import { filter } from 'rxjs';
 })
 export class NavigationService {
   activePage: number | null = null;
-  activeLayout: 'command' | 'routine' | 'smt' = 'command';
+  activeLayout: 'command' | 'routine' = 'command';
   activeLanguage: 'eng' | 'de' = 'eng';
 
   constructor(private router: Router, private location: Location) {
@@ -20,7 +20,7 @@ export class NavigationService {
     this.activeLayout = this.safeGetLocalStorage('DevKnowHow_activeLayout');
   }
 
-  setLayout(layout: 'command' | 'routine' | 'smt'): void {
+  setLayout(layout: 'command' | 'routine'): void {
     this.activeLayout = layout;
     this.safeSetLocalStorage('DevKnowHow_activeLayout', layout);
   }

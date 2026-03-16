@@ -15,7 +15,14 @@ export class SearchPipe implements PipeTransform {
         const query = this.dataService.searchQuery;
         if (!query.trim() || query.trim().length < 2) return text;
 
-        const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const ignoredPrefixes = ['sudo'];
+
+        const words = query.toLowerCase().split(' ');
+        const filteredWords = words.filter(w => !ignoredPrefixes.includes(w));
+
+        if (!filteredWords.length) return text;
+
+        const escapedQuery = filteredWords.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
         const regex = new RegExp(`(${escapedQuery})`, 'gi');
 
         return text.replace(regex, '<span class="text-[#a736b1]">$1</span>');

@@ -28,7 +28,7 @@
             @if (activeAlternativeItem()) {
             <span class="text-[#fff665] mb-1">{{ activeAlternativeItem()!.title }}</span>
             } @else {
-            <span [innerHTML]="command.title | variable | search" class="mb-1"
+            <span [innerHTML]="sudo ? 'sudo ' + (command.title | variable | search) : (command.title | variable | search)" class="mb-1"
                 [ngClass]="{'mr-1.5': activeOptions().length > 0 || command.context}">
             </span>
             @for (opt of activeOptions(); track opt.id) {

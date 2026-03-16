@@ -19,6 +19,7 @@ export class CommandComponent implements OnInit, OnChanges {
   @Input() command!: Command;
   @Input() index!: number;
   @Input() hidden!: Record<number, boolean>;
+  @Input() sudo: boolean = false;
 
   private readonly levelColors = [
     '#4af6f7',
@@ -179,7 +180,7 @@ export class CommandComponent implements OnInit, OnChanges {
     } else if (this.activeAlternativeItem()) {
       textToCopy = this.activeAlternativeItem()!.title;
     } else {
-      textToCopy = this.command.title;
+      textToCopy = this.sudo ? 'sudo ' + this.command.title : this.command.title;
       for (const opt of this.activeOptions()) {
         textToCopy += ' ' + opt.title;
       }

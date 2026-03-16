@@ -118,3 +118,7 @@ span:not(button):not([role="button"]):not([tabindex]) {
     width: 1.125rem;
     height: 1.125rem;
 }
+
+::-webkit-scrollbar {
+    display: none;
+}

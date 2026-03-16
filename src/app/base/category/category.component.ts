@@ -66,6 +66,7 @@ export class CategoryComponent {
 
   readonly activeOrder = signal<'copy' | 'asc' | 'dec' | null>('asc');
   readonly hidden = signal<Record<number, boolean>>({});
+  readonly sudo = signal<boolean>(false);
 
   readonly filteredCommands = computed<Command[]>(() => {
     const searchResults = this.dataService.searchResults();
@@ -84,8 +85,14 @@ export class CategoryComponent {
     }
   });
 
+  readonly isBashCategory = computed(() => this.category()?.title === 'Bash');
+
   toggleExtendedInfo(index: number): void {
     this.hidden.update(h => ({ ...h, [index]: !h[index] }));
+  }
+
+  toggleSudo(): void {
+    this.sudo.set(!this.sudo());
   }
 
   onOrderChange(value: 'asc' | 'dec' | 'copy'): void {

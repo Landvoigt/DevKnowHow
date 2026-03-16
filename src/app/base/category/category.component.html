@@ -1,6 +1,6 @@
 <div class="z-20 relative flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-[#f0f8ffbf]">
     @for (item of filteredCommands(); track item.id; let i = $index) {
-    <app-command [command]="item" [index]="i" [hidden]="hidden()"></app-command>
+    <app-command [command]="item" [index]="i" [hidden]="hidden()" [sudo]="sudo()"></app-command>
     }
 
     <!-- @for (item of filteredRoutines(); track item.id; let i = $index) {
@@ -21,6 +21,14 @@
     } -->
 </div>
 <div class="absolute flex top-1.5 right-6 z-30 gap-1">
+    @if (isBashCategory()) {
+    <div (click)="toggleSudo()" class="flex-center">
+        <span [ngClass]="{'bg-[#47aee1] !text-[#000000] border-[#47aee1]': sudo()}"
+            class="px-1 pt-0.5 pb-0.75 rounded text-xs font-medium text-gray-300 cursor-pointer border default-transition hover:bg-[#47aee1] hover:text-[#000000] hover:border-[#47aee1]">
+            Sudo
+        </span>
+    </div>
+    }
     <div (click)="onOrderChange('asc')" [ngClass]="{'!text-[#47aee1]': activeOrder() === 'asc'}"
         class="flex text-gray-300 rounded-md px-2 py-1.5 hover:bg-[#bad5ff70] hover:text-white cursor-pointer default-transition">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
