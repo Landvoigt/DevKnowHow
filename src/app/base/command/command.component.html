@@ -28,8 +28,9 @@
             @if (activeAlternativeItem()) {
             <span class="text-[#fff665] mb-1">{{ activeAlternativeItem()!.title }}</span>
             } @else {
-            <span [innerHTML]="sudo ? 'sudo ' + (command.title | variable | search) : (command.title | variable | search)" class="mb-1"
-                [ngClass]="{'mr-1.5': activeOptions().length > 0 || command.context}">
+            <span
+                [innerHTML]="sudo ? 'sudo ' + (command.title | variable | search) : (command.title | variable | search)"
+                class="mb-1" [ngClass]="{'mr-1.5': activeOptions().length > 0 || command.context}">
             </span>
             @for (opt of activeOptions(); track opt.id) {
             <span [innerHTML]="opt.title | variable"
@@ -48,8 +49,11 @@
     </div>
     <div class="col-span-7 flex lg:mr-7 md:mr-4 sm:mr-4 mr-2">
         <div class="w-full min-w-0 leading-6 text-[#f0f8ff]">
+            @if (!overwriteOption()) {
             <span [innerHTML]="command.description | variable | search" class="mb-1"
-                [ngClass]="{'mr-1.5': activeOptions().length > 0 || command.context}"></span>
+                [ngClass]="{'mr-1.5': activeOptions().length > 0 || command.context}">
+            </span>
+            }
             @for (opt of activeOptionDescriptions(); track opt.id) {
             <span [innerHTML]="opt.description | variable"
                 class="inline-block whitespace-nowrap border rounded leading-5 default-transition px-1 py-0.5 mr-1.5 mb-1"
@@ -70,7 +74,7 @@
     <div class="grid grid-cols-12 items-center">
         <div class="col-span-5 pl-12.25">
             <span class="text-sm text-[#f0f8ffbf] leading-6">
-                Tooltip
+                {{ 'COMMAND.TOOLTIP' | translate }}
             </span>
         </div>
         <div class="col-span-7 pl-0.25 flex items-center">
@@ -84,7 +88,7 @@
     <div class="grid grid-cols-12 items-center">
         <div class="col-span-5 pl-12.25">
             <span class="text-sm text-[#4af6f7] leading-6">
-                Options
+                {{ 'COMMAND.OPTION' | translate }}
             </span>
         </div>
         <div class="col-span-7 flex flex-wrap gap-1 leading-6 pl-0.25">
@@ -108,7 +112,7 @@
     <div class="grid grid-cols-12 items-center">
         <div class="col-span-5 pl-12.25">
             <span class="text-sm text-[#fff665] leading-6">
-                Alternatives
+                {{ 'COMMAND.ALTERNATIVE' | translate }}
             </span>
         </div>
         <div class="col-span-7 flex flex-wrap gap-1 leading-6 pl-0.25">
@@ -129,7 +133,7 @@
     <div class="grid grid-cols-12 items-center">
         <div class="col-span-5 pl-12.25">
             <span class="text-sm text-[#e69130] leading-6">
-                Examples
+                {{ 'COMMAND.EXAMPLE' | translate }}
             </span>
         </div>
         <div class="col-span-7 flex flex-wrap gap-1 leading-6 pl-0.25">

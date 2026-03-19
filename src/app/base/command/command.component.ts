@@ -72,6 +72,13 @@ export class CommandComponent implements OnInit, OnChanges {
     });
   });
 
+  readonly overwriteOption = computed(() => {
+    const selectedIds = new Set(Object.entries(this.optionState()).filter(([_, selected]) => selected).map(([id]) => Number(id)));
+    const activeOptions = this.command.option.filter(opt => selectedIds.has(opt.id));
+
+    return activeOptions.find(opt => opt.overwrite) ?? null;
+  });
+
   ngOnInit(): void {
     if (this.command) {
       this.resetOptionState();

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, inject, signal, effect, ChangeDetectionStrategy, ViewChild, ElementRef, AfterViewInit, computed } from '@angular/core';
+import { Component, input, inject, signal, effect, ViewChild, ElementRef, AfterViewInit, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@interfaces/category.interface';

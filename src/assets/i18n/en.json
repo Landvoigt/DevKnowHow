@@ -37,7 +37,12 @@
         "BTN_SUBMIT": "Submit"
     },
     "COMMAND": {
-        "VALUE": "value"
+        "VALUE": "value",
+        "TOOLTIP": "Tooltip",
+        "OPTION": "Options",
+        "ALTERNATIVE": "Alternatives",
+        "EXAMPLE": "Examples",
+        "CONTEXT": "Context"
     },
     "IMPRINT": {
         "IMPRINT": "Imprint",
