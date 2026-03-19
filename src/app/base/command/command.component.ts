@@ -20,7 +20,8 @@ export class CommandComponent implements OnInit, OnChanges {
   @Input() index!: number;
   @Input() hidden!: Record<number, boolean>;
   @Input() sudo: boolean = false;
-
+  @Input() isSearch: boolean = false;
+  
   private readonly levelColors = [
     '#4af6f7',
     '#16b2ff',

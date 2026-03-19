@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, inject, signal, effect, ViewChild, ElementRef, AfterViewInit, computed } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@interfaces/category.interface';
 import { FilterPipe } from '@pipes/filter.pipe';
 import { DataService } from '@services/data.service';
 import { NavigationService } from '@services/navigation.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'navbar',
@@ -22,6 +24,19 @@ export class NavbarComponent implements AfterViewInit {
   public readonly dataService = inject(DataService);
 
   public readonly categories = this.dataService.categories;
+
+  readonly activeCategoryId = toSignal(
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      map(() => {
+        const match = this.router.url.match(/\/category\/(\d+)/);
+        return match ? Number(match[1]) : null;
+      })
+    ),
+    {
+      initialValue: Number(this.router.url.match(/\/category\/(\d+)/)?.[1] ?? null)
+    }
+  );
 
   public readonly userMenuOpen = signal(false);
   public readonly mobileMenuOpen = signal(false);
@@ -79,14 +94,6 @@ export class NavbarComponent implements AfterViewInit {
   changePage(cat: Category) {
     this.closeMobileMenu();
     this.router.navigate([`category/${cat.id}/`]);
-  }
-
-  search(query: string) {
-    if (!query.trim()) {
-      this.cancelSearch(query);
-    } else {
-      this.dataService.search(query);
-    }
   }
 
   cancelSearch(currentQuery?: string) {

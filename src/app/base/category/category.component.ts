@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -85,7 +85,21 @@ export class CategoryComponent {
     }
   });
 
+  readonly isSearch = computed(() => {
+    return this.dataService.searchResults() !== null;
+  });
+
   readonly isBashCategory = computed(() => this.category()?.title === 'Bash');
+
+  constructor() {
+    effect(() => {
+      const id = this.categoryId();
+
+      if (id) {
+        this.dataService.clearSearchResults();
+      }
+    });
+  }
 
   toggleExtendedInfo(index: number): void {
     this.hidden.update(h => ({ ...h, [index]: !h[index] }));

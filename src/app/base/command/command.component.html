@@ -47,7 +47,7 @@
 
         <span class="leading-6 text-[#f0f8ffbf] shrink-0">–</span>
     </div>
-    <div class="col-span-7 flex lg:mr-7 md:mr-4 sm:mr-4 mr-2">
+    <div class="flex col-span-7 {{ isSearch ? 'sm:col-span-5 md:col-span-5 lg:col-span-6' : '' }} lg:mr-7 md:mr-4 sm:mr-4 mr-2">
         <div class="w-full min-w-0 leading-6 text-[#f0f8ff]">
             @if (!overwriteOption()) {
             <span [innerHTML]="command.description | variable | search" class="mb-1"
@@ -65,6 +65,13 @@
             }
         </div>
     </div>
+    @if(isSearch) {
+    <div class="hidden sm:flex col-span-2 lg:col-span-1">
+        <div class="w-full min-w-0 leading-6 text-sm text-[#f0f8ffbf]">
+            <span>{{ command.category }}</span>
+        </div>
+    </div>
+    }
 </div>
 @if (hidden[index] && (command.option.length || command.alternative.length || command.example || command.tooltip)) {
 <div class="grid lg:pl-14 md:pl-7 sm:pl-7 pl-5" [ngClass]="{ 'bg-[#f0f8ff0d]': index % 2 !== 0 }">

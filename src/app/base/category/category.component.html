@@ -1,6 +1,6 @@
 <div class="z-20 relative flex flex-col text-md sm:text-lg md:text-lg lg:text-lg font-medium text-[#f0f8ffbf]">
     @for (item of filteredCommands(); track item.id; let i = $index) {
-    <app-command [command]="item" [index]="i" [hidden]="hidden()" [sudo]="sudo()"></app-command>
+    <app-command [command]="item" [index]="i" [hidden]="hidden()" [sudo]="sudo()" [isSearch]="isSearch()"></app-command>
     }
 
     <!-- @for (item of filteredRoutines(); track item.id; let i = $index) {

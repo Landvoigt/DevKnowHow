@@ -1,9 +1,11 @@
 import { Injectable, effect, inject, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { catchError, debounceTime, of, Subject, switchMap, combineLatest } from 'rxjs';
 import { RestService } from '@services/rest.service';
 import { Category } from '@interfaces/category.interface';
 import { ErrorService } from '@services/error.service';
 import { Command } from '@interfaces/command.interface';
-import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
+import { TranslationService } from './translation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,7 @@ import { catchError, debounceTime, of, Subject, switchMap } from 'rxjs';
 export class DataService {
   private readonly rest = inject(RestService);
   private readonly error = inject(ErrorService);
+  private readonly translation = inject(TranslationService);
 
   private readonly categoriesSignal = signal<Category[]>([]);
   readonly categories = this.categoriesSignal.asReadonly();
@@ -23,17 +26,18 @@ export class DataService {
   private searchQuery$ = new Subject<string>();
 
   constructor() {
-    this.searchQuery$
+    combineLatest([
+      toObservable(this.searchQuerySignal),
+      toObservable(this.translation.language)
+    ])
       .pipe(
         debounceTime(150),
-        switchMap(query => {
+        switchMap(([query]) => {
           const trimmed = query.trim();
           if (!trimmed) return of(null);
+
           return this.rest.search(trimmed).pipe(
-            catchError(err => {
-              this.error.handleHttpError(err, {});
-              return of({ command: [] });
-            })
+            catchError(() => of({ command: [] }))
           );
         })
       )
@@ -54,7 +58,13 @@ export class DataService {
   }
 
   search(query: string) {
-    this.searchQuerySignal.set(query);
+    const trimmed = query.trim();
+
+    if (!trimmed) {
+      this.clearSearchResults();
+    } else {
+      this.searchQuerySignal.set(trimmed);
+    }
   }
 
   clearSearchResults() {

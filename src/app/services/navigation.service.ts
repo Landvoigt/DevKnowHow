@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { Injectable, signal } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { filter } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { filter } from 'rxjs';
   providedIn: 'root'
 })
 export class NavigationService {
-  activePage: number | null = null;
+  activePage = signal<number | null>(null);
   activeLayout: 'command' | 'routine' = 'command';
   activeLanguage: 'eng' | 'de' = 'eng';
 
@@ -47,21 +47,17 @@ export class NavigationService {
   private setActivePageFromUrl(url: string): void {
     const match = url.match(/\/category\/(\d+)/);
     if (match) {
-      this.activePage = parseInt(match[1], 10);
+      this.activePage.set(parseInt(match[1], 10));
     } else {
-      this.activePage = null;
+      this.activePage.set(null);
     }
   }
 
   setupActivePageListener(): void {
     this.router.events.pipe(
-      filter(event => event instanceof NavigationStart || event instanceof NavigationEnd)
+      filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      if (event instanceof NavigationStart) {
-        this.setActivePageFromUrl(event.url);
-      } else if (event instanceof NavigationEnd) {
-        this.setActivePageFromUrl(event.url);
-      }
+      this.setActivePageFromUrl(event.url);
     });
   }
 
