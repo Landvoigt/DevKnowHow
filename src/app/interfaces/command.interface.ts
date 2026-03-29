@@ -14,6 +14,7 @@ export interface Command {
     tooltip: string;
     option: Option[];
     alternative: Command[];
+    equivalent: Command[];
     tag: Tag[];
     copy_count: number;
 

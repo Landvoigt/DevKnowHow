@@ -9,9 +9,13 @@ export class StripPipe implements PipeTransform {
     transform(command: string): string {
         if (!command) return '';
 
-        return command
+        const stripped = command
             .replace(/\*(.*?)\*/g, '')
             .trim()
             .replace(/\s+/g, ' ');
+
+        if (!stripped) return command;
+
+        return stripped;
     }
 }

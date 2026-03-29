@@ -27,6 +27,8 @@
             } @else {
             @if (activeAlternativeItem()) {
             <span class="text-[#fff665] mb-1">{{ activeAlternativeItem()!.title }}</span>
+            } @else if(activeEquivalentItem()) {
+            <span class="text-[#fff665] mb-1">{{ activeEquivalentItem()!.title }}</span>
             } @else {
             <span
                 [innerHTML]="sudo ? 'sudo ' + (command.title | variable | search) : (command.title | variable | search)"
@@ -47,7 +49,8 @@
 
         <span class="leading-6 text-[#f0f8ffbf] shrink-0">–</span>
     </div>
-    <div class="flex col-span-7 {{ isSearch ? 'sm:col-span-5 md:col-span-5 lg:col-span-6' : '' }} lg:mr-7 md:mr-4 sm:mr-4 mr-2">
+    <div
+        class="flex col-span-7 {{ isSearch ? 'sm:col-span-5 md:col-span-5 lg:col-span-6' : '' }} lg:mr-7 md:mr-4 sm:mr-4 mr-2">
         <div class="w-full min-w-0 leading-6 text-[#f0f8ff]">
             @if (!overwriteOption()) {
             <span [innerHTML]="command.description | variable | search" class="mb-1"
@@ -73,7 +76,7 @@
     </div>
     }
 </div>
-@if (hidden[index] && (command.option.length || command.alternative.length || command.example || command.tooltip)) {
+@if (hidden[index] && (command.tooltip || command.option.length || command.example || command.alternative.length || command.equivalent.length)) {
 <div class="grid lg:pl-14 md:pl-7 sm:pl-7 pl-5" [ngClass]="{ 'bg-[#f0f8ff0d]': index % 2 !== 0 }">
 
     <!-- TOOLTIP -->
@@ -114,6 +117,27 @@
     </div>
     }
 
+    <!-- EXAMPLE -->
+    @if (command.example.length) {
+    <div class="grid grid-cols-12 items-center">
+        <div class="col-span-5 pl-12.25">
+            <span class="text-sm text-[#e69130] leading-6">
+                {{ 'COMMAND.EXAMPLE' | translate }}
+            </span>
+        </div>
+        <div class="col-span-7 flex flex-wrap gap-1 leading-6 pl-0.25">
+            @for (ex of command.example; track ex) {
+            <span (click)="toggleExample(ex); $event.stopPropagation()" [innerHTML]="ex" class="px-1 py-0.25 rounded text-xs font-medium 
+                cursor-pointer border default-transition hover:bg-[#e69130] hover:text-[#000000] border-[#e69130] 
+                whitespace-nowrap" [class.bg-[#e69130]]="activeExample() === ex"
+                [class.text-[#000000]]="activeExample() === ex">
+                {{ ex }}
+            </span>
+            }
+        </div>
+    </div>
+    }
+
     <!-- ALTERNATIVES -->
     @if (command.alternative.length) {
     <div class="grid grid-cols-12 items-center">
@@ -135,25 +159,26 @@
     </div>
     }
 
-    <!-- EXAMPLE -->
-    @if (command.example.length) {
+    <!-- EQUIVALENTS -->
+    @if (command.equivalent.length) {
     <div class="grid grid-cols-12 items-center">
         <div class="col-span-5 pl-12.25">
-            <span class="text-sm text-[#e69130] leading-6">
-                {{ 'COMMAND.EXAMPLE' | translate }}
+            <span class="text-sm text-[#fff665] leading-6">
+                {{ 'COMMAND.EQUIVALENT' | translate }}
             </span>
         </div>
         <div class="col-span-7 flex flex-wrap gap-1 leading-6 pl-0.25">
-            @for (ex of command.example; track ex) {
-            <span (click)="toggleExample(ex); $event.stopPropagation()" [innerHTML]="ex" class="px-1 py-0.25 rounded text-xs font-medium 
-                cursor-pointer border default-transition hover:bg-[#e69130] hover:text-[#000000] border-[#e69130] 
-                whitespace-nowrap" [class.bg-[#e69130]]="activeExample() === ex"
-                [class.text-[#000000]]="activeExample() === ex">
-                {{ ex }}
+            @for (eq of command.equivalent; track eq.id) {
+            <span (click)="toggleEquivalent(eq.id); $event.stopPropagation()" class="px-1 py-0.25 rounded text-xs font-medium 
+                cursor-pointer border default-transition hover:bg-[#fff665] hover:text-[#000000] border-[#fff665] 
+                whitespace-nowrap" [class.bg-[#fff665]]="activeEquivalent() === eq.id"
+                [class.text-[#000000]]="activeEquivalent() === eq.id">
+                {{ eq.title }}
             </span>
             }
         </div>
     </div>
     }
+
 </div>
 }

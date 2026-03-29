@@ -40,8 +40,9 @@
         "VALUE": "Wert",
         "TOOLTIP": "Tipp",
         "OPTION": "Optionen",
-        "ALTERNATIVE": "Alternativen",
         "EXAMPLE": "Beispiele",
+        "ALTERNATIVE": "Alternativen",
+        "EQUIVALENT": "Äquivalente",
         "CONTEXT": "Kontext"
     },
     "IMPRINT": {

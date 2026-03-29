@@ -57,11 +57,14 @@ export class CommandComponent implements OnInit, OnChanges {
     return standaloneOption ? [{ ...standaloneOption }] : activeOptions.map(opt => ({ ...opt }));
   });
 
+  readonly activeExample = signal<string | null>(null);
+  readonly activeExampleItem = computed(() => this.command.example.find(a => a === this.activeExample()) ?? null);
+
   readonly activeAlternative = signal<number | null>(null);
   readonly activeAlternativeItem = computed(() => this.command.alternative.find(a => a.id === this.activeAlternative()) ?? null);
 
-  readonly activeExample = signal<string | null>(null);
-  readonly activeExampleItem = computed(() => this.command.example.find(a => a === this.activeExample()) ?? null);
+  readonly activeEquivalent = signal<number | null>(null);
+  readonly activeEquivalentItem = computed(() => this.command.equivalent.find(a => a.id === this.activeEquivalent()) ?? null);
 
   readonly changesApplied = computed<boolean>(() => {
     return (this.activeOptions().length > 0 || this.activeExample() !== null || this.activeAlternative() !== null);
@@ -120,8 +123,9 @@ export class CommandComponent implements OnInit, OnChanges {
   }
 
   toggleOption(option: Option): void {
-    this.activeAlternative.set(null);
     this.activeExample.set(null);
+    this.activeAlternative.set(null);
+    this.activeEquivalent.set(null);
 
     const state = { ...this.optionState() };
     const newValue = !state[option.id];
@@ -156,6 +160,16 @@ export class CommandComponent implements OnInit, OnChanges {
     this.optionState.set(state);
   }
 
+  toggleExample(ex: string): void {
+    const isActive = this.activeExample() === ex;
+
+    this.clear();
+
+    if (!isActive) {
+      this.activeExample.set(ex);
+    }
+  }
+
   toggleAlternative(id: number): void {
     const isActive = this.activeAlternative() === id;
 
@@ -166,13 +180,13 @@ export class CommandComponent implements OnInit, OnChanges {
     }
   }
 
-  toggleExample(ex: string): void {
-    const isActive = this.activeExample() === ex;
+  toggleEquivalent(id: number): void {
+    const isActive = this.activeEquivalent() === id;
 
     this.clear();
 
     if (!isActive) {
-      this.activeExample.set(ex);
+      this.activeEquivalent.set(id);
     }
   }
 
@@ -185,6 +199,7 @@ export class CommandComponent implements OnInit, OnChanges {
   clear(): void {
     this.activeAlternative.set(null);
     this.activeExample.set(null);
+    this.activeEquivalent.set(null);
     this.clearOptions();
   }
 
@@ -195,6 +210,8 @@ export class CommandComponent implements OnInit, OnChanges {
       textToCopy = this.activeExample()!;
     } else if (this.activeAlternativeItem()) {
       textToCopy = this.activeAlternativeItem()!.title;
+    } else if (this.activeEquivalentItem()) {
+      textToCopy = this.activeEquivalentItem()!.title;
     } else {
       textToCopy = this.sudo ? 'sudo ' + this.command.title : this.command.title;
       for (const opt of this.activeOptions()) {
