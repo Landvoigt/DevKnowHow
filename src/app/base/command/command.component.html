@@ -26,9 +26,9 @@
             <span class="text-[#e69130] mb-1" [innerHTML]="activeExampleItem()"></span>
             } @else {
             @if (activeAlternativeItem()) {
-            <span class="text-[#fff665] mb-1">{{ activeAlternativeItem()!.title }}</span>
+            <span class="text-[#ffd40d] mb-1">{{ activeAlternativeItem()!.title }}</span>
             } @else if(activeEquivalentItem()) {
-            <span class="text-[#fff665] mb-1">{{ activeEquivalentItem()!.title }}</span>
+            <span class="text-[#dcf61a] mb-1">{{ activeEquivalentItem()!.title }}</span>
             } @else {
             <span
                 [innerHTML]="sudo ? 'sudo ' + (command.title | variable | search) : (command.title | variable | search)"
@@ -76,7 +76,8 @@
     </div>
     }
 </div>
-@if (hidden[index] && (command.tooltip || command.option.length || command.example || command.alternative.length || command.equivalent.length)) {
+@if (hidden[index] && (command.tooltip || command.option.length || command.example || command.alternative.length ||
+command.equivalent.length)) {
 <div class="grid lg:pl-14 md:pl-7 sm:pl-7 pl-5" [ngClass]="{ 'bg-[#f0f8ff0d]': index % 2 !== 0 }">
 
     <!-- TOOLTIP -->
@@ -142,15 +143,15 @@
     @if (command.alternative.length) {
     <div class="grid grid-cols-12 items-center">
         <div class="col-span-5 pl-12.25">
-            <span class="text-sm text-[#fff665] leading-6">
+            <span class="text-sm text-[#ffd40d] leading-6">
                 {{ 'COMMAND.ALTERNATIVE' | translate }}
             </span>
         </div>
         <div class="col-span-7 flex flex-wrap gap-1 leading-6 pl-0.25">
             @for (alt of command.alternative; track alt.id) {
             <span (click)="toggleAlternative(alt.id); $event.stopPropagation()" class="px-1 py-0.25 rounded text-xs font-medium 
-                cursor-pointer border default-transition hover:bg-[#fff665] hover:text-[#000000] border-[#fff665] 
-                whitespace-nowrap" [class.bg-[#fff665]]="activeAlternative() === alt.id"
+                cursor-pointer border default-transition hover:bg-[#ffd40d] hover:text-[#000000] border-[#ffd40d] 
+                whitespace-nowrap" [class.bg-[#ffd40d]]="activeAlternative() === alt.id"
                 [class.text-[#000000]]="activeAlternative() === alt.id">
                 {{ alt.title }}
             </span>
@@ -163,22 +164,26 @@
     @if (command.equivalent.length) {
     <div class="grid grid-cols-12 items-center">
         <div class="col-span-5 pl-12.25">
-            <span class="text-sm text-[#fff665] leading-6">
+            <span class="text-sm text-[#dcf61a] leading-6">
                 {{ 'COMMAND.EQUIVALENT' | translate }}
             </span>
         </div>
         <div class="col-span-7 flex flex-wrap gap-1 leading-6 pl-0.25">
             @for (eq of command.equivalent; track eq.id) {
-            <span (click)="toggleEquivalent(eq.id); $event.stopPropagation()" class="px-1 py-0.25 rounded text-xs font-medium 
-                cursor-pointer border default-transition hover:bg-[#fff665] hover:text-[#000000] border-[#fff665] 
-                whitespace-nowrap" [class.bg-[#fff665]]="activeEquivalent() === eq.id"
-                [class.text-[#000000]]="activeEquivalent() === eq.id">
-                {{ eq.title }}
-            </span>
+            <div class="flex items-center gap-1 whitespace-nowrap">
+                <span class="text-xs text-[#f0f8ffbf]">
+                    {{ eq.category.join(', ') }} >
+                </span>
+                <span (click)="toggleEquivalent(eq.id); $event.stopPropagation()" class="px-1 py-0.25 rounded text-xs font-medium 
+                    cursor-pointer border default-transition hover:bg-[#dcf61a] hover:text-[#000000] border-[#dcf61a]"
+                    [class.bg-[#dcf61a]]="activeEquivalent() === eq.id"
+                    [class.text-[#000000]]="activeEquivalent() === eq.id">
+                    {{ eq.title }}
+                </span>
+            </div>
             }
         </div>
     </div>
     }
-
 </div>
 }
