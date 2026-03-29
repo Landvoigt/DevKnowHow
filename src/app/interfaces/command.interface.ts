@@ -1,5 +1,6 @@
 import { Category } from "./category.interface";
 import { Option } from "./option.interface";
+import { Tag } from "./tag.interface";
 
 export interface Command {
     id: number;
@@ -13,6 +14,7 @@ export interface Command {
     tooltip: string;
     option: Option[];
     alternative: Command[];
+    tag: Tag[];
     copy_count: number;
 
     active: boolean;

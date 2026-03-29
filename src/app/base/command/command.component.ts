@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, Input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
+import { Component, computed, inject, input, Input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { Command } from '@interfaces/command.interface';
@@ -21,7 +21,9 @@ export class CommandComponent implements OnInit, OnChanges {
   @Input() hidden!: Record<number, boolean>;
   @Input() sudo: boolean = false;
   @Input() isSearch: boolean = false;
-  
+
+  readonly category = input<number | null>(null);
+
   private readonly levelColors = [
     '#4af6f7',
     '#16b2ff',
@@ -32,21 +34,27 @@ export class CommandComponent implements OnInit, OnChanges {
 
   readonly optionState = signal<Record<number, boolean>>({});
 
+  private filterByCategory(options: Option[]): Option[] {
+    const category = this.category();
+    if (!category) return options;
+
+    return options.filter(opt => !opt.category?.length || opt.category.includes(category));
+  }
+
   readonly sortedOptions = computed<Option[]>(() => {
     this.command;
-    return [...this.command.option].sort((a, b) => a.level - b.level);
+    this.category();
+
+    return this.filterByCategory(this.command.option).sort((a, b) => a.level - b.level);
   });
 
   readonly activeOptions = computed(() => {
     const selectedIds = new Set(Object.entries(this.optionState()).filter(([id, selected]) => selected).map(([id]) => Number(id)));
-    const activeOptions = this.command.option.filter(opt => selectedIds.has(opt.id)).sort((a, b) => a.level - b.level);
+    const filtered = this.filterByCategory(this.command.option);
+    const activeOptions = filtered.filter(opt => selectedIds.has(opt.id)).sort((a, b) => a.level - b.level);
     const standaloneOption = activeOptions.find(opt => opt.standalone);
 
-    if (standaloneOption) {
-      return [{ ...standaloneOption }];
-    }
-
-    return activeOptions.map(opt => ({ ...opt }));
+    return standaloneOption ? [{ ...standaloneOption }] : activeOptions.map(opt => ({ ...opt }));
   });
 
   readonly activeAlternative = signal<number | null>(null);
@@ -60,9 +68,9 @@ export class CommandComponent implements OnInit, OnChanges {
   });
 
   readonly activeOptionDescriptions = computed(() => {
-    const cmd = this.command;
     const selectedIds = new Set(Object.entries(this.optionState()).filter(([_, selected]) => selected).map(([id]) => Number(id)));
-    const activeOptions = cmd.option.filter(opt => selectedIds.has(opt.id)).sort((a, b) => a.level - b.level);
+    const filtered = this.filterByCategory(this.command.option);
+    const activeOptions = filtered.filter(opt => selectedIds.has(opt.id)).sort((a, b) => a.level - b.level);
     const standaloneOption = activeOptions.find(opt => opt.standalone);
     const optionsToRender = standaloneOption ? [standaloneOption] : activeOptions;
 

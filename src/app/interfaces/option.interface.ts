@@ -3,6 +3,7 @@ export interface Option {
     
     title: string;
     description: string;
+    category: number[];
     level: number;
     combinable: boolean;
     standalone: boolean;
