@@ -77,9 +77,25 @@ export class CategoryComponent {
 
     const order = this.activeOrder();
 
+    const charCategory = (str: string) => {
+      const firstChar = str.trim()[0];
+      if (!firstChar) return 2;
+      if (/[a-zA-Z]/.test(firstChar)) return 0;
+      if (/[0-9]/.test(firstChar)) return 2;
+      return 1;
+    };
+
+    const compareAlphaSpecial = (a: string, b: string) => {
+      const catA = charCategory(a);
+      const catB = charCategory(b);
+
+      if (catA !== catB) return catA - catB;
+      return a.localeCompare(b);
+    };
+
     switch (order) {
-      case 'asc': return result.sort((a, b) => a.title.localeCompare(b.title));
-      case 'dec': return result.sort((a, b) => b.title.localeCompare(a.title));
+      case 'asc': return result.sort((a, b) => compareAlphaSpecial(a.title, b.title));
+      case 'dec': return result.sort((a, b) => compareAlphaSpecial(b.title, a.title));
       case 'copy': return result.sort((a, b) => b.copy_count - a.copy_count);
       default: return result;
     }

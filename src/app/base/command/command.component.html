@@ -32,7 +32,7 @@
             } @else {
             <span
                 [innerHTML]="sudo ? 'sudo ' + (command.title | variable | search) : (command.title | variable | search)"
-                class="mb-1" [ngClass]="{'mr-1.5': activeOptions().length > 0 || command.context}">
+                class="mb-1" [ngClass]="{'mr-1.5': activeOptions().length > 0 || command.context, '!mr-0.5': command.context === ';'}">
             </span>
             @for (opt of activeOptions(); track opt.id) {
             <span [innerHTML]="opt.title | variable"

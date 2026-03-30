@@ -222,6 +222,8 @@ export class CommandComponent implements OnInit, OnChanges {
       }
     }
 
+    textToCopy = textToCopy.replace(/\\\*/g, '*');
+
     this.commandService.copy(textToCopy, this.command.id, this.index);
   }
 
