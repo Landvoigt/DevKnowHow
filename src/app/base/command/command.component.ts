@@ -218,7 +218,7 @@ export class CommandComponent implements OnInit, OnChanges {
         textToCopy += ' ' + opt.title;
       }
       if (this.command.context) {
-        textToCopy += ' ' + this.command.context;
+        textToCopy += (this.command.context === ';') ? this.command.context : ' ' + this.command.context;
       }
     }
 
