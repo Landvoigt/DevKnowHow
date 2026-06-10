@@ -14,7 +14,6 @@ import { DataService } from '@services/data.service';
 import { NavigationService } from '@services/navigation.service';
 import { TranslationService } from '@services/translation.service';
 import { CommandService } from '@services/command.service';
-import { ErrorService } from '@services/error.service';
 
 import { CommandComponent } from '../command/command.component';
 
@@ -30,7 +29,6 @@ export class CategoryComponent {
   private readonly rest = inject(RestService);
   private readonly dataService = inject(DataService);
   private readonly translation = inject(TranslationService);
-  private readonly error = inject(ErrorService);
 
   public readonly navService = inject(NavigationService);
   public readonly commandService = inject(CommandService);
@@ -113,6 +111,15 @@ export class CategoryComponent {
 
       if (id) {
         this.dataService.clearSearchResults();
+      }
+    });
+
+    effect(() => {
+      const detail = this.categoryDetail();
+      if (!detail) return;
+
+      if (detail.title !== 'Bash') {
+        this.sudo.set(false);
       }
     });
   }

@@ -8,6 +8,7 @@ import { CommandService } from '@services/command.service';
 import { VariablePipe } from '@pipes/variable.pipe';
 import { StripPipe } from '@pipes/strip.pipe';
 import { SearchPipe } from '@pipes/search.pipe';
+import { Category } from '@interfaces/category.interface';
 
 @Component({
   selector: 'app-command',
@@ -65,6 +66,39 @@ export class CommandComponent implements OnInit, OnChanges {
 
   readonly activeEquivalent = signal<number | null>(null);
   readonly activeEquivalentItem = computed(() => this.command.equivalent.find(a => a.id === this.activeEquivalent()) ?? null);
+
+  readonly groupedEquivalents = computed(() => {
+    const map = new Map<string, Command[]>();
+
+    for (const eq of this.command.equivalent) {
+      const cats = eq.category?.length ? eq.category : ['Uncategorized'];
+
+      for (const cat of cats) {
+        const key = cats.sort().join(', ');
+
+        if (!map.has(key)) {
+          map.set(key, []);
+        }
+
+        map.get(key)!.push(eq);
+      }
+    }
+
+    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
+  });
+
+  dedupedEquivalents(commands: Command[]): Command[] {
+    const seen = new Set<number>();
+    const result: Command[] = [];
+
+    for (const cmd of commands) {
+      if (seen.has(cmd.id)) continue;
+      seen.add(cmd.id);
+      result.push(cmd);
+    }
+
+    return result;
+  }
 
   readonly changesApplied = computed<boolean>(() => {
     return (this.activeOptions().length > 0 || this.activeExample() !== null || this.activeAlternative() !== null);

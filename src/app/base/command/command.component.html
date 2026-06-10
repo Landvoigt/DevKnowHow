@@ -161,7 +161,7 @@ command.equivalent.length)) {
     }
 
     <!-- EQUIVALENTS -->
-    @if (command.equivalent.length) {
+    @if (groupedEquivalents().length) {
     <div class="grid grid-cols-12 items-center">
         <div class="col-span-5 pl-12.25">
             <span class="text-sm text-[#dcf61a] leading-6">
@@ -169,17 +169,22 @@ command.equivalent.length)) {
             </span>
         </div>
         <div class="col-span-7 flex flex-wrap gap-1 leading-6 pl-0.25">
-            @for (eq of command.equivalent; track eq.id) {
+            @for (group of groupedEquivalents(); track group[0]) {
             <div class="flex items-center gap-1 whitespace-nowrap">
                 <span class="text-xs text-[#f0f8ffbf]">
-                    {{ eq.category.join(', ') }} >
+                    {{ group[0] }} 
                 </span>
-                <span (click)="toggleEquivalent(eq.id); $event.stopPropagation()" class="px-1 py-0.25 rounded text-xs font-medium 
-                    cursor-pointer border default-transition hover:bg-[#dcf61a] hover:text-[#000000] border-[#dcf61a]"
-                    [class.bg-[#dcf61a]]="activeEquivalent() === eq.id"
-                    [class.text-[#000000]]="activeEquivalent() === eq.id">
-                    {{ eq.title }}
-                </span>
+                <div class="flex flex-wrap gap-1">
+                    @for (eq of dedupedEquivalents(group[1]); track eq.id) {
+                      <span
+                        (click)="toggleEquivalent(eq.id); $event.stopPropagation()"
+                        class="px-1 py-0.25 rounded text-xs font-medium cursor-pointer border default-transition hover:bg-[#dcf61a] hover:text-[#000000] border-[#dcf61a]"
+                        [class.bg-[#dcf61a]]="activeEquivalent() === eq.id"
+                        [class.text-[#000000]]="activeEquivalent() === eq.id">
+                        {{ eq.title }}
+                      </span>
+                    }
+                </div>
             </div>
             }
         </div>
