@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, Input, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
+import { Component, computed, EventEmitter, inject, input, Input, OnChanges, OnInit, Output, signal, SimpleChanges } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { Command } from '@interfaces/command.interface';
@@ -8,7 +8,6 @@ import { CommandService } from '@services/command.service';
 import { VariablePipe } from '@pipes/variable.pipe';
 import { StripPipe } from '@pipes/strip.pipe';
 import { SearchPipe } from '@pipes/search.pipe';
-import { Category } from '@interfaces/category.interface';
 
 @Component({
   selector: 'app-command',
@@ -19,9 +18,11 @@ import { Category } from '@interfaces/category.interface';
 export class CommandComponent implements OnInit, OnChanges {
   @Input() command!: Command;
   @Input() index!: number;
-  @Input() hidden!: Record<number, boolean>;
+  @Input() hiddenMap!: Record<number, boolean>;
   @Input() sudo: boolean = false;
   @Input() isSearch: boolean = false;
+
+  @Output() onToggleInfo = new EventEmitter<number>();
 
   readonly category = input<number | null>(null);
 
@@ -152,10 +153,6 @@ export class CommandComponent implements OnInit, OnChanges {
     this.optionState.set(newState);
   }
 
-  toggleExtendedInfo(): void {
-    this.hidden[this.index] = !this.hidden[this.index];
-  }
-
   toggleOption(option: Option): void {
     this.activeExample.set(null);
     this.activeAlternative.set(null);
@@ -263,6 +260,10 @@ export class CommandComponent implements OnInit, OnChanges {
 
   isOptionSelected(option: Option): boolean {
     return this.optionState()[option.id] === true;
+  }
+
+  isHidden(): boolean {
+    return this.hiddenMap?.[this.command.id] === true;
   }
 
   getColorByLevel(level: number): string {

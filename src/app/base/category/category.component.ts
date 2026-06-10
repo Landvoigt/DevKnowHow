@@ -63,7 +63,7 @@ export class CategoryComponent {
   readonly commands = computed<Command[]>(() => this.categoryDetail()?.commands ?? []);
 
   readonly activeOrder = signal<'copy' | 'asc' | 'dec' | null>('asc');
-  readonly hidden = signal<Record<number, boolean>>({});
+  readonly hiddenMap = signal<Record<Command['id'], boolean>>({});
   readonly sudo = signal<boolean>(false);
 
   readonly filteredCommands = computed<Command[]>(() => {
@@ -124,8 +124,8 @@ export class CategoryComponent {
     });
   }
 
-  toggleExtendedInfo(index: number): void {
-    this.hidden.update(h => ({ ...h, [index]: !h[index] }));
+  toggleExtendedInfo(id: number): void {
+    this.hiddenMap.update(h => ({ ...h, [id]: !h[id] }));
   }
 
   toggleSudo(): void {
